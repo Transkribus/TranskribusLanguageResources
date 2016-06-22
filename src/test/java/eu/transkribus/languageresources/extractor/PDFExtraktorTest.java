@@ -31,7 +31,7 @@ public class PDFExtraktorTest
         page1 = "in in\nin den gegen Die\nin in , in den\ndes . in\ni ,\ner\nin den . in den in den\nin . die in den\nin den in in in den in\n" +
                 "i  de  i\n ,\nin in ,\ni  den\n. in , in den\nin in den in in ,\ni  in de\nin den in den\nder der\nin den in\ni  de\n" +
                 "der der in den in ,\ni ,\nDr . in\nih en ,\nder der der der\nin werden\nr\nin in ,\ni  de  in ,\nd r\nin in in in\n" +
-                "Die ,\nseit in den\nin den in den in in ,\ni  i  , seit\nDie in\nr,";
+                "Die ,\nseit in den\nin den in den in in ,\ni  i  , seit\nDie in\nr,\n";
         page2 = "\n";
         
         ClassLoader classLoader = getClass().getClassLoader();
@@ -70,7 +70,7 @@ public class PDFExtraktorTest
         String expResult = page1 + "\n" + page2;
         String result = instance.extractTextFromDocument(pathToFile);
         
-//        assertEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -86,7 +86,7 @@ public class PDFExtraktorTest
         String expResult = page1 + splitCharacter + page2;
         String result = instance.extractTextFromDocument(pathToFile, splitCharacter);
         
-//        assertEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -102,7 +102,7 @@ public class PDFExtraktorTest
         expResult.add(page1);
         expResult.add(page2);
         
-//        assertEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -117,7 +117,7 @@ public class PDFExtraktorTest
         String expResult = page1;
         String result = instance.extractTextFromPage(pathToFile, page);
         
-//        assertEquals(expResult, result);
+        assertEquals(expResult, result);
         
         page = 1;
         expResult = page2;

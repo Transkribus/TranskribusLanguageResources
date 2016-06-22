@@ -4,7 +4,6 @@ The ConfigTokenizer is used to tokenized strings. The main idea is that is being
 
 [![Build Status](http://dbis-halvar.uibk.ac.at/jenkins/buildStatus/icon?job=TranskribusLanguageResources)](http://dbis-halvar.uibk.ac.at/jenkins/job/TranskribusLanguageResources)
 
-
 ## Rules
 * Normalization 
 * Dehyphanation signs 

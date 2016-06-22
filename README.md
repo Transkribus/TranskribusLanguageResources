@@ -2,6 +2,9 @@
 
 The ConfigTokenizer is used to tokenized strings. The main idea is that is being used with a configuration file. If different use cases call for different types of tokenization, the same tokenizer with different configuration files can be used.
 
+[![Build Status](http://dbis-halvar.uibk.ac.at/jenkins/buildStatus/icon?job=TranskribusLanguageResources)](http://dbis-halvar.uibk.ac.at/jenkins/job/TranskribusLanguageResources)
+
+
 ## Rules
 * Normalization 
 * Dehyphanation signs 
@@ -18,3 +21,21 @@ Delemiters are used for splitting tokens. Common signs among others are spaces, 
 ## Delimiter signs being kept as tokens
 When there is a token like 'is, ', the user may be interested in getting 'is' as a token and the comma as a dedicated token.
 
+## Building
+Here is a short guide with steps that need to be performed
+to build your project.
+
+### Requirements
+- Java >= version 7
+- Maven
+- All further dependencies are gathered via Maven
+
+### Build Steps
+```
+git clone https://github.com/Transkribus/TranskribusLanguageResources
+cd TranskribusLanguageResources
+mvn install
+```
+
+### Links
+- https://transkribus.eu/TranskribusLanguageResources/apidocs/index.html

@@ -40,6 +40,11 @@
 			<version>0.0.2</version>
 			<scope>compile</scope>
 		</dependency>
+                <dependency>
+                        <groupId>eu.transkribus</groupId>
+                        <artifactId>TranskribusInterfaces</artifactId>
+                        <version>0.0.1</version>
+                </dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>

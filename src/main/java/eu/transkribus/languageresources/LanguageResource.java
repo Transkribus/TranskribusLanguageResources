@@ -6,7 +6,7 @@
 package eu.transkribus.languageresources;
 
 import eu.transkribus.languageresources.interfaces.ILanguageResource;
-import eu.transkribus.languageresources.interfaces.ITokenizer;
+import eu.transkribus.interfaces.ITokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

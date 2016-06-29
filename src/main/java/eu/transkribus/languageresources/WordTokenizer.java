@@ -5,8 +5,7 @@
  */
 package eu.transkribus.languageresources;
 
-import eu.transkribus.languageresources.interfaces.ITokenizer;
-import java.util.ArrayList;
+import eu.transkribus.interfaces.ITokenizer;
 import java.util.Arrays;
 import java.util.List;
 

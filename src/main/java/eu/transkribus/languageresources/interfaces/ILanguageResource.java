@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.interfaces;
 
+import eu.transkribus.interfaces.ITokenizer;
 import java.util.List;
 import java.util.Map;
 

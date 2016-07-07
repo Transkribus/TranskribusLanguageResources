@@ -28,7 +28,7 @@ public class TEIAbbreviationsTest
         extractor_simple = new TEIExtractor();
         
         ClassLoader classLoader = getClass().getClassLoader();
-        File configFile = new File(classLoader.getResource("abbreviations.properties").getFile());
+        File configFile = new File(classLoader.getResource("extractor_config.properties").getFile());
         
         extractor_config = new TEIExtractor(configFile);
     }

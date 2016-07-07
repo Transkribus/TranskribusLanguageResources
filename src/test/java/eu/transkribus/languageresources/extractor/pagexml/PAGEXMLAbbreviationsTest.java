@@ -17,18 +17,18 @@ import static org.junit.Assert.*;
  *
  * @author max
  */
-public class AbbreviationsTest
+public class PAGEXMLAbbreviationsTest
 {
 
     private final PAGEXMLExtractor extractor_simple;
     private final PAGEXMLExtractor extractor_config;
 
-    public AbbreviationsTest()
+    public PAGEXMLAbbreviationsTest()
     {
         extractor_simple = new PAGEXMLExtractor();
         
         ClassLoader classLoader = getClass().getClassLoader();
-        File configFile = new File(classLoader.getResource("abbreviations.properties").getFile());
+        File configFile = new File(classLoader.getResource("extractor_config.properties").getFile());
         
         extractor_config = new PAGEXMLExtractor(configFile);
     }

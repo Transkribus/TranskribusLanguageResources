@@ -60,22 +60,22 @@ public class PAGEXMLAbbreviationsTest
         String textOriginal = "#reert synde hebben haer Ho:Mo: hun daermede";
         String textExpanded = "#reert synde hebben haer Hooch-Mogende hun daermede";
         
-        String expanded = extractor_simple.expandAbbreviations(textOriginal, customTagValue);
-        assertEquals(textExpanded, expanded);
+        String result = extractor_simple.expandAbbreviations(textOriginal, customTagValue);
+        assertEquals(textExpanded, result);
         
-        expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textOriginal, expanded);
-        expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
-        assertEquals(textExpanded, expanded);
-        expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
-        assertEquals(textOriginal, expanded);
+        result = extractor_simple.getTextFromNode(textOriginal, customTagValue);
+        assertEquals(textOriginal, result);
+        result = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
+        assertEquals(textExpanded, result);
+        result = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
+        assertEquals(textOriginal, result);
         
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textOriginal, expanded);
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
-        assertEquals(textExpanded, expanded);
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
-        assertEquals(textOriginal, expanded);
+        result = extractor_config.getTextFromNode(textOriginal, customTagValue);
+        assertEquals(textExpanded, result);
+        result = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
+        assertEquals(textExpanded, result);
+        result = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
+        assertEquals(textOriginal, result);
     }
     
     @Test
@@ -93,7 +93,7 @@ public class PAGEXMLAbbreviationsTest
         assertEquals(textOriginal, expanded);
         
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textOriginal, expanded);
+        assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
         assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
@@ -115,7 +115,7 @@ public class PAGEXMLAbbreviationsTest
         assertEquals(textOriginal, expanded);
         
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textOriginal, expanded);
+        assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
         assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");

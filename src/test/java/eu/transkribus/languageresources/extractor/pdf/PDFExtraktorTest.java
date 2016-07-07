@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.transkribus.languageresources.extractor;
+package eu.transkribus.languageresources.extractor.pdf;
 
+import eu.transkribus.languageresources.extractor.pdf.PDFExtraktor;
 import eu.transkribus.languageresources.*;
 import java.io.File;
 import java.util.ArrayList;

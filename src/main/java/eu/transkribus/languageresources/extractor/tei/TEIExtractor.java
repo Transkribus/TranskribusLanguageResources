@@ -3,15 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.transkribus.languageresources.extractor;
+package eu.transkribus.languageresources.extractor.tei;
 
 import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -25,6 +30,37 @@ import org.w3c.dom.NodeList;
  */
 public class TEIExtractor implements ITextExtractor
 {
+    // Patterns do take time to compile, thus make them
+    // static for performance reasons.
+    private static Pattern patternChoice = Pattern.compile("<choice>(.*?)</choice>");
+    private static Pattern patternExpandFull = Pattern.compile(".*<expan>([\\w]+)</expan>.*");
+    private static Pattern patternExpandEmpty = Pattern.compile("[<abbr>\\w.</abbr>]?</expan>[<abbr>\\w.</abbr>]?");
+    private static Pattern patternAbbr = Pattern.compile(".*<abbr>([\\w]+)</abbr>.*");
+    
+    private final Properties properties;
+
+    public TEIExtractor()
+    {
+        properties = new Properties();
+    }
+
+    public TEIExtractor(String pathToConfig)
+    {
+        this(new File(pathToConfig));
+    }
+
+    public TEIExtractor(File configFile)
+    {
+        properties = new Properties();
+        try
+        {
+            properties.load(new FileInputStream(configFile));
+        } catch (IOException ex)
+        {
+            Logger.getLogger(TEIExtractor.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Could not load given property file with path: " + configFile.getAbsolutePath());
+        }
+    }
 
     @Override
     public String extractTextFromDocument(String path)
@@ -87,17 +123,27 @@ public class TEIExtractor implements ITextExtractor
 
         throw new RuntimeException("TEI.xml file could not be found for given path: " + path);
     }
+    
+    private String extractTextFromPage(Document document, String pageId)
+    {
+        return extractTextFromPage(document, pageId, properties.getProperty("abbreviation_expansion_mode", "keep"));
+    }
 
     private String extractTextFromPage(Document document, int page)
     {
+        return extractTextFromPage(document, page, properties.getProperty("abbreviation_expansion_mode", "keep"));
+    }
+    
+    private String extractTextFromPage(Document document, int page, String abbreviationExpansionMode)
+    {
         String pageId = getPageNames(document).get(page);
-        return extractTextFromPage(document, pageId);
+        return extractTextFromPage(document, pageId, abbreviationExpansionMode);
     }
 
-    private String extractTextFromPage(Document document, String pageId)
+    private String extractTextFromPage(Document document, String pageId, String abbreviationExpansionMode)
     {
         List<String> pageZoneNames = getPageParagraphNames(document, pageId);
-        return getTextFromLines(document, pageZoneNames);
+        return getTextFromLines(document, pageZoneNames, abbreviationExpansionMode);
     }
 
     private List<String> getPageNames(Document document)
@@ -182,18 +228,24 @@ public class TEIExtractor implements ITextExtractor
         return lineNames;
     }
 
-    private String getTextFromLines(Document document, List<String> lineNames)
+    private String getTextFromLines(Document document, List<String> lineNames, String abbreviationExpansionMode)
     {
         NodeList nList = document.getElementsByTagName("l");
         StringBuilder content = new StringBuilder();
 
         String zoneId;
+        String textContent;
+        
         for (int i = 0; i < nList.getLength(); i++)
         {
             zoneId = nList.item(i).getAttributes().getNamedItem("facs").getNodeValue().substring(1);
             if (lineNames.contains(zoneId))
             {
-                content.append(nList.item(i).getTextContent());
+                textContent = nList.item(i).getTextContent();
+                textContent = parseAbbreviations(textContent, abbreviationExpansionMode);
+                textContent = stripXML(textContent);
+                
+                content.append(textContent);
 
                 if (i + 1 < nList.getLength())
                 {
@@ -203,5 +255,51 @@ public class TEIExtractor implements ITextExtractor
         }
 
         return content.toString();
+    }
+
+    public String parseAbbreviations(String textContent)
+    {
+        return parseAbbreviations(textContent, properties.getProperty("abbreviation_expansion_mode", "keep"));
+    }
+    
+    public String parseAbbreviations(String textContent, String abbreviationExpansionMode)
+    {
+        if (!abbreviationExpansionMode.equals("keep") && !abbreviationExpansionMode.equals("expand"))
+        {
+            throw new IllegalArgumentException("Unkown mode, abbreviationExpansionMode has to be 'keep' or 'expand'");
+        }
+        
+        Matcher matcherChoice = patternChoice.matcher(textContent);
+        Matcher matcherExpandFull;
+        Matcher matcherAbbr;
+        String choiceContent;
+        String replaceWith;
+        boolean expandFull;
+        
+        while(matcherChoice.find())
+        {
+            choiceContent = matcherChoice.group();
+            
+            matcherExpandFull = patternExpandFull.matcher(choiceContent);
+            expandFull = matcherExpandFull.matches();
+            
+            if(abbreviationExpansionMode.equals("keep") || !expandFull)
+            {
+                matcherAbbr = patternAbbr.matcher(choiceContent);
+                matcherAbbr.matches();
+                replaceWith = matcherAbbr.group(1);
+            }else{
+                replaceWith = matcherExpandFull.group(1);
+            }
+            
+            textContent = textContent.replaceAll(choiceContent, replaceWith);
+        }
+        
+        return textContent;
+    }
+
+    private String stripXML(String textContent)
+    {
+        return textContent.replaceAll("<.*?>", "");
     }
 }

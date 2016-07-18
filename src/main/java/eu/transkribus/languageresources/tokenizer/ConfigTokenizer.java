@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.tokenizer;
 
+import eu.transkribus.interfaces.ITokenizer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import java.util.LinkedList;
  *
  * @author max
  */
-public class ConfigTokenizer
+public class ConfigTokenizer implements ITokenizer
 {
 
     public enum NormalizerOption

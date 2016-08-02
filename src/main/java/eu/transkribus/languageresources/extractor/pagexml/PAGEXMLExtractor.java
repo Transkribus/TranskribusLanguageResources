@@ -186,7 +186,7 @@ public class PAGEXMLExtractor implements ITextExtractor
 
     public String getTextFromNode(String textContent, String customTagValue)
     {
-        String abbreviationMode = properties.getProperty("abbriviation_expansion_mode", "keep");
+        String abbreviationMode = properties.getProperty("abbreviation_expansion_mode", "keep");
         return getTextFromNode(textContent, customTagValue, abbreviationMode);
     }
 
@@ -262,7 +262,7 @@ public class PAGEXMLExtractor implements ITextExtractor
                     abbriviation.setLength(matcherLength.group(1));
 
                     abbriviation.setAbbreviationFromLine(line);
-                    
+
                     abbriviations.add(abbriviation);
                 } catch (IllegalStateException e)
                 {

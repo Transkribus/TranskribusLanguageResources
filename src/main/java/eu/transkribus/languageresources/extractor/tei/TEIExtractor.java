@@ -36,7 +36,7 @@ public class TEIExtractor implements ITextExtractor
     private static Pattern patternExpandFull = Pattern.compile(".*<expan>([\\w]+)</expan>.*");
     private static Pattern patternExpandEmpty = Pattern.compile("[<abbr>\\w.</abbr>]?</expan>[<abbr>\\w.</abbr>]?");
     private static Pattern patternAbbr = Pattern.compile(".*<abbr>([\\w]+)</abbr>.*");
-    
+
     private final Properties properties;
 
     public TEIExtractor()
@@ -123,7 +123,7 @@ public class TEIExtractor implements ITextExtractor
 
         throw new RuntimeException("TEI.xml file could not be found for given path: " + path);
     }
-    
+
     private String extractTextFromPage(Document document, String pageId)
     {
         return extractTextFromPage(document, pageId, properties.getProperty("abbreviation_expansion_mode", "keep"));
@@ -133,7 +133,7 @@ public class TEIExtractor implements ITextExtractor
     {
         return extractTextFromPage(document, page, properties.getProperty("abbreviation_expansion_mode", "keep"));
     }
-    
+
     private String extractTextFromPage(Document document, int page, String abbreviationExpansionMode)
     {
         String pageId = getPageNames(document).get(page);
@@ -235,7 +235,7 @@ public class TEIExtractor implements ITextExtractor
 
         String zoneId;
         String textContent;
-        
+
         for (int i = 0; i < nList.getLength(); i++)
         {
             zoneId = nList.item(i).getAttributes().getNamedItem("facs").getNodeValue().substring(1);
@@ -244,7 +244,7 @@ public class TEIExtractor implements ITextExtractor
                 textContent = nList.item(i).getTextContent();
                 textContent = parseAbbreviations(textContent, abbreviationExpansionMode);
                 textContent = stripXML(textContent);
-                
+
                 content.append(textContent);
 
                 if (i + 1 < nList.getLength())
@@ -261,28 +261,28 @@ public class TEIExtractor implements ITextExtractor
     {
         return parseAbbreviations(textContent, properties.getProperty("abbreviation_expansion_mode", "keep"));
     }
-    
+
     public String parseAbbreviations(String textContent, String abbreviationExpansionMode)
     {
         if (!abbreviationExpansionMode.equals("keep") && !abbreviationExpansionMode.equals("expand"))
         {
             throw new IllegalArgumentException("Unkown mode, abbreviationExpansionMode has to be 'keep' or 'expand'");
         }
-        
+
         Matcher matcherChoice = patternChoice.matcher(textContent);
         Matcher matcherExpandFull;
         Matcher matcherAbbr;
         String choiceContent;
         String replaceWith;
         boolean expandFull;
-        
+
         while(matcherChoice.find())
         {
             choiceContent = matcherChoice.group();
-            
+
             matcherExpandFull = patternExpandFull.matcher(choiceContent);
             expandFull = matcherExpandFull.matches();
-            
+
             if(abbreviationExpansionMode.equals("keep") || !expandFull)
             {
                 matcherAbbr = patternAbbr.matcher(choiceContent);
@@ -291,10 +291,10 @@ public class TEIExtractor implements ITextExtractor
             }else{
                 replaceWith = matcherExpandFull.group(1);
             }
-            
+
             textContent = textContent.replaceAll(choiceContent, replaceWith);
         }
-        
+
         return textContent;
     }
 

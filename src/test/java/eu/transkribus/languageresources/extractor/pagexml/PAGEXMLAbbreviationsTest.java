@@ -26,10 +26,10 @@ public class PAGEXMLAbbreviationsTest
     public PAGEXMLAbbreviationsTest()
     {
         extractor_simple = new PAGEXMLExtractor();
-        
+
         ClassLoader classLoader = getClass().getClassLoader();
         File configFile = new File(classLoader.getResource("extractor_config.properties").getFile());
-        
+
         extractor_config = new PAGEXMLExtractor(configFile);
     }
 
@@ -59,17 +59,17 @@ public class PAGEXMLAbbreviationsTest
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: hun daermede";
         String textExpanded = "#reert synde hebben haer Hooch-Mogende hun daermede";
-        
+
         String result = extractor_simple.expandAbbreviations(textOriginal, customTagValue);
         assertEquals(textExpanded, result);
-        
+
         result = extractor_simple.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textOriginal, result);
         result = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
         assertEquals(textExpanded, result);
         result = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
         assertEquals(textOriginal, result);
-        
+
         result = extractor_config.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textExpanded, result);
         result = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
@@ -77,21 +77,21 @@ public class PAGEXMLAbbreviationsTest
         result = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
         assertEquals(textOriginal, result);
     }
-    
+
     @Test
     public void testDoubleExpandAbbreviation()
     {
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;expansion:Hooch-Mogende;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
         String textExpanded = "#reert synde hebben haer Hooch-Mogende Hooch-Mogende hun daermede";
-        
+
         String expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textOriginal, expanded);
         expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
         assertEquals(textExpanded, expanded);
         expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
         assertEquals(textOriginal, expanded);
-        
+
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
@@ -99,21 +99,21 @@ public class PAGEXMLAbbreviationsTest
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
         assertEquals(textOriginal, expanded);
     }
-    
+
     @Test
     public void testmissingExpansion()
     {
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
         String textExpanded = "#reert synde hebben haer Hooch-Mogende Ho:Mo: hun daermede";
-        
+
         String expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textOriginal, expanded);
         expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
         assertEquals(textExpanded, expanded);
         expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
         assertEquals(textOriginal, expanded);
-        
+
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
         assertEquals(textExpanded, expanded);
         expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");

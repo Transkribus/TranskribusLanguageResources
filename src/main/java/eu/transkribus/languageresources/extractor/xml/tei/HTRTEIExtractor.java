@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.transkribus.languageresources.extractor.tei;
+package eu.transkribus.languageresources.extractor.xml.tei;
 
-import eu.transkribus.languageresources.interfaces.ITextExtractor;
+import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
+import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,48 +27,10 @@ import org.w3c.dom.NodeList;
 
 /**
  *
- * @author max
+ * @author max, jnphilipp
  */
-public class TEIExtractor implements ITextExtractor
+public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtractor
 {
-    // Patterns do take time to compile, thus make them
-    // static for performance reasons.
-    private static Pattern patternChoice = Pattern.compile("<choice>(.*?)</choice>");
-    private static Pattern patternExpandFull = Pattern.compile(".*<expan>([\\w]+)</expan>.*");
-    private static Pattern patternExpandEmpty = Pattern.compile("[<abbr>\\w.</abbr>]?</expan>[<abbr>\\w.</abbr>]?");
-    private static Pattern patternAbbr = Pattern.compile(".*<abbr>([\\w]+)</abbr>.*");
-
-    private final Properties properties;
-
-    public TEIExtractor()
-    {
-        properties = new Properties();
-    }
-
-    public TEIExtractor(String pathToConfig)
-    {
-        this(new File(pathToConfig));
-    }
-
-    public TEIExtractor(File configFile)
-    {
-        properties = new Properties();
-        try
-        {
-            properties.load(new FileInputStream(configFile));
-        } catch (IOException ex)
-        {
-            Logger.getLogger(TEIExtractor.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Could not load given property file with path: " + configFile.getAbsolutePath());
-        }
-    }
-
-    @Override
-    public String extractTextFromDocument(String path)
-    {
-        return extractTextFromDocument(path, "\n");
-    }
-
     @Override
     public String extractTextFromDocument(String path, String splitCharacter)
     {
@@ -107,21 +70,6 @@ public class TEIExtractor implements ITextExtractor
     {
         Document document = getDocumentFromFile(path);
         return extractTextFromPage(document, page);
-    }
-
-    private Document getDocumentFromFile(String path)
-    {
-        try
-        {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            return dBuilder.parse(new File(path));
-        } catch (Exception ex)
-        {
-            Logger.getLogger(TEIExtractor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        throw new RuntimeException("TEI.xml file could not be found for given path: " + path);
     }
 
     private String extractTextFromPage(Document document, String pageId)
@@ -241,11 +189,7 @@ public class TEIExtractor implements ITextExtractor
             zoneId = nList.item(i).getAttributes().getNamedItem("facs").getNodeValue().substring(1);
             if (lineNames.contains(zoneId))
             {
-                textContent = nList.item(i).getTextContent();
-                textContent = parseAbbreviations(textContent, abbreviationExpansionMode);
-                textContent = stripXML(textContent);
-
-                content.append(textContent);
+                content.append(this.parseAbbreviations(nList.item(i), abbreviationExpansionMode));
 
                 if (i + 1 < nList.getLength())
                 {
@@ -255,51 +199,5 @@ public class TEIExtractor implements ITextExtractor
         }
 
         return content.toString();
-    }
-
-    public String parseAbbreviations(String textContent)
-    {
-        return parseAbbreviations(textContent, properties.getProperty("abbreviation_expansion_mode", "keep"));
-    }
-
-    public String parseAbbreviations(String textContent, String abbreviationExpansionMode)
-    {
-        if (!abbreviationExpansionMode.equals("keep") && !abbreviationExpansionMode.equals("expand"))
-        {
-            throw new IllegalArgumentException("Unkown mode, abbreviationExpansionMode has to be 'keep' or 'expand'");
-        }
-
-        Matcher matcherChoice = patternChoice.matcher(textContent);
-        Matcher matcherExpandFull;
-        Matcher matcherAbbr;
-        String choiceContent;
-        String replaceWith;
-        boolean expandFull;
-
-        while(matcherChoice.find())
-        {
-            choiceContent = matcherChoice.group();
-
-            matcherExpandFull = patternExpandFull.matcher(choiceContent);
-            expandFull = matcherExpandFull.matches();
-
-            if(abbreviationExpansionMode.equals("keep") || !expandFull)
-            {
-                matcherAbbr = patternAbbr.matcher(choiceContent);
-                matcherAbbr.matches();
-                replaceWith = matcherAbbr.group(1);
-            }else{
-                replaceWith = matcherExpandFull.group(1);
-            }
-
-            textContent = textContent.replaceAll(choiceContent, replaceWith);
-        }
-
-        return textContent;
-    }
-
-    private String stripXML(String textContent)
-    {
-        return textContent.replaceAll("<.*?>", "");
     }
 }

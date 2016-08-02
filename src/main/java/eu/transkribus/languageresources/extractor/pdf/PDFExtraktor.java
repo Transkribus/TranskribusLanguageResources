@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.pdf;
 
-import eu.transkribus.languageresources.interfaces.ITextExtractor;
+import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  *
  * @author max
  */
-public class PDFExtraktor implements ITextExtractor
+public class PDFExtraktor implements IPagewiseTextExtractor
 {
     
     @Override

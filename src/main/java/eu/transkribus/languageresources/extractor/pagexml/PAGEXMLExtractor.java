@@ -6,7 +6,7 @@
 package eu.transkribus.languageresources.extractor.pagexml;
 
 import eu.transkribus.languageresources.*;
-import eu.transkribus.languageresources.interfaces.ITextExtractor;
+import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
  *
  * @author max
  */
-public class PAGEXMLExtractor implements ITextExtractor
+public class PAGEXMLExtractor implements IPagewiseTextExtractor
 {
 
     // Patterns do take time to compile, thus make them

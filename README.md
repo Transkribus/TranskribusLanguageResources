@@ -6,12 +6,17 @@ The ConfigTokenizer is used to tokenized strings. The main idea is that is being
 
 ## Extractors
 
-The extractors take a file and extract contained text. Three formats are accepted:
+### Text
+The extractors take a file and extract contained text. Text can be extracted document- or page-wise. Three formats are accepted:
 * PDF
 * PAGE.xml
 * TEI
 
-The extractors can be called with a `properties` file. An example can be found [here](https://github.com/Transkribus/TranskribusLanguageResources/blob/master/src/test/resources/extractor_config.properties). 
+The extractors can be called with a `properties` file. An example can be found [here](https://github.com/Transkribus/TranskribusLanguageResources/blob/master/src/test/resources/extractor_config.properties).
+
+### Abbreviations
+
+Abbreviations can be extracted if the given format contains annotated abbrevitions like TEI or PAGE.XML. The abbreviations are returned in the format `Map<String, Set<String>>`, whereas every abbreviations is stored together with known expansions.
 
 ## Tokenizer
 

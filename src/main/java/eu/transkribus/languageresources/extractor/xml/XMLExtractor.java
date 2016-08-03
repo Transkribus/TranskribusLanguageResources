@@ -4,7 +4,9 @@ import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -114,5 +116,11 @@ public class XMLExtractor implements ITextExtractor {
         }
         else
             return node.getTextContent();
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviations(String path)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

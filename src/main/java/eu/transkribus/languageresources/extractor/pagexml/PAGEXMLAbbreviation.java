@@ -9,12 +9,17 @@ package eu.transkribus.languageresources.extractor.pagexml;
  *
  * @author max
  */
-public class Abbreviation
+public class PAGEXMLAbbreviation
 {
     private String abbreviation;
     private String expansion;
     private int length;
     private int offset;
+
+    public String getAbbreviation()
+    {
+        return abbreviation;
+    }
 
     public void setAbbreviationFromLine(String line)
     {

@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.pdfbox.cos.COSDocument;
@@ -109,5 +111,17 @@ public class PDFExtraktor implements IPagewiseTextExtractor
             Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex.getMessage());
         }
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviations(String path)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

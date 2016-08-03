@@ -6,6 +6,8 @@
 package eu.transkribus.languageresources.extractor.pagexml;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,8 +29,9 @@ public class PAGEXMLAbbreviationsTest
     {
         extractor_simple = new PAGEXMLExtractor();
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        File configFile = new File(classLoader.getResource("extractor_config.properties").getFile());
+//        ClassLoader classLoader = getClass().getClassLoader();
+//        String filePath = classLoader.getResource("/extractor_config.properties").getFile();
+        File configFile = new File("src/test/resources/extractor_config.properties");
 
         extractor_config = new PAGEXMLExtractor(configFile);
     }
@@ -101,24 +104,37 @@ public class PAGEXMLAbbreviationsTest
     }
 
     @Test
-    public void testmissingExpansion()
+    public void testMissingExpansion()
     {
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
         String textExpanded = "#reert synde hebben haer Hooch-Mogende Ho:Mo: hun daermede";
 
-        String expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textOriginal, expanded);
-        expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
-        assertEquals(textExpanded, expanded);
-        expanded = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
-        assertEquals(textOriginal, expanded);
+        String parsed = extractor_simple.getTextFromNode(textOriginal, customTagValue);
+        assertEquals(textOriginal, parsed);
+        parsed = extractor_simple.getTextFromNode(textOriginal, customTagValue, "expand");
+        assertEquals(textExpanded, parsed);
+        parsed = extractor_simple.getTextFromNode(textOriginal, customTagValue, "keep");
+        assertEquals(textOriginal, parsed);
 
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue);
-        assertEquals(textExpanded, expanded);
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
-        assertEquals(textExpanded, expanded);
-        expanded = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
-        assertEquals(textOriginal, expanded);
+        parsed = extractor_config.getTextFromNode(textOriginal, customTagValue);
+        assertEquals(textExpanded, parsed);
+        parsed = extractor_config.getTextFromNode(textOriginal, customTagValue, "expand");
+        assertEquals(textExpanded, parsed);
+        parsed = extractor_config.getTextFromNode(textOriginal, customTagValue, "keep");
+        assertEquals(textOriginal, parsed);
     }
+
+    public void testExtractingAbbreviations()
+    {
+        String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;}";
+        String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
+
+        Map<String, Set<String>> abbrevations = extractor_simple.extractAbbrevations(textOriginal, customTagValue);
+
+        assertEquals(1, abbrevations.keySet().size());
+        assertEquals(true, abbrevations.containsKey("Ho:Mo:"));
+        assertEquals("Hooch-Mogende", abbrevations.get("Ho:Mo:"));
+    }
+
 }

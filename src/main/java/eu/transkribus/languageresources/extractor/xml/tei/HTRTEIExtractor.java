@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -199,5 +201,11 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
         }
 
         return content.toString();
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

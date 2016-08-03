@@ -5,6 +5,9 @@
  */
 package eu.transkribus.languageresources.interfaces;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  *
  * @author max
@@ -14,4 +17,6 @@ public interface ITextExtractor
     String extractTextFromDocument(String path);
     
     String extractTextFromDocument(String path, String splitCharacter);
+    
+    Map<String, Set<String>> extractAbbreviations(String path);
 }

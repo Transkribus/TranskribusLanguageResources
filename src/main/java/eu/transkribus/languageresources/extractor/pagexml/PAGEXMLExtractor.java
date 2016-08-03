@@ -6,6 +6,7 @@
 package eu.transkribus.languageresources.extractor.pagexml;
 
 import eu.transkribus.languageresources.*;
+import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;
@@ -15,9 +16,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -34,7 +40,7 @@ import org.w3c.dom.NodeList;
  *
  * @author max
  */
-public class PAGEXMLExtractor implements IPagewiseTextExtractor
+public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtractor
 {
 
     // Patterns do take time to compile, thus make them
@@ -43,30 +49,20 @@ public class PAGEXMLExtractor implements IPagewiseTextExtractor
     private static Pattern patternAbbrevOffset = Pattern.compile(".*offset:([0-9]*);.*");
     private static Pattern patternAbbrevLength = Pattern.compile(".*length:([0-9]*);.*");
     private static Pattern patternAbbrevExpansion = Pattern.compile(".*expansion:([\\w-]*);.*");
-
-    private final Properties properties;
-
+    
     public PAGEXMLExtractor()
     {
-        properties = new Properties();
+        super();
     }
 
     public PAGEXMLExtractor(String pathToConfig)
     {
-        this(new File(pathToConfig));
+        super(new File(pathToConfig));
     }
 
     public PAGEXMLExtractor(File configFile)
     {
-        properties = new Properties();
-        try
-        {
-            properties.load(new FileInputStream(configFile));
-        } catch (IOException ex)
-        {
-            Logger.getLogger(PAGEXMLExtractor.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException("Could not load given property file with path: " + configFile.getAbsolutePath());
-        }
+        super(configFile);
     }
 
     @Override
@@ -142,35 +138,40 @@ public class PAGEXMLExtractor implements IPagewiseTextExtractor
         return orderedFileList;
     }
 
-    private String getTextFromFile(File f)
+    private NodeList getNodesFromFile(File f)
     {
-        StringBuilder content = new StringBuilder();
-
         try
         {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(f);
 
-            NodeList nList = doc.getElementsByTagName("Unicode");
-            Node unicodeNode;
-            int numNodes = nList.getLength();
-
-            for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++)
-            {
-                unicodeNode = nList.item(nodeIndex);
-                content.append(getTextFromNode(unicodeNode));
-
-                if (nodeIndex + 1 < numNodes)
-                {
-                    content.append("\n");
-                }
-            }
+            return doc.getElementsByTagName("Unicode");
 
         } catch (Exception ex)
         {
-            Logger.getLogger(PAGEXMLExtractor.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
+            throw new RuntimeException("Could not load nodes from file!");
+        }
+    }
+
+    private String getTextFromFile(File f)
+    {
+        StringBuilder content = new StringBuilder();
+
+        NodeList unicodeNodes = getNodesFromFile(f);
+        Node unicodeNode;
+
+        int numNodes = unicodeNodes.getLength();
+
+        for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++)
+        {
+            unicodeNode = unicodeNodes.item(nodeIndex);
+            content.append(getTextFromNode(unicodeNode));
+
+            if (nodeIndex + 1 < numNodes)
+            {
+                content.append("\n");
+            }
         }
 
         return content.toString();
@@ -207,40 +208,40 @@ public class PAGEXMLExtractor implements IPagewiseTextExtractor
 
     public String expandAbbreviations(String textContent, String customTagValue)
     {
-        List<Abbreviation> abbriviations = extractAbbrevations(textContent, customTagValue);
+        List<PAGEXMLAbbreviation> abbreviations = extractAbbrevationsFromLine(textContent, customTagValue);
 
         String partLeft;
         String partRight;
         int startLeft;
         int expansionDiffSum = 0;
 
-        for (Abbreviation abbriviation : abbriviations)
+        for (PAGEXMLAbbreviation abbreviation : abbreviations)
         {
-            startLeft = abbriviation.getOffset() + expansionDiffSum;
+            startLeft = abbreviation.getOffset() + expansionDiffSum;
             partLeft = textContent.substring(0, startLeft);
-            partRight = textContent.substring(startLeft + abbriviation.getLength(), textContent.length());
+            partRight = textContent.substring(startLeft + abbreviation.getLength(), textContent.length());
 
-            textContent = partLeft + abbriviation.getExpansion() + partRight;
-            expansionDiffSum += abbriviation.getLengthDiff();
+            textContent = partLeft + abbreviation.getExpansion() + partRight;
+            expansionDiffSum += abbreviation.getLengthDiff();
         }
 
         return textContent;
     }
 
-    private List<Abbreviation> extractAbbrevations(String line, String customTagValue)
+    private List<PAGEXMLAbbreviation> extractAbbrevationsFromLine(String line, String customTagValue)
     {
-        List<Abbreviation> abbriviations = new LinkedList<>();
+        List<PAGEXMLAbbreviation> abbreviations = new LinkedList<>();
 
         Matcher matcherAbbrev = patternAbbrev.matcher(customTagValue);
 
         Matcher matcherExpansion;
         Matcher matcherOffset;
         Matcher matcherLength;
-        Abbreviation abbriviation;
+        PAGEXMLAbbreviation abbreviation;
         String abbrev;
         while (matcherAbbrev.find())
         {
-            abbriviation = new Abbreviation();
+            abbreviation = new PAGEXMLAbbreviation();
             abbrev = matcherAbbrev.group(1);
 
             matcherExpansion = patternAbbrevExpansion.matcher(abbrev);
@@ -251,19 +252,19 @@ public class PAGEXMLExtractor implements IPagewiseTextExtractor
                 try
                 {
                     String expansion = matcherExpansion.group(1);
-                    abbriviation.setExpansion(expansion);
+                    abbreviation.setExpansion(expansion);
 
                     matcherOffset = patternAbbrevOffset.matcher(abbrev);
                     matcherOffset.matches();
-                    abbriviation.setOffset(matcherOffset.group(1));
+                    abbreviation.setOffset(matcherOffset.group(1));
 
                     matcherLength = patternAbbrevLength.matcher(abbrev);
                     matcherLength.matches();
-                    abbriviation.setLength(matcherLength.group(1));
+                    abbreviation.setLength(matcherLength.group(1));
 
-                    abbriviation.setAbbreviationFromLine(line);
+                    abbreviation.setAbbreviationFromLine(line);
 
-                    abbriviations.add(abbriviation);
+                    abbreviations.add(abbreviation);
                 } catch (IllegalStateException e)
                 {
                     // If no expension tag is being found, groupCount is still 1
@@ -271,6 +272,75 @@ public class PAGEXMLExtractor implements IPagewiseTextExtractor
             }
         }
 
-        return abbriviations;
+        return abbreviations;
     }
+
+    public Map<String, Set<String>> extractAbbrevations(String line, String customTagValue)
+    {
+        return listToMap(extractAbbrevationsFromLine(line, customTagValue));
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviations(String path)
+    {
+        List<PAGEXMLAbbreviation> abbreviations = new LinkedList<>();
+        List<File> files = getFileList(path);
+
+        for (int fileIndex = 0; fileIndex < files.size(); fileIndex++)
+        {
+            abbreviations.addAll(PAGEXMLExtractor.this.extractAbbreviationsFromPage(files.get(fileIndex)));
+        }
+
+        return listToMap(abbreviations);
+    }
+
+    private Map<String, Set<String>> listToMap(List<PAGEXMLAbbreviation> list)
+    {
+        Map<String, Set<String>> map = new HashMap<>();
+
+        for (PAGEXMLAbbreviation abbr : list)
+        {
+            if (!map.containsKey(abbr.getAbbreviation()))
+            {
+                map.put(abbr.getAbbreviation(), new HashSet<>());
+            }
+
+            if (abbr.getExpansion() != null)
+            {
+                map.get(abbr.getAbbreviation()).add(abbr.getExpansion());
+            }
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    {
+        List<File> files = getFileList(path);
+        List<PAGEXMLAbbreviation> abbreviations = PAGEXMLExtractor.this.extractAbbreviationsFromPage(files.get(page));
+        return listToMap(abbreviations);
+    }
+
+    private List<PAGEXMLAbbreviation> extractAbbreviationsFromPage(File f)
+    {
+        List<PAGEXMLAbbreviation> abbreviations = new LinkedList<>();
+        NodeList unicodeNodes = getNodesFromFile(f);
+
+        for (int i = 0; i < unicodeNodes.getLength(); i++)
+        {
+            abbreviations.addAll(extractAbbreviationsFromPage(unicodeNodes.item(i)));
+        }
+
+        return abbreviations;
+    }
+
+    private List<PAGEXMLAbbreviation> extractAbbreviationsFromPage(Node unicodeNode)
+    {
+        String textContent = unicodeNode.getTextContent();
+        Node textLineNode = unicodeNode.getParentNode().getParentNode();
+        String customTagValue = textLineNode.getAttributes().getNamedItem("custom").getTextContent();
+        return extractAbbrevationsFromLine(textContent, customTagValue);
+    }
+
 }

@@ -26,7 +26,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class PDFExtraktor implements IPagewiseTextExtractor
 {
-    
+
     @Override
     public String extractTextFromDocument(String pathToFile)
     {
@@ -57,12 +57,14 @@ public class PDFExtraktor implements IPagewiseTextExtractor
     {
         List<String> pageWiseText = new LinkedList<>();
 
+        COSDocument cosDoc = null;
+        PDDocument pdDoc = null;
         try
         {
             PDFParser parser = new PDFParser(new FileInputStream(new File(pathToFile)));
             parser.parse();
-            COSDocument cosDoc = parser.getDocument();
-            PDDocument pdDoc = new PDDocument(cosDoc);
+            cosDoc = parser.getDocument();
+            pdDoc = new PDDocument(cosDoc);
 
             for (int pageId = 0; pageId < pdDoc.getNumberOfPages(); pageId++)
             {
@@ -71,6 +73,22 @@ public class PDFExtraktor implements IPagewiseTextExtractor
         } catch (IOException ex)
         {
             Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            if ( pdDoc != null )
+                try {
+                    pdDoc.close();
+                }
+                catch ( IOException ex ) {
+                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            if ( cosDoc != null )
+                try {
+                    cosDoc.close();
+                }
+                catch ( IOException ex ) {
+                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         return pageWiseText;
@@ -81,16 +99,34 @@ public class PDFExtraktor implements IPagewiseTextExtractor
     {
         StringBuilder sb = new StringBuilder();
 
+        COSDocument cosDoc = null;
+        PDDocument pdDoc = null;
         try
         {
             PDFParser parser = new PDFParser(new FileInputStream(new File(pathToFile)));
             parser.parse();
-            COSDocument cosDoc = parser.getDocument();
-            PDDocument pdDoc = new PDDocument(cosDoc);
+            cosDoc = parser.getDocument();
+            pdDoc = new PDDocument(cosDoc);
             sb.append(extractTextFromPage(pdDoc, page));
         } catch (IOException ex)
         {
             Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            if ( pdDoc != null )
+                try {
+                    pdDoc.close();
+                }
+                catch ( IOException ex ) {
+                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            if ( cosDoc != null )
+                try {
+                    cosDoc.close();
+                }
+                catch ( IOException ex ) {
+                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         return sb.toString();
@@ -104,7 +140,7 @@ public class PDFExtraktor implements IPagewiseTextExtractor
             pdDoc.getNumberOfPages();
             pdfStripper.setStartPage(page+1);
             pdfStripper.setEndPage(page+1);
-            
+
             return pdfStripper.getText(pdDoc);
         } catch (IOException ex)
         {

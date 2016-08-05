@@ -4,13 +4,21 @@ import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -20,6 +28,10 @@ import org.w3c.dom.NodeList;
  * @author jnphilipp
  */
 public class XMLExtractor implements ITextExtractor {
+    private static final Pattern PATTERN_CHOICE = Pattern.compile("<choice>(.*?)</choice>");
+    private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
+    private static final Pattern PATTERN_EXPAN = Pattern.compile("<expan>(.+)</expan>");
+
     protected final Properties properties;
 
     public XMLExtractor() {
@@ -68,7 +80,7 @@ public class XMLExtractor implements ITextExtractor {
         else
             content.append(this.parseAbbreviations(document.getDocumentElement(), this.properties.getProperty("abbreviation_expansion_mode", "keep")));
 
-        return content.toString();
+        return content.toString().trim();
     }
 
     protected Document getDocumentFromFile(String path) {
@@ -118,9 +130,51 @@ public class XMLExtractor implements ITextExtractor {
             return node.getTextContent();
     }
 
+    public String parseAbbreviations(String text) {
+        return this.parseAbbreviations(text, this.properties.getProperty("abbreviation_expansion_mode", "keep"));
+    }
+
+    public String parseAbbreviations(String text, String abbreviationExpansionMode) {
+        if ( !abbreviationExpansionMode.equals("keep") && !abbreviationExpansionMode.equals("expand") ) {
+            throw new IllegalArgumentException("Unkown mode, abbreviationExpansionMode has to be 'keep' or 'expand'");
+        }
+
+        Matcher matcher = PATTERN_CHOICE.matcher(text);
+        while ( matcher.find() ) {
+            String abbr = "", expan = "";
+            Matcher abbr_matcher = PATTERN_ABBR.matcher(matcher.group(1));
+            if ( abbr_matcher.find() )
+                abbr = abbr_matcher.group(1);
+            Matcher expan_matcher = PATTERN_EXPAN.matcher(matcher.group(1));
+            if ( expan_matcher.find() )
+                expan = expan_matcher.group(1);
+            text = text.replaceAll(matcher.group(), abbreviationExpansionMode.equals("keep") || expan.isEmpty() ? abbr : expan);
+        }
+        return text;
+    }
+
+    public String stripXML(String text) {
+        return text.replaceAll("<[^>]*>", "");
+    }
+
     @Override
     public Map<String, Set<String>> extractAbbreviations(String path)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    protected String documentToString(Document document) {
+        try {
+            DOMSource domSource = new DOMSource(document);
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
+            transformer.transform(domSource, result);
+            return writer.toString();
+        }
+        catch ( TransformerException e ) {
+            return null;
+        }
     }
 }

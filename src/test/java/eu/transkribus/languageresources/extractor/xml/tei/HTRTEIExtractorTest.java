@@ -8,6 +8,8 @@ package eu.transkribus.languageresources.extractor.xml.tei;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,9 +23,13 @@ import static org.junit.Assert.*;
  */
 public class HTRTEIExtractorTest
 {
-    String page1;
-    String page2;
-    String pathToFile;
+    private final String pathToFile;
+    private final String page1;
+    private final String page2;
+    
+    private final String pathToAbbrFile;
+    private final String pageAbbr_Keep;
+    private final String pageAbbr_Expand;
 
     public HTRTEIExtractorTest()
     {
@@ -32,9 +38,13 @@ public class HTRTEIExtractorTest
                 "Dr . in\nihren ,\nder der der der\nin werden\nder\n\nin in ,\nin den in ,\nder\nin in in in\n\nDie ,\nseit in den\nin den in den in in ,\n" +
                 "in in , seit\nDie in\nder\n,";
         page2 = "";
+        
+        pageAbbr_Keep = "in in i i\n";
+        pageAbbr_Expand = "in in in i\n";
 
         ClassLoader classLoader = getClass().getClassLoader();
         pathToFile = new File(classLoader.getResource("HTR_Reichsgericht_tei.xml").getFile()).getAbsolutePath();
+        pathToAbbrFile = new File(classLoader.getResource("HTR_Reichsgericht_tei_abbr.xml").getFile()).getAbsolutePath();
     }
 
     @BeforeClass
@@ -117,5 +127,35 @@ public class HTRTEIExtractorTest
         expResult = page2;
         result = instance.extractTextFromPage(pathToFile, 1);
         assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testKeepExpandAbbreviations()
+    {
+        HTRTEIExtractor instance = new HTRTEIExtractor();
+        
+        String result = instance.extractTextFromDocument(pathToAbbrFile);
+        assertEquals(pageAbbr_Keep, result);
+        
+        instance.getProperties().put("abbreviation_expansion_mode", "keep");
+        result = instance.extractTextFromDocument(pathToAbbrFile);
+        assertEquals(pageAbbr_Keep, result);
+        
+        instance.getProperties().put("abbreviation_expansion_mode", "expand");
+        result = instance.extractTextFromDocument(pathToAbbrFile);
+        assertEquals(pageAbbr_Expand, result);
+    }
+    
+    @Test
+    public void testExtractAbbreviations()
+    {
+        HTRTEIExtractor instance = new HTRTEIExtractor();
+        
+        Map<String, Set<String>> extractedAbbreviations = instance.extractAbbreviations(pathToAbbrFile);
+        
+        assertEquals(1, extractedAbbreviations.size());
+        assertEquals(true, extractedAbbreviations.containsKey("i"));
+        assertEquals(1, extractedAbbreviations.get("i").size());
+        assertEquals(true, extractedAbbreviations.get("i").contains("in"));
     }
 }

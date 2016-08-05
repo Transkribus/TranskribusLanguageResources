@@ -7,22 +7,17 @@ package eu.transkribus.languageresources.extractor.xml.tei;
 
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,6 +28,7 @@ import org.w3c.dom.NodeList;
  */
 public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtractor
 {
+
     @Override
     public String extractTextFromDocument(String path, String splitCharacter)
     {
@@ -201,6 +197,50 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
         }
 
         return content.toString();
+    }
+
+    @Override
+    public Map<String, Set<String>> extractAbbreviations(String path)
+    {
+        Map<String, Set<String>> abbreviations = new HashMap<>();
+
+        Document document = getDocumentFromFile(path);
+        NodeList nodeList = document.getElementsByTagName("l");
+
+        Node lNode;
+        NodeList children;
+        Node child;
+
+        String abbreviation;
+        String expansion;
+
+        for (int i = 0; i < nodeList.getLength(); i++)
+        {
+            lNode = nodeList.item(i);
+            children = lNode.getChildNodes();
+
+            for (int j = 0; j < children.getLength(); j++)
+            {
+                child = children.item(j);
+                if (child.getNodeName().equalsIgnoreCase("choice"))
+                {
+                    abbreviation = ((Element) child).getElementsByTagName("abbr").item(0).getTextContent();
+                    expansion = ((Element) child).getElementsByTagName("expan").item(0).getTextContent();
+
+                    if (!abbreviations.containsKey(abbreviation))
+                    {
+                        abbreviations.put(abbreviation, new HashSet<>());
+                    }
+
+                    if (expansion != null && !expansion.equals(""))
+                    {
+                        abbreviations.get(abbreviation).add(expansion);
+                    }
+                }
+            }
+        }
+
+        return abbreviations;
     }
 
     @Override

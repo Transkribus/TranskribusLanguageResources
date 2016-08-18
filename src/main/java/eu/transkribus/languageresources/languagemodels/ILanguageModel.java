@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.languagemodels;
 
+import eu.transkribus.languageresources.exceptions.UnsupportedSequenceException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,5 +15,5 @@ import java.util.Map;
  */
 public interface ILanguageModel
 {
-    public Map<String, Double> getProbabilitiesForNextToken(List<String> sequence);
+    public Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException;
 }

@@ -29,6 +29,25 @@ public class NeuralLanguageModel implements ILanguageModel
         this.model = new Model(pathToModel, types.size(), types.size());
     }
     
+    private double[][] sequenceToMatrix(Map<String, Integer> types, List<String> sequence) throws UnsupportedSequenceException
+    {
+        double[][] input = new double[sequence.size()][types.size()];
+        String token;
+        
+        for (int i = 0; i < sequence.size(); i++)
+        {
+            token = sequence.get(i);
+            
+            if(!types.containsKey(token))
+            {
+                throw new UnsupportedSequenceException("Sequence contains unknown token: "+token);
+            }
+            
+            input[i][types.get(token)] = 1;
+        }
+        return input;
+    }
+    
     @Override
     public Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException
     {

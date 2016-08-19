@@ -38,6 +38,26 @@ Delemiters are used for splitting tokens. Common signs among others are spaces, 
 #### Delimiter signs being kept as tokens
 When there is a token like 'is, ', the user may be interested in getting 'is' as a token and the comma as a dedicated token.
 
+## Language Models
+
+Two types of language models are supported: ARPA and neuronal networks.
+
+The offered method looks like this:
+
+    Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException;
+
+It takes a list of string of which each string represents one token. The returned `Map<String, Double>` contains the probability for each type depending on the given sequence. The two formats both hold a list of known types.
+
+
+### ARPA
+
+A language model in the ARPA format can be used using the class `ARPALanguageModel`. It is initialized with the path to the file with the ARPA format. The constructor throws an `ARPAParseException` if the file is malformed. When using `getProbabilitiesForNextToken`, the method looks for a sequence length `n` and return the probability of token `n + 1`. It throws an exception if the given list of tokens has either a length which was not in the file or if the sequence is unkown.
+
+
+### Neural Network
+
+A language model in the form of a neural network can be used using the class `NeuralLanguageModel`. It needs to be initialized with a path to the zip file containing the network and to a file containing a list of types. When using `getProbabilitiesForNextToken`, the given sequence is mapped onto a matrix with dimensions `(sequence_length, num_types)`, whereas at each timestamp, the index of the given token will be set `1`. It returns a vector with probabilities for the next token. The returned `double[]` is transformed into a map which contains the type as key and its probability as value. If the given sequence contains an unkown token, a `UnsupportedSequenceException` will be thrown.
+
 ## Building
 Here is a short guide with steps that need to be performed
 to build your project.

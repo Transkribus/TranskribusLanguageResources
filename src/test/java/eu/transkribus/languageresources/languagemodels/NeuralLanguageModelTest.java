@@ -7,9 +7,12 @@ package eu.transkribus.languageresources.languagemodels;
 
 import eu.transkribus.languageresources.languagemodels.NeuralLanguageModel;
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
+import eu.transkribus.languageresources.exceptions.UnsupportedSequenceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -51,20 +54,26 @@ public class NeuralLanguageModelTest
     @Test
     public void testGetProbabilityForNextToken()
     {
-        NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_layers_6.zip", "nn/lm_bozen_characters_types.txt");
-        
-        List<String> sequence = new ArrayList<>();
-        sequence.add("ä");
-        sequence.add("Ö");
-        sequence.add("f");
-        
-        Map<String, Integer> types = Utils.loadTypes("nn/lm_bozen_characters_types.txt");
-        Map<String, Double> probabilitiesForNextToken = nlm.getProbabilitiesForNextToken(sequence);
-        double[] givenProbabilities = Utils.loadValues("nn/forecasted_layers_6.txt").get("äÖf");
-        
-        for(String type : types.keySet())
+        try
         {
-            assertEquals(givenProbabilities[types.get(type)], probabilitiesForNextToken.get(type), 0.00001);
+            NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_layers_6.zip", "nn/lm_bozen_characters_types.txt");
+            
+            List<String> sequence = new ArrayList<>();
+            sequence.add("ä");
+            sequence.add("Ö");
+            sequence.add("f");
+            
+            Map<String, Integer> types = Utils.loadTypes("nn/lm_bozen_characters_types.txt");
+            Map<String, Double> probabilitiesForNextToken = nlm.getProbabilitiesForNextToken(sequence);
+            double[] givenProbabilities = Utils.loadValues("nn/forecasted_layers_6.txt").get("äÖf");
+            
+            for(String type : types.keySet())
+            {
+                assertEquals(givenProbabilities[types.get(type)], probabilitiesForNextToken.get(type), 0.00001);
+            }
+        } catch (UnsupportedSequenceException ex)
+        {
+            Logger.getLogger(NeuralLanguageModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

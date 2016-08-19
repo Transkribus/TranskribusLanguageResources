@@ -42,7 +42,7 @@ When there is a token like 'is, ', the user may be interested in getting 'is' as
 
 Two types of language models are supported: ARPA and neuronal networks.
 
-The offered method looks like this:
+The offered method by the interface `ILanguageModel` looks like this:
 
     Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException;
 

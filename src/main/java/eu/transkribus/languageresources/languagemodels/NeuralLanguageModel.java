@@ -9,6 +9,7 @@ import de.unileipzig.asv.neuralnetwork.model.Model;
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
 import de.unileipzig.asv.neuralnetwork.values.StaticValues;
 import de.unileipzig.asv.neuralnetwork.values.TimeDistributedValues;
+import eu.transkribus.languageresources.exceptions.UnsupportedSequenceException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class NeuralLanguageModel implements ILanguageModel
     }
     
     @Override
-    public Map<String, Double> getProbabilitiesForNextToken(List<String> sequence)
+    public Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException
     {
         TimeDistributedValues values = new TimeDistributedValues();
         values.setValues(Utils.sequenceToMatrix(types, sequence));

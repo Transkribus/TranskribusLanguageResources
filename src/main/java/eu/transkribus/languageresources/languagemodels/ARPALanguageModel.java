@@ -53,7 +53,7 @@ public class ARPALanguageModel implements ILanguageModel {
                     break;
                 case 1:
                     if ( line.matches("\\\\\\d+-grams:") ) {
-                        ngramType = Integer.valueOf(line.replaceAll("\\\\", "").replaceAll("-grams:", ""));
+                        ngramType = this.checkNgramType(line);
                         state = 2;
                     }
                     break;
@@ -61,7 +61,7 @@ public class ARPALanguageModel implements ILanguageModel {
                     if ( line.isEmpty() || line.equals("\\end\\") )
                         state = 1;
                     else if ( line.matches("\\\\\\d+-grams:") )
-                        ngramType = Integer.valueOf(line.replaceAll("\\\\", "").replaceAll("-grams:", ""));
+                        ngramType = this.checkNgramType(line);
                     else {
                         if ( !this.ngrams.containsKey(ngramType) )
                             this.ngrams.put(ngramType, new LinkedHashMap<List<String>, Map<String, Double>>());
@@ -84,6 +84,13 @@ public class ARPALanguageModel implements ILanguageModel {
 
         if ( !this.ngramTypes.keySet().equals(this.ngrams.keySet()) )
             throw new ARPAParseException("N-gram definitions do not match the listed N-grams.");
+    }
+
+    private int checkNgramType(String line) throws ARPAParseException {
+        int ngramType = Integer.valueOf(line.replaceAll("\\\\", "").replaceAll("-grams:", ""));
+        if ( !this.ngramTypes.containsKey(ngramType) )
+            throw new ARPAParseException(String.format("%s-ngram type is not defined, but found %s-ngrams.", ngramType, ngramType));
+        return ngramType;
     }
 
     @Override

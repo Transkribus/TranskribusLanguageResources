@@ -59,14 +59,11 @@ public class NeuralLanguageModelTest
             NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_characters.zip");
             
             List<String> sequence = new ArrayList<>();
-            sequence.add("<");
-            sequence.add("ē");
-            sequence.add("4");
-            sequence.add(".");
+            sequence.add("+");
             
             Map<String, Integer> types = nlm.getTypes();
             Map<String, Double> probabilitiesForNextToken = nlm.getProbabilitiesForNextToken(sequence);
-            double[] givenProbabilities = Utils.loadValues("nn/lm_bozen_characters_forecasted.txt").get("<ē4.");
+            double[] givenProbabilities = Utils.loadValues("nn/lm_bozen_characters_forecasted.txt").get("+");
             
             for(String type : types.keySet())
             {

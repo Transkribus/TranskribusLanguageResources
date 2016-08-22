@@ -56,20 +56,21 @@ public class NeuralLanguageModelTest
     {
         try
         {
-            NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_layers_6.zip", "nn/lm_bozen_characters_types.txt");
+            NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_characters.zip");
             
             List<String> sequence = new ArrayList<>();
-            sequence.add("ä");
-            sequence.add("Ö");
-            sequence.add("f");
+            sequence.add("<");
+            sequence.add("ē");
+            sequence.add("4");
+            sequence.add(".");
             
-            Map<String, Integer> types = Utils.loadTypes("nn/lm_bozen_characters_types.txt");
+            Map<String, Integer> types = nlm.getTypes();
             Map<String, Double> probabilitiesForNextToken = nlm.getProbabilitiesForNextToken(sequence);
-            double[] givenProbabilities = Utils.loadValues("nn/forecasted_layers_6.txt").get("äÖf");
+            double[] givenProbabilities = Utils.loadValues("nn/lm_bozen_characters_forecasted.txt").get("<ē4.");
             
             for(String type : types.keySet())
             {
-                assertEquals(givenProbabilities[types.get(type)], probabilitiesForNextToken.get(type), 0.00001);
+                assertEquals(givenProbabilities[types.get(type)], probabilitiesForNextToken.get(type), 0.001);
             }
         } catch (UnsupportedSequenceException ex)
         {

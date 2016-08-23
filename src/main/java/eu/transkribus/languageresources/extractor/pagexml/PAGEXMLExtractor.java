@@ -121,10 +121,11 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         File folder = new File(path);
         File[] files = folder.listFiles();
         List<File> listOfFiles = Arrays.asList(folder.listFiles());
-        List<String> fileNames = listOfFiles
-                .stream()
-                .map(((File f) -> f.getName()))
-                .collect(Collectors.toList());
+        List<String> fileNames = new ArrayList<>(listOfFiles.size());
+        for(File f : listOfFiles)
+        {
+            fileNames.add(f.getName());
+        }
 
         Comparator c = new PAGEFileComparator();
         Collections.sort(fileNames, c);
@@ -302,7 +303,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         {
             if (!map.containsKey(abbr.getAbbreviation()))
             {
-                map.put(abbr.getAbbreviation(), new HashSet<>());
+                map.put(abbr.getAbbreviation(), new HashSet<String>());
             }
 
             if (abbr.getExpansion() != null)

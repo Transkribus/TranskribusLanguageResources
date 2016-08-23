@@ -229,7 +229,7 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
 
                     if (!abbreviations.containsKey(abbreviation))
                     {
-                        abbreviations.put(abbreviation, new HashSet<>());
+                        abbreviations.put(abbreviation, new HashSet<String>());
                     }
 
                     if (expansion != null && !expansion.equals(""))

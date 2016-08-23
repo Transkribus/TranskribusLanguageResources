@@ -15,8 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  * The ConfigTokenizer is used to tokenized strings. The main idea is that is being used with a configuration file. If different use cases call for different types of tokenization, the same tokenizer with different configuration files can be used.

@@ -5,33 +5,24 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
-import eu.transkribus.languageresources.*;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

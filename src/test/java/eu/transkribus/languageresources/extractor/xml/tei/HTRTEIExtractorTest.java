@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.xml.tei;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,11 +152,11 @@ public class HTRTEIExtractorTest
     {
         HTRTEIExtractor instance = new HTRTEIExtractor();
         
-        Map<String, Set<String>> extractedAbbreviations = instance.extractAbbreviations(pathToAbbrFile);
+        Dictionary extractedAbbreviations = instance.extractAbbreviations(pathToAbbrFile);
         
-        assertEquals(1, extractedAbbreviations.size());
-        assertEquals(true, extractedAbbreviations.containsKey("i"));
-        assertEquals(1, extractedAbbreviations.get("i").size());
-        assertEquals(true, extractedAbbreviations.get("i").contains("in"));
+        assertEquals(1, extractedAbbreviations.getEntries().size());
+        assertEquals(true, extractedAbbreviations.containsKeyEntry("i"));
+        assertEquals(1, extractedAbbreviations.getEntryByKeyName("i").getAdditionalValues().size());
+        assertEquals(true, extractedAbbreviations.getEntryByKeyName("i").containsAdditionalEntry("in"));
     }
 }

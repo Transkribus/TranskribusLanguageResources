@@ -33,7 +33,7 @@ public class NeuralLanguageModel implements ILanguageModel
         try
         {
             this.types = loadTypes(zipPath);
-            this.model = new Model(zipPath, types.size(), types.size());
+            this.model = new Model(zipPath, types.size(), 2);
         } catch (IOException ex)
         {
             throw new RuntimeException("Could find zip archive with given path: " + zipPath);

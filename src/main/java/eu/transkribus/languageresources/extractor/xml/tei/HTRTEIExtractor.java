@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.xml.tei;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.util.ArrayList;
@@ -198,9 +199,9 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviations(String path)
+    public Dictionary extractAbbreviations(String path)
     {
-        Map<String, Set<String>> abbreviations = new HashMap<>();
+        Dictionary abbreviationsDictionary = new Dictionary();
 
         Document document = getDocumentFromFile(path);
         NodeList nodeList = document.getElementsByTagName("l");
@@ -225,24 +226,20 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
                     abbreviation = ((Element) child).getElementsByTagName("abbr").item(0).getTextContent();
                     expansion = ((Element) child).getElementsByTagName("expan").item(0).getTextContent();
 
-                    if (!abbreviations.containsKey(abbreviation))
-                    {
-                        abbreviations.put(abbreviation, new HashSet<String>());
-                    }
-
+                    abbreviationsDictionary.addEntry(abbreviation);
                     if (expansion != null && !expansion.equals(""))
                     {
-                        abbreviations.get(abbreviation).add(expansion);
+                        abbreviationsDictionary.addAdditionalValue(abbreviation, expansion);
                     }
                 }
             }
         }
 
-        return abbreviations;
+        return abbreviationsDictionary;
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    public Dictionary extractAbbreviationsFromPage(String path, int page)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

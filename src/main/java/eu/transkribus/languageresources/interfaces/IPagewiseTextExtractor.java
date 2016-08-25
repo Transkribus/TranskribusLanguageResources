@@ -1,5 +1,6 @@
 package eu.transkribus.languageresources.interfaces;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,5 +16,5 @@ public interface IPagewiseTextExtractor extends ITextExtractor
 
     String extractTextFromPage(String path, int page);
     
-    Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page);
+    Dictionary extractAbbreviationsFromPage(String path, int page);
 }

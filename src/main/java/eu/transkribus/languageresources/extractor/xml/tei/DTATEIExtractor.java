@@ -1,5 +1,7 @@
 package eu.transkribus.languageresources.extractor.xml.tei;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLAbbreviation;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.io.File;
@@ -57,11 +59,11 @@ public class DTATEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
         }
         return page.toString().trim();
     }
-
+    
     @Override
-    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page) {
+    public Dictionary extractAbbreviationsFromPage(String path, int page) {
         Document document = this.getDocumentFromFile(path);
         Map<String, Set<String>> abbreviations = new LinkedHashMap<>();
-        return abbreviations;
+        return mapToDictionary(abbreviations);
     }
 }

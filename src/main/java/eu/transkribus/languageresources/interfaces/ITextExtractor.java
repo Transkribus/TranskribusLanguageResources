@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.interfaces;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,5 +19,5 @@ public interface ITextExtractor
     
     String extractTextFromDocument(String path, String splitCharacter);
     
-    Map<String, Set<String>> extractAbbreviations(String path);
+    Dictionary extractAbbreviations(String path);
 }

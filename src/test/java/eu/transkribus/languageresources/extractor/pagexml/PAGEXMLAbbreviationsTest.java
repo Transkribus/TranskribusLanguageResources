@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.File;
 import java.util.Map;
 import java.util.Set;
@@ -130,11 +131,11 @@ public class PAGEXMLAbbreviationsTest
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
 
-        Map<String, Set<String>> abbrevations = extractor_simple.extractAbbrevations(textOriginal, customTagValue);
+        Dictionary abbrevations = extractor_simple.extractAbbrevations(textOriginal, customTagValue);
 
-        assertEquals(1, abbrevations.keySet().size());
-        assertEquals(true, abbrevations.containsKey("Ho:Mo:"));
-        assertEquals("Hooch-Mogende", abbrevations.get("Ho:Mo:"));
+        assertEquals(1, abbrevations.getEntries().size());
+        assertEquals(true, abbrevations.containsKeyEntry("Ho:Mo:"));
+        assertEquals(true, abbrevations.getEntryByKeyName("Ho:Mo:").containsAdditionalEntry("Hooch-Mogende"));
     }
 
 }

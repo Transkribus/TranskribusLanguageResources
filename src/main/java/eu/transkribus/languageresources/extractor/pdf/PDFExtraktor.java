@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.pdf;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -150,13 +151,13 @@ public class PDFExtraktor implements IPagewiseTextExtractor
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    public Dictionary extractAbbreviationsFromPage(String path, int page)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviations(String path)
+    public Dictionary extractAbbreviations(String path)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

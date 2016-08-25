@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
@@ -267,13 +268,13 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return abbreviations;
     }
 
-    public Map<String, Set<String>> extractAbbrevations(String line, String customTagValue)
+    public Dictionary extractAbbrevations(String line, String customTagValue)
     {
-        return listToMap(extractAbbrevationsFromLine(line, customTagValue));
+        return listToDictionary(extractAbbrevationsFromLine(line, customTagValue));
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviations(String path)
+    public Dictionary extractAbbreviations(String path)
     {
         List<PAGEXMLAbbreviation> abbreviations = new LinkedList<>();
         List<File> files = getFileList(path);
@@ -283,35 +284,32 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             abbreviations.addAll(PAGEXMLExtractor.this.extractAbbreviationsFromPage(files.get(fileIndex)));
         }
 
-        return listToMap(abbreviations);
+        return listToDictionary(abbreviations);
     }
 
-    private Map<String, Set<String>> listToMap(List<PAGEXMLAbbreviation> list)
+    private Dictionary listToDictionary(List<PAGEXMLAbbreviation> list)
     {
-        Map<String, Set<String>> map = new HashMap<>();
+        Dictionary dictionary = new Dictionary();
 
         for (PAGEXMLAbbreviation abbr : list)
         {
-            if (!map.containsKey(abbr.getAbbreviation()))
-            {
-                map.put(abbr.getAbbreviation(), new HashSet<String>());
-            }
-
+            dictionary.addEntry(abbr.getAbbreviation());
+            
             if (abbr.getExpansion() != null)
             {
-                map.get(abbr.getAbbreviation()).add(abbr.getExpansion());
+                dictionary.addAdditionalValue(abbr.getAbbreviation(), abbr.getExpansion());
             }
         }
 
-        return map;
+        return dictionary;
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviationsFromPage(String path, int page)
+    public Dictionary extractAbbreviationsFromPage(String path, int page)
     {
         List<File> files = getFileList(path);
         List<PAGEXMLAbbreviation> abbreviations = PAGEXMLExtractor.this.extractAbbreviationsFromPage(files.get(page));
-        return listToMap(abbreviations);
+        return listToDictionary(abbreviations);
     }
 
     private List<PAGEXMLAbbreviation> extractAbbreviationsFromPage(File f)

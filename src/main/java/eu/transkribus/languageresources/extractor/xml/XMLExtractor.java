@@ -1,5 +1,6 @@
 package eu.transkribus.languageresources.extractor.xml;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -158,9 +159,26 @@ public class XMLExtractor implements ITextExtractor {
     }
 
     @Override
-    public Map<String, Set<String>> extractAbbreviations(String path)
+    public Dictionary extractAbbreviations(String path)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    protected Dictionary mapToDictionary(Map<String, Set<String>> map)
+    {
+        Dictionary dictionary = new Dictionary();
+
+        for (Map.Entry<String, Set<String>> entry : map.entrySet())
+        {
+            dictionary.addEntry(entry.getKey());
+            
+            for(String expansion : entry.getValue())
+            {
+                dictionary.addAdditionalValue(entry.getKey(), expansion);
+            }
+        }
+
+        return dictionary;
     }
 
     protected String documentToString(Document document) {

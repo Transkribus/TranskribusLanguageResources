@@ -20,4 +20,8 @@ public interface ITextExtractor
     String extractTextFromDocument(String path, String splitCharacter);
     
     Dictionary extractAbbreviations(String path);
+    
+    Dictionary extractPlaceNames(String path);
+    
+    Dictionary extractPersonNames(String path);
 }

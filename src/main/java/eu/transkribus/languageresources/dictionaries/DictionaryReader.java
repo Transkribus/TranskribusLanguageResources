@@ -7,12 +7,6 @@ package eu.transkribus.languageresources.dictionaries;
 
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

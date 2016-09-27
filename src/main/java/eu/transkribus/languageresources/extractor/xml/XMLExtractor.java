@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -23,6 +24,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -90,11 +92,20 @@ public class XMLExtractor implements ITextExtractor {
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             return dBuilder.parse(new File(path));
         }
-        catch (Exception ex) {
-            Logger.getLogger(XMLExtractor.class.getName()).log(Level.SEVERE, null, ex);
+        catch (ParserConfigurationException ex)
+        {
+            ex.printStackTrace();
+            throw new RuntimeException();
         }
-
-        throw new RuntimeException("XML file could not be found for given path: " + path);
+        catch(SAXException ex)
+        {
+            ex.printStackTrace();
+            throw new RuntimeException("XML file could not be parsed, it is probably malformatted.");
+        }
+        catch(IOException ex)
+        {
+            throw new RuntimeException("XML file could not be found for given path: " + path);
+        }
     }
 
     public String parseAbbreviations(Node node) {
@@ -194,5 +205,46 @@ public class XMLExtractor implements ITextExtractor {
         catch ( TransformerException e ) {
             return null;
         }
+    }
+    
+    private boolean underTextNode(Node n)
+    {
+        if(n.getNodeName().equals("text"))
+            return true;
+        
+        if(n.getParentNode() == null)
+            return false;
+        
+        return underTextNode(n.getParentNode());
+    }
+    
+    private Dictionary extractTag(String path, String tagName)
+    {
+        Dictionary dictionary = new Dictionary();
+        
+        Document document = getDocumentFromFile(path);
+        NodeList foundNodes = document.getElementsByTagName(tagName);
+        
+        for(int i = 0, len = foundNodes.getLength(); i < len; i++)
+        {
+            if(underTextNode(foundNodes.item(i)))
+            {
+                dictionary.addEntry(foundNodes.item(i).getTextContent());
+            }
+        }
+        
+        return dictionary;
+    }
+
+    @Override
+    public Dictionary extractPlaceNames(String path)
+    {
+        return extractTag(path, "placeName");
+    }
+
+    @Override
+    public Dictionary extractPersonNames(String path)
+    {
+        return extractTag(path, "persName");
     }
 }

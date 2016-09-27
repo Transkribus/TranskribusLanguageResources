@@ -17,6 +17,7 @@ public class EntryValue
     public EntryValue(String name)
     {
         this.name = name;
+        this.frequency = 1;
     }
 
     public String getName()

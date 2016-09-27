@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title xml:lang="de">Brief von Adolf von Buch an Louis de Beausobre<lb/>(Magdeburg,
+                    19. November 1761)</title>
+                <title xml:lang="fr">Lettre d'Adolf von Buch à Louis de Beausobre<lb/>(Magdebourg,
+                    19 novembre 1761)</title>
+                <title xml:lang="en">Letter from Adolf von Buch to Louis de
+                    Beausobre<lb/>(Magdeburg, 19 November 1761)</title>
+                <funder>Deutsche Forschungsgemeinschaft: Emmy Noether-Programm</funder>
+                <principal>
+                    <persName ref="#anne.baillot">
+                        <forename>Anne</forename>
+                        <surname>Baillot</surname>
+                    </persName>
+                </principal>
+                <placeName ref="#l1103">Berlin</placeName>
+            </titleStmt>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="transcription">
+                <p>
+                    <placeName ref="#l1103">Berlin</placeName>
+                    <persName ref="#p0015">Grecourt</persName>
+                    <placeName ref="#l1103">Berlin</placeName>
+                    <persName ref="#p0017">Grecourt</persName>
+                    <persName ref="#p0018">Haude</persName>
+                    <persName ref="#p0018">Ambrosius Haude</persName>
+                </p>
+            </div>
+        </body>
+    </text>
+</TEI>

@@ -61,7 +61,7 @@ public class XMLTagExtractorTest
         assertEquals(2, extractedPlaceNames.getEntryByKeyName("Berlin").getKeyEntry().getFrequency());
         
         Dictionary extractedPersonNames = extractor.extractPersonNames(path);
-        assertEquals(4, extractedPersonNames.getEntries().size());
-        assertEquals(2, extractedPersonNames.getEntryByKeyName("Berlin").getKeyEntry().getFrequency());
+        assertEquals(3, extractedPersonNames.getEntries().size());
+        assertEquals(2, extractedPersonNames.getEntryByKeyName("Grecourt").getKeyEntry().getFrequency());
     }
 }

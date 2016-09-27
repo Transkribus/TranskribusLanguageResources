@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 public class XMLExtractor implements ITextExtractor {
     private static final Pattern PATTERN_CHOICE = Pattern.compile("<choice>(.*?)</choice>");
     private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
+    private static final Pattern PATTERN_ABBR_ATTR = Pattern.compile("<abbr expand=\"([^\"]+)\">(.+?)</abbr>");
     private static final Pattern PATTERN_EXPAN = Pattern.compile("<expan>(.+)</expan>");
 
     protected final Properties properties;
@@ -131,6 +132,14 @@ public class XMLExtractor implements ITextExtractor {
             else
                 return expan;
         }
+        else if ( node.getNodeName().equalsIgnoreCase("abbr") ) {
+            String abbr = node.getTextContent();
+            String expan = node.getAttributes().getNamedItem("expan") == null ? "" : node.getAttributes().getNamedItem("expan").getTextContent();
+            if ( abbreviationExpansionMode.equals("keep") || expan.isEmpty() )
+                return abbr;
+            else
+                return expan;
+        }
         else if ( node.hasChildNodes() ) {
             NodeList children = node.getChildNodes();
             StringBuilder content = new StringBuilder();
@@ -160,6 +169,12 @@ public class XMLExtractor implements ITextExtractor {
             Matcher expan_matcher = PATTERN_EXPAN.matcher(matcher.group(1));
             if ( expan_matcher.find() )
                 expan = expan_matcher.group(1);
+            text = text.replaceAll(matcher.group(), abbreviationExpansionMode.equals("keep") || expan.isEmpty() ? abbr : expan);
+        }
+        matcher = PATTERN_ABBR_ATTR.matcher(text);
+        while ( matcher.find() ) {
+            String abbr = matcher.group(2);
+            String expan = matcher.group(1);
             text = text.replaceAll(matcher.group(), abbreviationExpansionMode.equals("keep") || expan.isEmpty() ? abbr : expan);
         }
         return text;

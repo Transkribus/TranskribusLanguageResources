@@ -53,7 +53,6 @@ public class Entry
         }
 
         EntryValue entry = new EntryValue(name);
-        entry.increaseFrequency();
         additionalValues.add(entry);
     }
     

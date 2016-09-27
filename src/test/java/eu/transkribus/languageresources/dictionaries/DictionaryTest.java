@@ -135,7 +135,7 @@ public class DictionaryTest
             assertEquals(false, dictionary2.containsKeyEntry("abkürzung"));
             assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().size());
             assertEquals("abkürzung", dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-            assertEquals(0, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
+            assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
         } catch (IOException ex)
         {
             Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);

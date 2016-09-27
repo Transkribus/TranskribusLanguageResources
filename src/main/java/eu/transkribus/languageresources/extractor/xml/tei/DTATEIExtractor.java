@@ -59,11 +59,12 @@ public class DTATEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
         }
         return page.toString().trim();
     }
-    
+
     @Override
     public Dictionary extractAbbreviationsFromPage(String path, int page) {
-        Document document = this.getDocumentFromFile(path);
-        Map<String, Set<String>> abbreviations = new LinkedHashMap<>();
-        return mapToDictionary(abbreviations);
+        throw new UnsupportedOperationException("Not supported yet.");
+        /*Document document = this.getDocumentFromFile(path);
+        Dictionary dictionary = new Dictionary();
+        return dictionary;*/
     }
 }

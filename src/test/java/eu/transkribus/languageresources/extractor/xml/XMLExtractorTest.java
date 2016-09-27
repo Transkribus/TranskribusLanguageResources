@@ -1,5 +1,6 @@
 package eu.transkribus.languageresources.extractor.xml;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,5 +86,22 @@ public class XMLExtractorTest {
 
         result = instance.parseAbbreviations(page2);
         assertEquals(this.page2_keep, result);
+    }
+
+
+    /**
+     * Test of parseAbbreviations method, of class XMLExtractor.
+     */
+    @Test
+    public void testExtractAbbreviations() {
+        XMLExtractor instance = new XMLExtractor(this.properties);
+        Dictionary dictionary = instance.extractAbbreviations(this.page1Path);
+        assertEquals(3, dictionary.getEntries().size());
+        assertTrue(dictionary.containsKeyEntry("i"));
+        assertTrue(dictionary.getEntry("i").containsAdditionalEntry("in"));
+        assertTrue(dictionary.containsKeyEntry("officî"));
+        assertTrue(dictionary.getEntry("officî").containsAdditionalEntry("officia"));
+        assertTrue(dictionary.containsKeyEntry("laborû"));
+        assertTrue(dictionary.getEntry("laborû").containsAdditionalEntry("laborum"));
     }
 }

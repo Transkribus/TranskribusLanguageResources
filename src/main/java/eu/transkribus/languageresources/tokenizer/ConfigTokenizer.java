@@ -51,6 +51,11 @@ public class ConfigTokenizer implements ITokenizer
     {
         properties = new Properties();
     }
+    
+    public ConfigTokenizer(Properties properties)
+    {
+        this.properties = properties;
+    }
 
     public ConfigTokenizer(String pathToConfig)
     {

@@ -6,6 +6,7 @@
 package eu.transkribus.languageresources.dictionaries;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,6 +21,16 @@ public class Dictionary
     public Dictionary()
     {
         entries = new HashSet<>();
+    }
+    
+    public Dictionary(List<String> tokenizedText)
+    {
+        this();
+        
+        for(String token : tokenizedText)
+        {
+            addEntry(token);
+        }
     }
 
     public void addEntry(String name)

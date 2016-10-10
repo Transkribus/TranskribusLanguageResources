@@ -52,7 +52,7 @@ public class DictionaryFromPAGEXMLTest
     }
 
      @Test
-     public void hello()
+     public void dictionaryFromPAGEXML()
      {
          // first, we extract the text from the page xml folder
          PAGEXMLExtractor textExtraktor = new PAGEXMLExtractor();

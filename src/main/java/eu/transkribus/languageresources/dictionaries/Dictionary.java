@@ -79,7 +79,7 @@ public class Dictionary
 
         return false;
     }
-    
+
     public Entry getEntryByKeyName(String name)
     {
         for (Entry e : entries)
@@ -96,5 +96,12 @@ public class Dictionary
     public void addEntry(Entry entry)
     {
         this.entries.add(entry);
+    }
+
+    public Entry getEntry(String key) {
+        for ( Entry e : entries )
+            if ( e.getKeyEntry().getName().equals(key) )
+                return e;
+        return null;
     }
 }

@@ -20,6 +20,10 @@ import static org.junit.Assert.*;
  * @author jnphilipp
  */
 public class DTATEIExtractorTest {
+    private String acidaliusEpistolaeTEI;
+    private String acidaliusEpistolaeTXT;
+    private String colliPrincepsTEI;
+    private String colliPrincepsTXT;
     private String dieLeidenDesJungenWerthersTEI;
     private String dieLeidenDesJungenWerthersTXT;
     private String dta510291TEI;
@@ -30,10 +34,14 @@ public class DTATEIExtractorTest {
         ClassLoader classLoader = getClass().getClassLoader();
         this.dieLeidenDesJungenWerthersTEI = new File(classLoader.getResource("goethe_werther01_1774.TEI-P5.xml").getFile()).getAbsolutePath();
         this.dta510291TEI = new File(classLoader.getResource("510291.TEI-P5.xml").getFile()).getAbsolutePath();
+        this.acidaliusEpistolaeTEI = new File(classLoader.getResource("Acidalius_epistolae.xml").getFile()).getAbsolutePath();
+        this.colliPrincepsTEI = new File(classLoader.getResource("Colli_princeps.xml").getFile()).getAbsolutePath();
         this.properties = new File(classLoader.getResource("extractor_config.properties").getFile()).getAbsolutePath();
 
         this.dieLeidenDesJungenWerthersTXT = this.readFile(classLoader.getResource("goethe_werther01_1774.txt").getFile());
         this.dta510291TXT = this.readFile(classLoader.getResource("510291.txt").getFile());
+        this.acidaliusEpistolaeTXT = this.readFile(new File(classLoader.getResource("Acidalius_epistolae.txt").getFile()).getAbsolutePath());
+        this.colliPrincepsTXT = this.readFile(new File(classLoader.getResource("Colli_princeps.txt").getFile()).getAbsolutePath());
     }
 
     @BeforeClass
@@ -80,6 +88,12 @@ public class DTATEIExtractorTest {
 
         result = instance.extractTextFromDocument(this.dta510291TEI);
         assertEquals(this.dta510291TXT, result);
+
+        result = instance.extractTextFromDocument(this.acidaliusEpistolaeTEI);
+        assertEquals(this.acidaliusEpistolaeTXT, result);
+
+        result = instance.extractTextFromDocument(this.colliPrincepsTEI);
+        assertEquals(this.colliPrincepsTXT, result);
     }
 
     /**

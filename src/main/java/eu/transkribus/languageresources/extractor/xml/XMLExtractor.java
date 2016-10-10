@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 public class XMLExtractor implements ITextExtractor {
     private static final Pattern PATTERN_CHOICE = Pattern.compile("<choice>(.*?)</choice>");
     private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
+    private static final Pattern PATTERN_ABBR_ATTR = Pattern.compile("<abbr expand=\"([^\"]+)\">(.+?)</abbr>");
     private static final Pattern PATTERN_EXPAN = Pattern.compile("<expan>(.+)</expan>");
 
     protected final Properties properties;
@@ -131,6 +132,14 @@ public class XMLExtractor implements ITextExtractor {
             else
                 return expan;
         }
+        else if ( node.getNodeName().equalsIgnoreCase("abbr") ) {
+            String abbr = node.getTextContent();
+            String expan = node.getAttributes().getNamedItem("expan") == null ? "" : node.getAttributes().getNamedItem("expan").getTextContent();
+            if ( abbreviationExpansionMode.equals("keep") || expan.isEmpty() )
+                return abbr;
+            else
+                return expan;
+        }
         else if ( node.hasChildNodes() ) {
             NodeList children = node.getChildNodes();
             StringBuilder content = new StringBuilder();
@@ -162,6 +171,12 @@ public class XMLExtractor implements ITextExtractor {
                 expan = expan_matcher.group(1);
             text = text.replaceAll(matcher.group(), abbreviationExpansionMode.equals("keep") || expan.isEmpty() ? abbr : expan);
         }
+        matcher = PATTERN_ABBR_ATTR.matcher(text);
+        while ( matcher.find() ) {
+            String abbr = matcher.group(2);
+            String expan = matcher.group(1);
+            text = text.replaceAll(matcher.group(), abbreviationExpansionMode.equals("keep") || expan.isEmpty() ? abbr : expan);
+        }
         return text;
     }
 
@@ -170,23 +185,31 @@ public class XMLExtractor implements ITextExtractor {
     }
 
     @Override
-    public Dictionary extractAbbreviations(String path)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    protected Dictionary mapToDictionary(Map<String, Set<String>> map)
-    {
+    public Dictionary extractAbbreviations(String path) {
+        Document document = this.getDocumentFromFile(path);
         Dictionary dictionary = new Dictionary();
 
-        for (Map.Entry<String, Set<String>> entry : map.entrySet())
-        {
-            dictionary.addEntry(entry.getKey());
-            
-            for(String expansion : entry.getValue())
-            {
-                dictionary.addAdditionalValue(entry.getKey(), expansion);
-            }
+        NodeList nodes = document.getElementsByTagName("choice");
+        for  ( int i = 0; i < nodes.getLength(); i++ ) {
+            NodeList children = nodes.item(i).getChildNodes();
+            String abbr = "", expan = "";
+            for ( int j = 0; j < children.getLength(); j++ )
+                if ( children.item(j).getNodeName().equalsIgnoreCase("abbr") )
+                    abbr = children.item(j).getTextContent();
+                else if ( children.item(j).getNodeName().equalsIgnoreCase("expan") )
+                    expan = children.item(j).getTextContent();
+            dictionary.addEntry(abbr);
+            if ( !expan.isEmpty() )
+                dictionary.addAdditionalValue(abbr, expan);
+        }
+        nodes = document.getElementsByTagName("abbr");
+        for  ( int i = 0; i < nodes.getLength(); i++ ) {
+            if (nodes.item(i).getParentNode().getNodeName().equalsIgnoreCase("choice") )
+                continue;
+            dictionary.addEntry(nodes.item(i).getTextContent());
+            String expan = nodes.item(i).getAttributes().getNamedItem("expan") == null ? "" : nodes.item(i).getAttributes().getNamedItem("expan").getTextContent();
+            if ( !expan.isEmpty() )
+                dictionary.addAdditionalValue(nodes.item(i).getTextContent(), expan);
         }
 
         return dictionary;
@@ -206,25 +229,25 @@ public class XMLExtractor implements ITextExtractor {
             return null;
         }
     }
-    
+
     private boolean underTextNode(Node n)
     {
         if(n.getNodeName().equals("text"))
             return true;
-        
+
         if(n.getParentNode() == null)
             return false;
-        
+
         return underTextNode(n.getParentNode());
     }
-    
+
     private Dictionary extractTag(String path, String tagName)
     {
         Dictionary dictionary = new Dictionary();
-        
+
         Document document = getDocumentFromFile(path);
         NodeList foundNodes = document.getElementsByTagName(tagName);
-        
+
         for(int i = 0, len = foundNodes.getLength(); i < len; i++)
         {
             if(underTextNode(foundNodes.item(i)))
@@ -232,7 +255,7 @@ public class XMLExtractor implements ITextExtractor {
                 dictionary.addEntry(foundNodes.item(i).getTextContent());
             }
         }
-        
+
         return dictionary;
     }
 

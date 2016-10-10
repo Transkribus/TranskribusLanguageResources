@@ -22,18 +22,18 @@ import java.util.zip.ZipFile;
  *
  * @author max
  */
-public class NeuralLanguageModel implements ILanguageModel
+public class NeuralForecastOneLanguageModel implements ILanguageModel
 {
 
     private final Map<String, Integer> types;
     private final Model model;
 
-    public NeuralLanguageModel(String zipPath)
+    public NeuralForecastOneLanguageModel(String zipPath)
     {
         try
         {
             this.types = loadTypes(zipPath);
-            this.model = new Model(zipPath, types.size(), 2);
+            this.model = new Model(zipPath);
         } catch (IOException ex)
         {
             throw new RuntimeException("Could find zip archive with given path: " + zipPath);
@@ -59,7 +59,7 @@ public class NeuralLanguageModel implements ILanguageModel
     {
         TimeDistributedValues values = new TimeDistributedValues();
         values.setValues(Utils.sequenceToMatrix(types, sequence));
-        StaticValues result = (StaticValues) model.pass(values, types.size());
+        StaticValues result = (StaticValues) model.pass(values);
 
         Map<String, Double> confMat = new HashMap();
         for (Map.Entry<String, Integer> entry : types.entrySet())

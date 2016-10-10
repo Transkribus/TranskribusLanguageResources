@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.languagemodels;
 
-import eu.transkribus.languageresources.languagemodels.NeuralLanguageModel;
+import eu.transkribus.languageresources.languagemodels.NeuralForecastOneLanguageModel;
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
 import eu.transkribus.languageresources.exceptions.UnsupportedSequenceException;
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ import static org.junit.Assert.*;
  *
  * @author max
  */
-public class NeuralLanguageModelTest
+public class NeuralForecastOneLanguageModelTest
 {
     
-    public NeuralLanguageModelTest()
+    public NeuralForecastOneLanguageModelTest()
     {
     }
     
@@ -56,7 +56,7 @@ public class NeuralLanguageModelTest
     {
         try
         {
-            NeuralLanguageModel nlm = new NeuralLanguageModel("nn/lm_bozen_characters.zip");
+            NeuralForecastOneLanguageModel nlm = new NeuralForecastOneLanguageModel("nn/lm_bozen_characters.zip");
             
             List<String> sequence = new ArrayList<>();
             sequence.add("+");
@@ -71,7 +71,7 @@ public class NeuralLanguageModelTest
             }
         } catch (UnsupportedSequenceException ex)
         {
-            Logger.getLogger(NeuralLanguageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NeuralForecastOneLanguageModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

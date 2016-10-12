@@ -104,4 +104,20 @@ public class Dictionary
                 return e;
         return null;
     }
+    
+    public double outOfVocabulary(Dictionary smallerDictionary)
+    {
+        int countTotal = entries.size();
+        int countFound = 0;
+        
+        for(Entry externalEntry : smallerDictionary.entries)
+        {
+            if(entries.contains(externalEntry))
+            {
+                countFound++;
+            }
+        }
+        
+        return (double) (countTotal - countFound) / (double) countTotal;
+    }
 }

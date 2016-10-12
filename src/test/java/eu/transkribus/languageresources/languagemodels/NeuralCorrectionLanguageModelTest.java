@@ -57,11 +57,8 @@ public class NeuralCorrectionLanguageModelTest
     {
         NeuralCorrectionLanguageModel lm = new NeuralCorrectionLanguageModel("nn/lm_bozen_characters_correction.zip");
         
-        correct(lm, "meistre");
-        correct(lm, "dre");
-        correct(lm, "dne");
-        correct(lm, "dei");
-        correct(lm, "uaf");
+        correct(lm, "Her rBūrge");
+        correct(lm, "R atswegen");
     }
     
     private void correct(NeuralCorrectionLanguageModel lm, String sequence)

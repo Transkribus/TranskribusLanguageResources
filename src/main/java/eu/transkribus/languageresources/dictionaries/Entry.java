@@ -7,6 +7,7 @@ package eu.transkribus.languageresources.dictionaries;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -81,5 +82,36 @@ public class Entry
         }
 
         return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.keyEntry);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        final Entry other = (Entry) obj;
+        if (!Objects.equals(this.keyEntry, other.keyEntry))
+        {
+            return false;
+        }
+        return true;
     }
 }

@@ -174,7 +174,11 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     {
         String textContent = unicodeNode.getTextContent();
         Node textLineNode = unicodeNode.getParentNode().getParentNode();
-        String customTagValue = textLineNode.getAttributes().getNamedItem("custom").getTextContent();
+        Node customNode = textLineNode.getAttributes().getNamedItem("custom");
+        String customTagValue = null;
+        if(customNode != null) {
+        	customTagValue = textLineNode.getAttributes().getNamedItem("custom").getTextContent();
+        }
         return getTextFromNode(textContent, customTagValue);
     }
 

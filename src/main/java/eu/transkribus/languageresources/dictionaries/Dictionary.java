@@ -5,8 +5,11 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,18 +19,18 @@ import java.util.Set;
 public class Dictionary
 {
 
-    private final Set<Entry> entries;
+    private final Map<String, Entry> entries;
 
     public Dictionary()
     {
-        entries = new HashSet<>();
+        entries = new HashMap<>();
     }
-    
+
     public Dictionary(List<String> tokenizedText)
     {
         this();
-        
-        for(String token : tokenizedText)
+
+        for (String token : tokenizedText)
         {
             addEntry(token);
         }
@@ -35,89 +38,64 @@ public class Dictionary
 
     public void addEntry(String name)
     {
-        for (Entry entry : entries)
+        if (entries.containsKey(name))
         {
-            if (entry.getKeyEntry().getName().equals(name))
-            {
-                entry.getKeyEntry().increaseFrequency();
-                return;
-            }
+            entries.get(name).getKeyEntry().increaseFrequency();
+            return;
         }
 
-        entries.add(new Entry(name));
+        entries.put(name, new Entry(name));
     }
 
     public void addAdditionalValue(String key, String additionalName)
     {
-        for (Entry entry : entries)
+        if (entries.containsKey(key))
         {
-            if (entry.getKeyEntry().getName().equals(key))
-            {
-                entry.addAdditionalValue(additionalName);
-                return;
-            }
+            entries.get(key).addAdditionalValue(additionalName);
+            return;
         }
 
         Entry e = new Entry(key);
         e.addAdditionalValue(additionalName);
+        entries.put(key, e);
     }
 
-    public Set<Entry> getEntries()
+    public Collection<Entry> getEntries()
     {
-        return entries;
+        return entries.values();
     }
 
     public boolean containsKeyEntry(String name)
     {
-        for (Entry e : entries)
-        {
-            if (e.getKeyEntry().getName().equals(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return entries.containsKey(name);
     }
 
     public Entry getEntryByKeyName(String name)
     {
-        for (Entry e : entries)
-        {
-            if (e.getKeyEntry().getName().equals(name))
-            {
-                return e;
-            }
-        }
+        if(entries.containsKey(name))
+            return entries.get(name);
 
-        throw new RuntimeException("Could not find entry with given key name: "+name);
+        throw new RuntimeException("Could not find entry with given key name: " + name);
     }
 
     public void addEntry(Entry entry)
     {
-        this.entries.add(entry);
+        this.entries.put(entry.getKeyEntry().getName(), entry);
     }
 
-    public Entry getEntry(String key) {
-        for ( Entry e : entries )
-            if ( e.getKeyEntry().getName().equals(key) )
-                return e;
-        return null;
-    }
-    
     public double outOfVocabulary(Dictionary smallerDictionary)
     {
         int countTotal = entries.size();
         int countFound = 0;
-        
-        for(Entry externalEntry : smallerDictionary.entries)
+
+        for (String externalKey : smallerDictionary.entries.keySet())
         {
-            if(entries.contains(externalEntry))
+            if (entries.containsKey(externalKey))
             {
                 countFound++;
             }
         }
-        
+
         return (double) (countTotal - countFound) / (double) countTotal;
     }
 }

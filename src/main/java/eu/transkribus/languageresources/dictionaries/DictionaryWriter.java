@@ -8,6 +8,7 @@ package eu.transkribus.languageresources.dictionaries;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ public class DictionaryWriter
         }
     }
 
-    private static void writeEntries(PrintWriter printWriter, Set<Entry> entries, boolean withFrequencies)
+    private static void writeEntries(PrintWriter printWriter, Collection<Entry> entries, boolean withFrequencies)
     {
         for(Entry entry : entries)
         {

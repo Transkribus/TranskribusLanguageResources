@@ -62,8 +62,8 @@ public class DictionaryTest
         assertEquals(true, dictionary.containsKeyEntry("abk"));
         assertEquals(false, dictionary.containsKeyEntry("abkürzung"));
         assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().size());
-        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-        assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
+        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getName());
+        assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getFrequency());
         
         dictionary.addAdditionalValue("abk", "abkürzung");
         
@@ -71,8 +71,8 @@ public class DictionaryTest
         assertEquals(true, dictionary.containsKeyEntry("abk"));
         assertEquals(false, dictionary.containsKeyEntry("abkürzung"));
         assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().size());
-        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-        assertEquals(2, dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
+        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getName());
+        assertEquals(2, dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getFrequency());
         
         dictionary.addAdditionalValue("abk", "Abkürzung");
         
@@ -80,10 +80,10 @@ public class DictionaryTest
         assertEquals(true, dictionary.containsKeyEntry("abk"));
         assertEquals(false, dictionary.containsKeyEntry("abkürzung"));
         assertEquals(2, dictionary.getEntryByKeyName("abk").getAdditionalValues().size());
-        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-        assertEquals("Abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get(1).getName());
-        assertEquals(2, dictionary.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
-        assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().get(1).getFrequency());
+        assertEquals("abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getName());
+        assertEquals("Abkürzung", dictionary.getEntryByKeyName("abk").getAdditionalValues().get("Abkürzung").getName());
+        assertEquals(2, dictionary.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getFrequency());
+        assertEquals(1, dictionary.getEntryByKeyName("abk").getAdditionalValues().get("Abkürzung").getFrequency());
     }
     
     @Test
@@ -106,8 +106,8 @@ public class DictionaryTest
             assertEquals(true, dictionary2.containsKeyEntry("abk"));
             assertEquals(false, dictionary2.containsKeyEntry("abkürzung"));
             assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().size());
-            assertEquals("abkürzung", dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-            assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
+            assertEquals("abkürzung", dictionary2.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getName());
+            assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getFrequency());
         } catch (IOException ex)
         {
             Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,8 +134,8 @@ public class DictionaryTest
             assertEquals(true, dictionary2.containsKeyEntry("abk"));
             assertEquals(false, dictionary2.containsKeyEntry("abkürzung"));
             assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().size());
-            assertEquals("abkürzung", dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getName());
-            assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get(0).getFrequency());
+            assertEquals("abkürzung", dictionary2.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getName());
+            assertEquals(1, dictionary2.getEntryByKeyName("abk").getAdditionalValues().get("abkürzung").getFrequency());
         } catch (IOException ex)
         {
             Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,8 +5,10 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -17,22 +19,21 @@ public class Entry
 {
 
     private EntryValue keyEntry;
-    private List<EntryValue> additionalValues;
-    
+    private Map<String, EntryValue> additionalValues;
+
     public Entry(EntryValue keyEntry)
     {
         this.keyEntry = keyEntry;
-        this.additionalValues = new LinkedList<>();
+        this.additionalValues = new HashMap<>();
     }
-
 
     public Entry(String name)
     {
         this.keyEntry = new EntryValue(name);
-        this.additionalValues = new LinkedList<>();
+        this.additionalValues = new HashMap<>();
     }
 
-    public List<EntryValue> getAdditionalValues()
+    public Map<String, EntryValue> getAdditionalValues()
     {
         return additionalValues;
     }
@@ -44,43 +45,29 @@ public class Entry
 
     public void addAdditionalValue(String name)
     {
-        for (EntryValue entry : additionalValues)
+        if (additionalValues.containsKey(name))
         {
-            if (entry.getName().equals(name))
-            {
-                entry.increaseFrequency();
-                return;
-            }
+            additionalValues.get(name).increaseFrequency();
+        } else
+        {
+            EntryValue entry = new EntryValue(name);
+            additionalValues.put(name, entry);
         }
-
-        EntryValue entry = new EntryValue(name);
-        additionalValues.add(entry);
     }
-    
+
     public void addAdditionalValue(EntryValue entryValue)
     {
-        for (EntryValue entry : additionalValues)
+        if (additionalValues.containsKey(entryValue.getName()))
         {
-            if (entry.getName().equals(entryValue.getName()))
-            {
-                entry.increaseFrequency();
-                return;
-            }
+            additionalValues.get(entryValue.getName()).increaseFrequency();
+        } else
+        {
+            additionalValues.put(entryValue.getName(), entryValue);
         }
-
-        additionalValues.add(entryValue);
     }
 
     public boolean containsAdditionalEntry(String name)
     {
-        for (EntryValue e : additionalValues)
-        {
-            if (e.getName().equals(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return additionalValues.containsKey(name);
     }
 }

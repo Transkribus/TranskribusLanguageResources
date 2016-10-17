@@ -49,7 +49,7 @@ public class DictionaryWriter
     {
         writeEntryValue(printWriter, entry.getKeyEntry(), withFrequencies);
         
-        for(EntryValue additionalValue : entry.getAdditionalValues())
+        for(EntryValue additionalValue : entry.getAdditionalValues().values())
         {
             writeEntryValue(printWriter, additionalValue, withFrequencies);
         }

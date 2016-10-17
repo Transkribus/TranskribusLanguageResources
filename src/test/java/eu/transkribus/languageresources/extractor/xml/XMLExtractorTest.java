@@ -98,10 +98,10 @@ public class XMLExtractorTest {
         Dictionary dictionary = instance.extractAbbreviations(this.page1Path);
         assertEquals(3, dictionary.getEntries().size());
         assertTrue(dictionary.containsKeyEntry("i"));
-        assertTrue(dictionary.getEntry("i").containsAdditionalEntry("in"));
+        assertTrue(dictionary.getEntryByKeyName("i").containsAdditionalEntry("in"));
         assertTrue(dictionary.containsKeyEntry("officî"));
-        assertTrue(dictionary.getEntry("officî").containsAdditionalEntry("officia"));
+        assertTrue(dictionary.getEntryByKeyName("officî").containsAdditionalEntry("officia"));
         assertTrue(dictionary.containsKeyEntry("laborû"));
-        assertTrue(dictionary.getEntry("laborû").containsAdditionalEntry("laborum"));
+        assertTrue(dictionary.getEntryByKeyName("laborû").containsAdditionalEntry("laborum"));
     }
 }

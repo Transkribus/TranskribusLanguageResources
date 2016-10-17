@@ -5,8 +5,11 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,4 +145,32 @@ public class DictionaryTest
         }
     }
     
+    @Test
+    public void createCharacterDictionary()
+    {
+        try
+        {
+            File tmpFile = File.createTempFile("dict_character_freq", "txt");
+            tmpFile.deleteOnExit();
+            
+            String text = "Hello! test, test, test...";
+            
+            Properties tokenizerProperties = new Properties();
+            tokenizerProperties.setProperty("delimiter_signs", "!., ");
+            tokenizerProperties.setProperty("tokenize_character_wise", "true");
+            ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+            
+            List<String> tokenizedText = tokenizer.tokenize(text);
+            
+            Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
+            DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false);
+            
+            Dictionary readDictionary = DictionaryReader.readDictionary(tmpFile);
+            
+            assertEquals(6, readDictionary.getEntries().size());
+        } catch (IOException ex)
+        {
+            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

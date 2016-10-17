@@ -51,7 +51,7 @@ public class ConfigTokenizer implements ITokenizer
     {
         properties = new Properties();
     }
-    
+
     public ConfigTokenizer(Properties properties)
     {
         this.properties = properties;
@@ -101,8 +101,9 @@ public class ConfigTokenizer implements ITokenizer
         String dehyphenationSigns = properties.getProperty("dehyphenation_signs", "");
         String delimiterSigns = properties.getProperty("delimiter_signs", "\n ");
         String keepDelimiterSigns = properties.getProperty("keep_delimiter_signs", "");
+        boolean tokenizeCharacterWise = properties.getProperty("tokenize_character_wise", "false").equals("true");
 
-        return tokenize(text, normalizer, dehyphenationSigns, delimiterSigns, keepDelimiterSigns);
+        return tokenize(text, normalizer, dehyphenationSigns, delimiterSigns, keepDelimiterSigns, tokenizeCharacterWise);
     }
 
     public String normalize(String text, Normalizer.Form normalizer)
@@ -115,7 +116,8 @@ public class ConfigTokenizer implements ITokenizer
             Normalizer.Form normalizer,
             String dehyphenizationSignsString,
             String delimiterSignsString,
-            String keepDelimiterSignsString)
+            String keepDelimiterSignsString,
+            boolean tokenizeCharacterWise)
     {
         if (normalizer != null)
         {
@@ -139,44 +141,53 @@ public class ConfigTokenizer implements ITokenizer
         {
             charCurrent = text.charAt(index);
 
-            if (index + 2 < lenText && dehyphenizationSigns.contains(charCurrent))
+            if (tokenizeCharacterWise)
             {
-
-                charNext = text.charAt(index + 1);
-                if (delimiterSigns.contains(charNext))
+                if (!delimiterSigns.contains(charCurrent))
+                {
+                    tokenizedText.add(Character.toString(charCurrent));
+                }
+            } else
+            {
+                if (index + 2 < lenText && dehyphenizationSigns.contains(charCurrent))
                 {
 
-                    charNext2 = text.charAt(index + 2);
-                    if (isLowercase(charNext2))
+                    charNext = text.charAt(index + 1);
+                    if (delimiterSigns.contains(charNext))
                     {
-                        dehyphenize = true;
-                        continue;
+
+                        charNext2 = text.charAt(index + 2);
+                        if (isLowercase(charNext2))
+                        {
+                            dehyphenize = true;
+                            continue;
+                        }
                     }
                 }
-            }
 
-            if (!delimiterSigns.contains(charCurrent))
-            {
-                dehyphenize = false;
-            }
-
-            if (!dehyphenize)
-            {
-                if (delimiterSigns.contains(charCurrent))
+                if (!delimiterSigns.contains(charCurrent))
                 {
-                    if (nextToken.toString().length() > 0)
-                    {
-                        tokenizedText.add(nextToken.toString());
-                        nextToken = new StringBuilder();
-                    }
+                    dehyphenize = false;
+                }
 
-                    if (keepDelimiterSigns.contains(charCurrent))
-                    {
-                        tokenizedText.add(Character.toString(charCurrent));
-                    }
-                } else
+                if (!dehyphenize)
                 {
-                    nextToken.append(charCurrent);
+                    if (delimiterSigns.contains(charCurrent))
+                    {
+                        if (nextToken.toString().length() > 0)
+                        {
+                            tokenizedText.add(nextToken.toString());
+                            nextToken = new StringBuilder();
+                        }
+
+                        if (keepDelimiterSigns.contains(charCurrent))
+                        {
+                            tokenizedText.add(Character.toString(charCurrent));
+                        }
+                    } else
+                    {
+                        nextToken.append(charCurrent);
+                    }
                 }
             }
         }
@@ -185,7 +196,7 @@ public class ConfigTokenizer implements ITokenizer
         {
             tokenizedText.add(nextToken.toString());
         }
-        
+
         return tokenizedText;
     }
 

@@ -83,16 +83,25 @@ public class ConfigTokenizerTest
     @Test
     public void testDehyphenation()
     {
-        assertEquals("test", ct_simple.tokenize("te¬\nst", null, "¬", "\n ", "").get(0));
+        assertEquals("test", ct_simple.tokenize("te¬\nst", null, "¬", "\n ", "", false).get(0));
         assertEquals("test", ct_config.tokenize("te¬\nst").get(0));
     }
     
     @Test
     public void testKeepDelimiters()
     {
-        assertEquals(2, ct_simple.tokenize("test, test", null, "", "\n., ", "").size());
-        assertEquals(3, ct_simple.tokenize("test, test", null, "", "\n., ", ",").size());
+        assertEquals(2, ct_simple.tokenize("test, test", null, "", "\n., ", "", false).size());
+        assertEquals(3, ct_simple.tokenize("test, test", null, "", "\n., ", ",", false).size());
         assertEquals(3, ct_config.tokenize("test, test").size());
+    }
+    
+    @Test
+    public void testCharacterWiseTokenization()
+    {
+        assertEquals(5, ct_simple.tokenize("hello", null, "", "", "", true).size());
+        assertEquals(11, ct_simple.tokenize("hello hello", null, "", "", "", true).size());
+        assertEquals(10, ct_simple.tokenize("hello hello", null, "", " ", "", true).size());
+        assertEquals(10, ct_simple.tokenize("hello. hello!", null, "", ".! ", "", true).size());
     }
     
 }

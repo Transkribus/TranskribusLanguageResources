@@ -41,12 +41,6 @@
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
-            <artifactId>TranskribusCore</artifactId>
-            <version>0.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusInterfaces</artifactId>
             <version>0.0.1</version>
         </dependency>
@@ -59,6 +53,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

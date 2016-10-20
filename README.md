@@ -38,6 +38,22 @@ Delemiters are used for splitting tokens. Common signs among others are spaces, 
 #### Delimiter signs being kept as tokens
 When there is a token like 'is, ', the user may be interested in getting 'is' as a token and the comma as a dedicated token.
 
+## Out of vocabulary rate
+
+The OOV rate can be calculated using a dictionary and a tokenized text. The necessary methods are located in the class `OutOfVocabularyRate` static and are static. There are two ways to have the OOV rate calculated:
+
+### OOV rate by types
+
+When having the OOV rate calculted by types, the number of types in the dictionary and text is counted, the two numbers are divided: `oov_rate = num_types_not_in_dict / (num_types_in_dict + num_types_not_in_dict)`.
+
+Example: There are 100 tokens in a text but only two types, `word1` and `word2`. `word1` appears 99 times and is in the dictionary, `word2` appears only once and is not in the dictionary. The OOV would be calculated as such: `oov_rate = 1 / (1 + 1) = 0.5`
+
+### OOV rate by tokens
+
+When having the OOV rate calculted by tokens, the number of tokens in the dictionary and text is counted, the two numbers are divided: `oov_rate = num_tokens_not_in_dict / (num_tokens_in_dict + num_tokens_not_in_dict)`.
+
+Example: There are 100 tokens in a text but only two types, `word1` and `word2`. `word1` appears 99 times and is in the dictionary, `word2` appears only once and is not in the dictionary. The OOV would be calculated as such: `oov_rate = 1 / (99 + 1) = 0.01`
+
 ## Language Models
 
 Two types of language models are supported: ARPA and neuronal networks.

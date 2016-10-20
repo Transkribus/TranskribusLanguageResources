@@ -14,6 +14,7 @@ import java.io.File;
  */
 public class DictionaryReader
 {
+
     public static Dictionary readDictionary(String path)
     {
         return readDictionary(new File(path));
@@ -24,43 +25,48 @@ public class DictionaryReader
 
         String[] lines = Utils.loadFileLineByLine(file);
         Dictionary dictionary = new Dictionary();
-        
-        for(String line : lines)
+
+        for (String line : lines)
         {
             parseLine(dictionary, line);
         }
-        
+
         return dictionary;
     }
 
     private static void parseLine(Dictionary dictionary, String line)
     {
         String[] parts = line.split("\t");
-        
+
         Entry entry = new Entry(getEntryValue(parts[0]));
         dictionary.addEntry(entry);
-        
-        if(parts.length > 1)
+
+        if (parts.length > 1)
         {
-            for(int i = 1; i < parts.length; i++)
+            for (int i = 1; i < parts.length; i++)
             {
                 entry.addAdditionalValue(getEntryValue(parts[i]));
             }
         }
     }
-    
+
     private static EntryValue getEntryValue(String part)
     {
         String[] parts = part.split("\\|");
         String name = parts[0];
-        
+
         EntryValue v = new EntryValue(name);
-        
-        if(parts.length == 2)
+
+        if (parts.length >= 2)
         {
-            v.setFrequency(new Integer(parts[1]));
+            try
+            {
+                v.setFrequency(new Integer(parts[1]));
+            } catch (Exception e)
+            {
+            }
         }
-        
+
         return v;
     }
 }

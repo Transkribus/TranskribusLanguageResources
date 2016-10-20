@@ -76,6 +76,6 @@ public class DictionaryFromPAGEXMLTest
          // the dictionary is created with the tokenized text
          // and is written into a file without frequencies
          Dictionary dictionary = new Dictionary(tokenizedText);
-         DictionaryWriter.writeDictionray(dictionary, "dictionary.txt", false);
+         DictionaryWriter.writeDictionray(dictionary, "dictionary.txt", false, false, false);
      }
 }

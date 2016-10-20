@@ -82,20 +82,4 @@ public class Dictionary
     {
         this.entries.put(entry.getKeyEntry().getName(), entry);
     }
-
-    public double outOfVocabulary(Dictionary smallerDictionary)
-    {
-        int countTotal = entries.size();
-        int countFound = 0;
-
-        for (String externalKey : smallerDictionary.entries.keySet())
-        {
-            if (entries.containsKey(externalKey))
-            {
-                countFound++;
-            }
-        }
-
-        return (double) (countTotal - countFound) / (double) countTotal;
-    }
 }

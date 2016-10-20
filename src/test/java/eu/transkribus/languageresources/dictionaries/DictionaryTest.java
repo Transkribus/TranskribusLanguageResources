@@ -5,9 +5,11 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import de.unileipzig.asv.neuralnetwork.utils.Utils;
 import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -101,7 +103,7 @@ public class DictionaryTest
             dictionary1.addEntry("abk");
             dictionary1.addAdditionalValue("abk", "abkürzung");
             
-            DictionaryWriter.writeDictionray(dictionary1, tmpFile, true);
+            DictionaryWriter.writeDictionray(dictionary1, tmpFile, true, false, false);
             
             Dictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
             
@@ -129,7 +131,7 @@ public class DictionaryTest
             dictionary1.addEntry("abk");
             dictionary1.addAdditionalValue("abk", "abkürzung");
             
-            DictionaryWriter.writeDictionray(dictionary1, tmpFile, false);
+            DictionaryWriter.writeDictionray(dictionary1, tmpFile, false, false, false);
             
             Dictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
             
@@ -163,11 +165,41 @@ public class DictionaryTest
             List<String> tokenizedText = tokenizer.tokenize(text);
             
             Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
-            DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false);
+            DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false, false, false);
             
             Dictionary readDictionary = DictionaryReader.readDictionary(tmpFile);
             
             assertEquals(6, readDictionary.getEntries().size());
+        } catch (IOException ex)
+        {
+            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void createExtendedCharacterDictionary()
+    {
+        try
+        {
+            File tmpFile = File.createTempFile("dict_character_freq", "txt");
+            tmpFile.deleteOnExit();
+            
+            String text = "Hi!";
+            
+            Properties tokenizerProperties = new Properties();
+            tokenizerProperties.setProperty("delimiter_signs", "!., ");
+            tokenizerProperties.setProperty("tokenize_character_wise", "true");
+            ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+            
+            List<String> tokenizedText = tokenizer.tokenize(text);
+            
+            Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
+            DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false, true, true);
+            
+            String[] loadFileLineByLine = Utils.loadFileLineByLine(tmpFile);
+            String expected = "[H|\\u0048|LATIN CAPITAL LETTER H, i|\\u0069|LATIN SMALL LETTER I]";
+            assertEquals(expected, Arrays.toString(loadFileLineByLine));
+            
         } catch (IOException ex)
         {
             Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);

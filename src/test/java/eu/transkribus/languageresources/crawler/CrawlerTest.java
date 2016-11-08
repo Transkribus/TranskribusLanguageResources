@@ -5,6 +5,9 @@
  */
 package eu.transkribus.languageresources.crawler;
 
+import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
+import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.util.Map;
 import org.junit.Test;
 
@@ -20,5 +23,24 @@ public class CrawlerTest
     {
         CrawlerController c = new CrawlerController();
         Map<String, String> crawledText = c.crawl("berliner-intellektuelle.eu");
+    }
+
+    @Test
+    public void testCreateDictionaryFromURL()
+    {
+        CrawlerController c = new CrawlerController();
+        Map<String, String> crawledText = c.crawl("berliner-intellektuelle.eu");
+
+        ConfigTokenizer tokenizer = new ConfigTokenizer();
+
+        IDictionary dictionary = new Dictionary();
+
+        for (Map.Entry<String, String> e : crawledText.entrySet())
+        {
+            for (String token : tokenizer.tokenize(e.getValue()))
+            {
+                dictionary.addEntry(token);
+            }
+        }
     }
 }

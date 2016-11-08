@@ -1,73 +1,75 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.transkribus.languageresources.dictionaries;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import eu.transkribus.languageresources.interfaces.IEntry;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  *
- * @author max
+ * @author max, jnphilipp
  */
-public class Entry
-{
+public class Entry implements IEntry {
+    private String name;
+    private int frequency;
+    private Map<String, Integer> values;
 
-    private EntryValue keyEntry;
-    private Map<String, EntryValue> additionalValues;
-
-    public Entry(EntryValue keyEntry)
-    {
-        this.keyEntry = keyEntry;
-        this.additionalValues = new HashMap<>();
+    public Entry(String name) {
+        this(name, 1);
     }
 
-    public Entry(String name)
-    {
-        this.keyEntry = new EntryValue(name);
-        this.additionalValues = new HashMap<>();
+    public Entry(String name, int frequency) {
+        this.name = name;
+        this.frequency = frequency;
+        this.values = new LinkedHashMap<>();
     }
 
-    public Map<String, EntryValue> getAdditionalValues()
-    {
-        return additionalValues;
+    public Map<String, Integer> getValues() {
+        return this.values;
     }
 
-    public EntryValue getKeyEntry()
-    {
-        return keyEntry;
+    public String getName() {
+        return this.name;
     }
 
-    public void addAdditionalValue(String name)
-    {
-        if (additionalValues.containsKey(name))
-        {
-            additionalValues.get(name).increaseFrequency();
-        } else
-        {
-            EntryValue entry = new EntryValue(name);
-            additionalValues.put(name, entry);
-        }
+    public int getFrequency() {
+        return this.frequency;
     }
 
-    public void addAdditionalValue(EntryValue entryValue)
-    {
-        if (additionalValues.containsKey(entryValue.getName()))
-        {
-            additionalValues.get(entryValue.getName()).increaseFrequency();
-        } else
-        {
-            additionalValues.put(entryValue.getName(), entryValue);
-        }
+    public void increaseFrequency() {
+        this.frequency++;
     }
 
-    public boolean containsAdditionalEntry(String name)
-    {
-        return additionalValues.containsKey(name);
+    public void increaseFrequency(int increment) {
+        this.frequency += increment;
+    }
+
+    public void addValue(String name) {
+        this.values.put(name, this.values.containsKey(name) ? this.values.get(name) + 1 : 0);
+    }
+
+    public void addValue(String name, int frequency) {
+        this.values.put(name, this.values.containsKey(name) ? this.values.get(name) + frequency : frequency);
+    }
+
+    public boolean containsKey(String name) {
+        return this.values.containsKey(name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj != null )
+            if ( obj instanceof Entry )
+                if ( this.name == ((Entry)obj).getName() && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
+                    return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + this.name.hashCode();
+        hash = 11 * hash + this.frequency;
+        hash = 53 * hash + this.values.hashCode();
+        return hash;
     }
 }

@@ -1,6 +1,6 @@
 package eu.transkribus.languageresources.extractor.xml;
 
-import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,13 +95,13 @@ public class XMLExtractorTest {
     @Test
     public void testExtractAbbreviations() {
         XMLExtractor instance = new XMLExtractor(this.properties);
-        Dictionary dictionary = instance.extractAbbreviations(this.page1Path);
+        IDictionary dictionary = instance.extractAbbreviations(this.page1Path);
         assertEquals(3, dictionary.getEntries().size());
-        assertTrue(dictionary.containsKeyEntry("i"));
-        assertTrue(dictionary.getEntryByKeyName("i").containsAdditionalEntry("in"));
-        assertTrue(dictionary.containsKeyEntry("officî"));
-        assertTrue(dictionary.getEntryByKeyName("officî").containsAdditionalEntry("officia"));
-        assertTrue(dictionary.containsKeyEntry("laborû"));
-        assertTrue(dictionary.getEntryByKeyName("laborû").containsAdditionalEntry("laborum"));
+        assertTrue(dictionary.containsKey("i"));
+        assertTrue(dictionary.getEntry("i").containsKey("in"));
+        assertTrue(dictionary.containsKey("officî"));
+        assertTrue(dictionary.getEntry("officî").containsKey("officia"));
+        assertTrue(dictionary.containsKey("laborû"));
+        assertTrue(dictionary.getEntry("laborû").containsKey("laborum"));
     }
 }

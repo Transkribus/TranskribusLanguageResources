@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.oov;
 
-import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,14 +17,14 @@ import java.util.Set;
 public class OutOfVocabularyRate
 {
 
-    public static double byTypes(Dictionary dictionary, List<String> tokenizedText)
+    public static double byTypes(IDictionary dictionary, List<String> tokenizedText)
     {
         Set<String> typesInDict = new HashSet<>();
         Set<String> typesNotInDict = new HashSet<>();
 
         for (String token : tokenizedText)
         {
-            if (dictionary.containsKeyEntry(token))
+            if (dictionary.containsKey(token))
             {
                 typesInDict.add(token);
             } else
@@ -40,7 +40,7 @@ public class OutOfVocabularyRate
         return (double) numTypesNotInDict / (double) totalTypesSeen;
     }
 
-    public static double byTokens(Dictionary dictionary, List<String> tokenizedText)
+    public static double byTokens(IDictionary dictionary, List<String> tokenizedText)
     {
         int numTokensSeen = 0;
         int numTokensNotInDict = 0;
@@ -48,8 +48,8 @@ public class OutOfVocabularyRate
         for (String token : tokenizedText)
         {
             numTokensSeen += 1;
-            
-            if (!dictionary.containsKeyEntry(token))
+
+            if (!dictionary.containsKey(token))
             {
                 numTokensNotInDict += 1;
             }

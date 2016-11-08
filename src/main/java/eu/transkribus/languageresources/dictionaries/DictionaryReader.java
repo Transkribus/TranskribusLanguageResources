@@ -23,18 +23,18 @@ public class DictionaryReader
     public static Dictionary readDictionary(File file)
     {
 
-        String[] lines = Utils.loadFileLineByLine(file);
+        /*String[] lines = Utils.loadFileLineByLine(file);*/
         Dictionary dictionary = new Dictionary();
 
-        for (String line : lines)
+        /*for (String line : lines)
         {
             parseLine(dictionary, line);
         }
-
+*/
         return dictionary;
     }
 
-    private static void parseLine(Dictionary dictionary, String line)
+    /*private static void parseLine(Dictionary dictionary, String line)
     {
         String[] parts = line.split("\t");
 
@@ -68,5 +68,5 @@ public class DictionaryReader
         }
 
         return v;
-    }
+    }*/
 }

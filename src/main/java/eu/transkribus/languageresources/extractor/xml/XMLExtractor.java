@@ -1,6 +1,7 @@
 package eu.transkribus.languageresources.extractor.xml;
 
 import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
@@ -185,9 +186,9 @@ public class XMLExtractor implements ITextExtractor {
     }
 
     @Override
-    public Dictionary extractAbbreviations(String path) {
+    public IDictionary extractAbbreviations(String path) {
         Document document = this.getDocumentFromFile(path);
-        Dictionary dictionary = new Dictionary();
+        IDictionary dictionary = new Dictionary();
 
         NodeList nodes = document.getElementsByTagName("choice");
         for  ( int i = 0; i < nodes.getLength(); i++ ) {
@@ -200,7 +201,7 @@ public class XMLExtractor implements ITextExtractor {
                     expan = children.item(j).getTextContent();
             dictionary.addEntry(abbr);
             if ( !expan.isEmpty() )
-                dictionary.addAdditionalValue(abbr, expan);
+                dictionary.addValue(abbr, expan);
         }
         nodes = document.getElementsByTagName("abbr");
         for  ( int i = 0; i < nodes.getLength(); i++ ) {
@@ -209,7 +210,7 @@ public class XMLExtractor implements ITextExtractor {
             dictionary.addEntry(nodes.item(i).getTextContent());
             String expan = nodes.item(i).getAttributes().getNamedItem("expan") == null ? "" : nodes.item(i).getAttributes().getNamedItem("expan").getTextContent();
             if ( !expan.isEmpty() )
-                dictionary.addAdditionalValue(nodes.item(i).getTextContent(), expan);
+                dictionary.addValue(nodes.item(i).getTextContent(), expan);
         }
 
         return dictionary;

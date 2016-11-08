@@ -6,7 +6,6 @@
 package eu.transkribus.languageresources.interfaces;
 
 import eu.transkribus.interfaces.ITokenizer;
-import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.util.List;
 import java.util.Map;
 
@@ -16,5 +15,5 @@ import java.util.Map;
  */
 public interface ILanguageResource
 {
-    Dictionary getFrequencyDictionary(ITokenizer tokenizer, String text);
+    IDictionary getFrequencyDictionary(ITokenizer tokenizer, String text);
 }

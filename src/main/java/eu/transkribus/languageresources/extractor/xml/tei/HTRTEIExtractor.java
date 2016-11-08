@@ -7,6 +7,7 @@ package eu.transkribus.languageresources.extractor.xml.tei;
 
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -199,9 +200,9 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
     }
 
     @Override
-    public Dictionary extractAbbreviations(String path)
+    public IDictionary extractAbbreviations(String path)
     {
-        Dictionary abbreviationsDictionary = new Dictionary();
+        IDictionary abbreviationsDictionary = new Dictionary();
 
         Document document = getDocumentFromFile(path);
         NodeList nodeList = document.getElementsByTagName("l");
@@ -229,7 +230,7 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
                     abbreviationsDictionary.addEntry(abbreviation);
                     if (expansion != null && !expansion.equals(""))
                     {
-                        abbreviationsDictionary.addAdditionalValue(abbreviation, expansion);
+                        abbreviationsDictionary.addValue(abbreviation, expansion);
                     }
                 }
             }

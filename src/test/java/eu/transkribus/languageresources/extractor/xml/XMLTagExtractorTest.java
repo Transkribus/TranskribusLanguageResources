@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.xml;
 
-import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -55,13 +55,13 @@ public class XMLTagExtractorTest
         File f = new File(path);
         boolean isFile = f.isFile();
         XMLExtractor extractor = new XMLExtractor();
-        
-        Dictionary extractedPlaceNames = extractor.extractPlaceNames(path);
+
+        IDictionary extractedPlaceNames = extractor.extractPlaceNames(path);
         assertEquals(1, extractedPlaceNames.getEntries().size());
-        assertEquals(2, extractedPlaceNames.getEntryByKeyName("Berlin").getKeyEntry().getFrequency());
-        
-        Dictionary extractedPersonNames = extractor.extractPersonNames(path);
+        assertEquals(2, extractedPlaceNames.getEntry("Berlin").getFrequency());
+
+        IDictionary extractedPersonNames = extractor.extractPersonNames(path);
         assertEquals(3, extractedPersonNames.getEntries().size());
-        assertEquals(2, extractedPersonNames.getEntryByKeyName("Grecourt").getKeyEntry().getFrequency());
+        assertEquals(2, extractedPersonNames.getEntry("Grecourt").getFrequency());
     }
 }

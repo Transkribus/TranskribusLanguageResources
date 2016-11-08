@@ -7,6 +7,7 @@ package eu.transkribus.languageresources.extractor.pagexml;
 
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;
@@ -41,7 +42,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     private static Pattern patternAbbrevOffset = Pattern.compile(".*offset:([0-9]*);.*");
     private static Pattern patternAbbrevLength = Pattern.compile(".*length:([0-9]*);.*");
     private static Pattern patternAbbrevExpansion = Pattern.compile(".*expansion:([\\w-]*);.*");
-    
+
     public PAGEXMLExtractor()
     {
         super();
@@ -272,13 +273,13 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return abbreviations;
     }
 
-    public Dictionary extractAbbrevations(String line, String customTagValue)
+    public IDictionary extractAbbrevations(String line, String customTagValue)
     {
         return listToDictionary(extractAbbrevationsFromLine(line, customTagValue));
     }
 
     @Override
-    public Dictionary extractAbbreviations(String path)
+    public IDictionary extractAbbreviations(String path)
     {
         List<PAGEXMLAbbreviation> abbreviations = new LinkedList<>();
         List<File> files = getFileList(path);
@@ -291,17 +292,17 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return listToDictionary(abbreviations);
     }
 
-    private Dictionary listToDictionary(List<PAGEXMLAbbreviation> list)
+    private IDictionary listToDictionary(List<PAGEXMLAbbreviation> list)
     {
-        Dictionary dictionary = new Dictionary();
+        IDictionary dictionary = new Dictionary();
 
         for (PAGEXMLAbbreviation abbr : list)
         {
             dictionary.addEntry(abbr.getAbbreviation());
-            
+
             if (abbr.getExpansion() != null)
             {
-                dictionary.addAdditionalValue(abbr.getAbbreviation(), abbr.getExpansion());
+                dictionary.addValue(abbr.getAbbreviation(), abbr.getExpansion());
             }
         }
 
@@ -309,7 +310,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     }
 
     @Override
-    public Dictionary extractAbbreviationsFromPage(String path, int page)
+    public IDictionary extractAbbreviationsFromPage(String path, int page)
     {
         List<File> files = getFileList(path);
         List<PAGEXMLAbbreviation> abbreviations = PAGEXMLExtractor.this.extractAbbreviationsFromPage(files.get(page));

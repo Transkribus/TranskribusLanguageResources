@@ -38,10 +38,10 @@ public class DTATEIExtractorTest {
         this.colliPrincepsTEI = new File(classLoader.getResource("Colli_princeps.xml").getFile()).getAbsolutePath();
         this.properties = new File(classLoader.getResource("extractor_config.properties").getFile()).getAbsolutePath();
 
-        this.dieLeidenDesJungenWerthersTXT = this.readFile(classLoader.getResource("goethe_werther01_1774.txt").getFile());
+        /*this.dieLeidenDesJungenWerthersTXT = this.readFile(classLoader.getResource("goethe_werther01_1774.txt").getFile());
         this.dta510291TXT = this.readFile(classLoader.getResource("510291.txt").getFile());
         this.acidaliusEpistolaeTXT = this.readFile(new File(classLoader.getResource("Acidalius_epistolae.txt").getFile()).getAbsolutePath());
-        this.colliPrincepsTXT = this.readFile(new File(classLoader.getResource("Colli_princeps.txt").getFile()).getAbsolutePath());
+        this.colliPrincepsTXT = this.readFile(new File(classLoader.getResource("Colli_princeps.txt").getFile()).getAbsolutePath());*/
     }
 
     @BeforeClass

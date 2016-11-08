@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.xml.tei;
 
-import eu.transkribus.languageresources.dictionaries.Dictionary;
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class HTRTEIExtractorTest
     private final String pathToFile;
     private final String page1;
     private final String page2;
-    
+
     private final String pathToAbbrFile;
     private final String pageAbbr_Keep;
     private final String pageAbbr_Expand;
@@ -39,7 +39,7 @@ public class HTRTEIExtractorTest
                 "Dr . in\nihren ,\nder der der der\nin werden\nder\n\nin in ,\nin den in ,\nder\nin in in in\n\nDie ,\nseit in den\nin den in den in in ,\n" +
                 "in in , seit\nDie in\nder\n,";
         page2 = "";
-        
+
         pageAbbr_Keep = "in in i i\n";
         pageAbbr_Expand = "in in in i\n";
 
@@ -129,34 +129,34 @@ public class HTRTEIExtractorTest
         result = instance.extractTextFromPage(pathToFile, 1);
         assertEquals(expResult, result);
     }
-    
+
     @Test
     public void testKeepExpandAbbreviations()
     {
         HTRTEIExtractor instance = new HTRTEIExtractor();
-        
+
         String result = instance.extractTextFromDocument(pathToAbbrFile);
         assertEquals(pageAbbr_Keep, result);
-        
+
         instance.getProperties().put("abbreviation_expansion_mode", "keep");
         result = instance.extractTextFromDocument(pathToAbbrFile);
         assertEquals(pageAbbr_Keep, result);
-        
+
         instance.getProperties().put("abbreviation_expansion_mode", "expand");
         result = instance.extractTextFromDocument(pathToAbbrFile);
         assertEquals(pageAbbr_Expand, result);
     }
-    
+
     @Test
     public void testExtractAbbreviations()
     {
         HTRTEIExtractor instance = new HTRTEIExtractor();
-        
-        Dictionary extractedAbbreviations = instance.extractAbbreviations(pathToAbbrFile);
-        
+
+        IDictionary extractedAbbreviations = instance.extractAbbreviations(pathToAbbrFile);
+
         assertEquals(1, extractedAbbreviations.getEntries().size());
-        assertEquals(true, extractedAbbreviations.containsKeyEntry("i"));
-        assertEquals(1, extractedAbbreviations.getEntryByKeyName("i").getAdditionalValues().size());
-        assertEquals(true, extractedAbbreviations.getEntryByKeyName("i").containsAdditionalEntry("in"));
+        assertTrue(extractedAbbreviations.containsKey("i"));
+        assertEquals(1, extractedAbbreviations.getEntry("i").getValues().size());
+        assertTrue(extractedAbbreviations.getEntry("i").containsKey("in"));
     }
 }

@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -20,14 +21,14 @@ import java.util.logging.Logger;
 public class DictionaryWriter
 {
 
-    public static void writeDictionray(Dictionary dictionary, String path, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
+    public static void writeDictionray(IDictionary dictionary, String path, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
     {
         writeDictionray(dictionary, new File(path), withFrequencies, withUnicodeRepresentation, withUnicodeName);
     }
 
-    public static void writeDictionray(Dictionary dictionary, File file, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
+    public static void writeDictionray(IDictionary dictionary, File file, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
     {
-        try
+        /*try
         {
             PrintWriter printWriter = new PrintWriter(file);
             writeEntries(printWriter, dictionary.getEntries(), withFrequencies, withUnicodeRepresentation, withUnicodeName);
@@ -35,10 +36,10 @@ public class DictionaryWriter
         } catch (FileNotFoundException ex)
         {
             Logger.getLogger(DictionaryWriter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
-    private static void writeEntries(PrintWriter printWriter, Collection<Entry> entries, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
+    /*private static void writeEntries(PrintWriter printWriter, Collection<Entry> entries, boolean withFrequencies, boolean withUnicodeRepresentation, boolean withUnicodeName)
     {
         for (Entry entry : entries)
         {
@@ -79,7 +80,7 @@ public class DictionaryWriter
             printWriter.append("|");
             printWriter.append("\\u" + Integer.toHexString(entryValue.getName().charAt(0) | 0x10000).substring(1));
         }
-        
+
         if (withUnicodeName)
         {
             if (entryValue.getName().length() > 1)
@@ -90,5 +91,5 @@ public class DictionaryWriter
             printWriter.append("|");
             printWriter.append(Character.getName(entryValue.getName().charAt(0)));
         }
-    }
+    }*/
 }

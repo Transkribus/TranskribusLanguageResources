@@ -17,19 +17,24 @@ import java.util.Set;
 public class OutOfVocabularyRate
 {
 
-    public static double byTypes(IDictionary dictionary, List<String> tokenizedText)
+    public static double byTypes(IDictionary dictionary, List<String> tokenizedText, boolean key)
     {
         Set<String> typesInDict = new HashSet<>();
         Set<String> typesNotInDict = new HashSet<>();
 
         for (String token : tokenizedText)
         {
-            if (dictionary.containsKey(token))
-            {
-                typesInDict.add(token);
-            } else
-            {
-                typesNotInDict.add(token);
+            if ( key ) {
+                if (dictionary.containsKey(token))
+                    typesInDict.add(token);
+                else
+                    typesNotInDict.add(token);
+            }
+            else {
+                if (dictionary.containsValue(token))
+                    typesInDict.add(token);
+                else
+                    typesNotInDict.add(token);
             }
         }
 
@@ -40,7 +45,7 @@ public class OutOfVocabularyRate
         return (double) numTypesNotInDict / (double) totalTypesSeen;
     }
 
-    public static double byTokens(IDictionary dictionary, List<String> tokenizedText)
+    public static double byTokens(IDictionary dictionary, List<String> tokenizedText, boolean key)
     {
         int numTokensSeen = 0;
         int numTokensNotInDict = 0;
@@ -49,10 +54,12 @@ public class OutOfVocabularyRate
         {
             numTokensSeen += 1;
 
-            if (!dictionary.containsKey(token))
-            {
-                numTokensNotInDict += 1;
-            }
+            if ( key )
+                if (!dictionary.containsKey(token))
+                    numTokensNotInDict += 1;
+            else
+                if (!dictionary.containsValue(token))
+                    numTokensNotInDict += 1;
         }
 
         return (double) numTokensNotInDict / (double) numTokensSeen;

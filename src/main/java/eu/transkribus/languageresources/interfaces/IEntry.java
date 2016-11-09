@@ -9,11 +9,8 @@ import java.util.Map;
  */
 public interface IEntry {
     public Map<String, Integer> getValues();
-    public String getName();
+    public String getKey();
     public int getFrequency();
-    public void increaseFrequency();
-    public void increaseFrequency(int increment);
-    public void addValue(String name);
-    public void addValue(String name, int frequency);
-    public boolean containsKey(String name);
+    public int getFrequency(String name);
+    public boolean containsValue(String name);
 }

@@ -14,28 +14,19 @@ import java.util.NoSuchElementException;
 public interface IDictionary {
     /* meta */
     public String getName();
-    public void setName(String name);
     public String getDescription();
-    public void setDescription(String description);
     public String getLanguage();
-    public void setLanguage(String language);
     public int getNumberTokens();
-    public void setNumberTokens(int numberTokens);
     public int getNumberTypes();
-    public void setNumberTypes(int numberTypes);
-    public Map<Character, Integer> getCharacterTable();
-    public void setCharacterTable(Map<Character, Integer> characterTable);
-    public LocalDateTime getDate();
-    public void setDate(LocalDateTime date);
+    public Map<Character, Integer> getEntryCharacterTable();
+    public Map<Character, Integer> getValueCharacterTable();
+    public LocalDateTime getCreationDate();
 
-    /* entires */
-    public void addEntry(String key);
-    public void addEntry(String key, int frequency);
-    public void addEntry(IEntry entry);
-    public void addValue(String key, String name);
-    public void addValue(String key, String name, int frequency);
+    /* entries */
+    public void merge(IDictionary dictionary);
     public Collection<IEntry> getEntries();
     public boolean containsKey(String key);
+    public boolean containsValue(String name);
     public IEntry getEntry(String key) throws NoSuchElementException;
-    public void save(String path) throws IOException, FileNotFoundException;
+    public Collection<IEntry> getEntriesByValue(String name) throws NoSuchElementException;
 }

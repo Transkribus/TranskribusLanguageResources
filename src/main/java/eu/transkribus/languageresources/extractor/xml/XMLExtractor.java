@@ -199,18 +199,18 @@ public class XMLExtractor implements ITextExtractor {
                     abbr = children.item(j).getTextContent();
                 else if ( children.item(j).getNodeName().equalsIgnoreCase("expan") )
                     expan = children.item(j).getTextContent();
-            dictionary.addEntry(abbr);
+            ((Dictionary)dictionary).addEntry(abbr);
             if ( !expan.isEmpty() )
-                dictionary.addValue(abbr, expan);
+                ((Dictionary)dictionary).addValue(abbr, expan);
         }
         nodes = document.getElementsByTagName("abbr");
         for  ( int i = 0; i < nodes.getLength(); i++ ) {
             if (nodes.item(i).getParentNode().getNodeName().equalsIgnoreCase("choice") )
                 continue;
-            dictionary.addEntry(nodes.item(i).getTextContent());
+            ((Dictionary)dictionary).addEntry(nodes.item(i).getTextContent());
             String expan = nodes.item(i).getAttributes().getNamedItem("expan") == null ? "" : nodes.item(i).getAttributes().getNamedItem("expan").getTextContent();
             if ( !expan.isEmpty() )
-                dictionary.addValue(nodes.item(i).getTextContent(), expan);
+                ((Dictionary)dictionary).addValue(nodes.item(i).getTextContent(), expan);
         }
 
         return dictionary;

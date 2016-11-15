@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Map;
 
 /**
  *
@@ -21,13 +22,15 @@ public class Dictionary implements IDictionary {
     private String language;
     private int numberTypes;
     private int numberTokens;
-    private Map<Character, Integer> characterTable;
-    private LocalDateTime date = LocalDateTime.now();
+    private Map<Character, Integer> entryCharacterTable;
+    private Map<Character, Integer> valueCharacterTable;
+    private LocalDateTime creationDate = LocalDateTime.now();
     private final Map<String, IEntry> entries;
 
     public Dictionary() {
         this.entries = new LinkedHashMap<>();
-        this.characterTable = new LinkedHashMap<>();
+        this.entryCharacterTable = new LinkedHashMap<>();
+        this.valueCharacterTable = new LinkedHashMap<>();
     }
 
     public Dictionary(List<String> tokenizedText) {
@@ -37,6 +40,7 @@ public class Dictionary implements IDictionary {
            this.addEntry(token);
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
@@ -45,6 +49,7 @@ public class Dictionary implements IDictionary {
         this.name = name;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -53,6 +58,7 @@ public class Dictionary implements IDictionary {
         this.description = description;
     }
 
+    @Override
     public String getLanguage() {
         return this.language;
     }
@@ -61,36 +67,29 @@ public class Dictionary implements IDictionary {
         this.language = language;
     }
 
+    @Override
     public int getNumberTokens() {
         return this.numberTokens;
     }
 
-    public void setNumberTokens(int numberTokens) {
-        this.numberTokens = numberTokens;
-    }
-
+    @Override
     public int getNumberTypes() {
         return this.numberTypes;
     }
 
-    public void setNumberTypes(int numberTypes) {
-        this.numberTypes = numberTypes;
+    @Override
+    public Map<Character, Integer> getEntryCharacterTable() {
+        return this.entryCharacterTable;
     }
 
-    public Map<Character, Integer> getCharacterTable() {
-        return this.characterTable;
+    @Override
+    public Map<Character, Integer> getValueCharacterTable() {
+        return this.valueCharacterTable;
     }
 
-    public void setCharacterTable(Map<Character, Integer> characterTable) {
-        this.characterTable = characterTable;
-    }
-
-    public LocalDateTime getDate() {
-        return this.date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    @Override
+    public LocalDateTime getCreationDate() {
+        return this.creationDate;
     }
 
     public void addEntry(String key) {
@@ -99,28 +98,28 @@ public class Dictionary implements IDictionary {
 
     public void addEntry(String key, int frequency) {
         if ( this.entries.containsKey(key) )
-            this.entries.get(key).increaseFrequency(frequency);
+            ((Entry)this.entries.get(key)).increaseFrequency(frequency);
         else {
             this.entries.put(key, new Entry(key, frequency));
             this.numberTypes++;
         }
         this.numberTokens += frequency;
-        this.updateCharacterTable(key, frequency);
+        this.updateEntryCharacterTable(key, frequency);
     }
 
     public void addEntry(IEntry entry) {
-        if ( this.entries.containsKey(entry.getName()) ) {
-            this.addEntry(entry.getName(), entry.getFrequency());
+        if ( this.entries.containsKey(entry.getKey()) ) {
+            this.addEntry(entry.getKey(), entry.getFrequency());
             for ( Map.Entry<String, Integer> value : entry.getValues().entrySet() )
-                this.addValue(entry.getName(), value.getKey(), value.getValue());
+                this.addValue(entry.getKey(), value.getKey(), value.getValue());
         }
         else {
-            this.entries.put(entry.getName(), entry);
+            this.entries.put(entry.getKey(), entry);
             this.numberTypes++;
             this.numberTokens += entry.getFrequency();
-            this.updateCharacterTable(entry.getName(), entry.getFrequency());
+            this.updateEntryCharacterTable(entry.getKey(), entry.getFrequency());
             for ( Map.Entry<String, Integer> value : entry.getValues().entrySet() ) {
-                this.updateCharacterTable(value.getKey(), value.getValue());
+                this.updateValueCharacterTable(value.getKey(), value.getValue());
                 this.numberTypes++;
                 this.numberTokens += value.getValue();
             }
@@ -133,10 +132,10 @@ public class Dictionary implements IDictionary {
 
     public void addValue(String key, String name, int frequency) {
         if ( this.entries.containsKey(key) ) {
-            if ( !this.entries.get(key).containsKey(name) )
+            if ( !this.entries.get(key).containsValue(name) )
                 this.numberTypes += 1;
             this.numberTokens += frequency;
-            this.entries.get(key).addValue(name, frequency);
+            ((Entry)this.entries.get(key)).addValue(name, frequency);
         }
         else {
             Entry e = new Entry(key);
@@ -145,42 +144,76 @@ public class Dictionary implements IDictionary {
             this.numberTypes += 2;
             this.numberTokens += 1 + frequency;
         }
-        this.updateCharacterTable(name, frequency);
+        this.updateValueCharacterTable(name, frequency);
     }
 
-    public Collection<IEntry> getEntries() {
-        return this.entries.values();
-    }
-
+    @Override
     public boolean containsKey(String key) {
         return this.entries.containsKey(key);
     }
 
+    @Override
+    public boolean containsValue(String name) {
+        for ( IEntry e : this.entries.values() )
+            if ( e.containsValue(name) )
+                return true;
+        return false;
+    }
+
+    @Override
+    public Collection<IEntry> getEntries() {
+        return this.entries.values();
+    }
+
+    @Override
     public IEntry getEntry(String key) throws NoSuchElementException {
         if ( this.entries.containsKey(key) )
-            return entries.get(key);
+            return this.entries.get(key);
 
         throw new NoSuchElementException("Could not find entry with given key: " + key);
     }
 
-    public void save(String path) throws IOException, FileNotFoundException {
-        DictionaryWriter.writeDictionray(this, path, true, true, true);
+    @Override
+    public Collection<IEntry> getEntriesByValue(String name) throws NoSuchElementException {
+        Collection<IEntry> entries = new LinkedHashSet<>();
+        for ( IEntry e : this.entries.values() )
+            if ( e.containsValue(name) )
+                entries.add(e);
+
+        if ( entries.isEmpty() )
+            throw new NoSuchElementException("Could not find entry with given key: " + name);
+        return entries;
     }
 
-    private void updateCharacterTable(String word) {
-        this.updateCharacterTable(word, 1);
+    @Override
+    public void merge(IDictionary dictionary) {
+        for ( IEntry e : dictionary.getEntries() )
+            this.addEntry(e);
     }
 
-    private void updateCharacterTable(String word, int frequency) {
+    private void updateEntryCharacterTable(String word) {
+        this.updateEntryCharacterTable(word, 1);
+    }
+
+    private void updateEntryCharacterTable(String word, int frequency) {
         for ( char c : word.toCharArray() )
-            this.characterTable.put(c, this.characterTable.containsKey(c) ? this.characterTable.get(c) + frequency : frequency);
+            this.entryCharacterTable.put(c, this.entryCharacterTable.containsKey(c) ? this.entryCharacterTable.get(c) + frequency : frequency);
+    }
+
+    private void updateValueCharacterTable(String word) {
+        this.updateValueCharacterTable(word, 1);
+    }
+
+    private void updateValueCharacterTable(String word, int frequency) {
+        for ( char c : word.toCharArray() )
+            this.valueCharacterTable.put(c, this.valueCharacterTable.containsKey(c) ? this.valueCharacterTable.get(c) + frequency : frequency);
     }
 
     @Override
     public boolean equals(Object obj) {
         if ( obj != null )
             if ( obj instanceof Dictionary )
-                if ( this.name.equals(((Dictionary)obj).getName()) && this.description.equals(((Dictionary)obj).getDescription()) && this.language.equals(((Dictionary)obj).getLanguage()) && this.numberTypes == ((Dictionary)obj).getNumberTypes() && this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.characterTable.equals(((Dictionary)obj).getCharacterTable()) && this.date.equals(((Dictionary)obj).getDate()) && this.entries.equals(((Dictionary)obj).getEntries()) )
+                if ( this.name.equals(((Dictionary)obj).getName()) && this.description.equals(((Dictionary)obj).getDescription()) && this.language.equals(((Dictionary)obj).getLanguage()) && this.numberTypes == ((Dictionary)obj).getNumberTypes() && this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.entryCharacterTable.equals(((Dictionary)obj).getEntryCharacterTable()) && this.valueCharacterTable.equals(((Dictionary)obj).getValueCharacterTable()) && this.creationDate.equals(((Dictionary)obj).getCreationDate()) && this.entries.equals(((Dictionary)obj).getEntries()) )
                     return true;
         return false;
     }
@@ -189,7 +222,14 @@ public class Dictionary implements IDictionary {
     public int hashCode() {
         int hash = 7;
         hash = 23 * hash + this.name.hashCode();
-        hash = 53 * hash + this.entries.hashCode();
+        hash = 11 * hash + this.description.hashCode();
+        hash = 2 * hash + this.language.hashCode();
+        hash = 53 * hash + this.numberTypes;
+        hash = 41 * hash + this.numberTokens;
+        hash = 61 * hash + this.entryCharacterTable.hashCode();
+        hash = 71 * hash + this.valueCharacterTable.hashCode();
+        hash = 97 * hash + this.creationDate.hashCode();
+        hash = 43 * hash + this.entries.hashCode();
         return hash;
     }
 }

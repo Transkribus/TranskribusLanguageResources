@@ -24,9 +24,9 @@ public interface IDictionary {
 
     /* entries */
     public void merge(IDictionary dictionary);
-    public Collection<IEntry> getEntries();
     public boolean containsKey(String key);
     public boolean containsValue(String name);
+    public Collection<IEntry> getEntries();
     public IEntry getEntry(String key) throws NoSuchElementException;
     public Collection<IEntry> getEntriesByValue(String name) throws NoSuchElementException;
 }

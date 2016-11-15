@@ -298,12 +298,10 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
 
         for (PAGEXMLAbbreviation abbr : list)
         {
-            dictionary.addEntry(abbr.getAbbreviation());
+            ((Dictionary)dictionary).addEntry(abbr.getAbbreviation());
 
             if (abbr.getExpansion() != null)
-            {
-                dictionary.addValue(abbr.getAbbreviation(), abbr.getExpansion());
-            }
+                ((Dictionary)dictionary).addValue(abbr.getAbbreviation(), abbr.getExpansion());
         }
 
         return dictionary;

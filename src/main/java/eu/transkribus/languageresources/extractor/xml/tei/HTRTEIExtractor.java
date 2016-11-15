@@ -227,11 +227,9 @@ public class HTRTEIExtractor extends XMLExtractor implements IPagewiseTextExtrac
                     abbreviation = ((Element) child).getElementsByTagName("abbr").item(0).getTextContent();
                     expansion = ((Element) child).getElementsByTagName("expan").item(0).getTextContent();
 
-                    abbreviationsDictionary.addEntry(abbreviation);
+                    ((Dictionary)abbreviationsDictionary).addEntry(abbreviation);
                     if (expansion != null && !expansion.equals(""))
-                    {
-                        abbreviationsDictionary.addValue(abbreviation, expansion);
-                    }
+                        ((Dictionary)abbreviationsDictionary).addValue(abbreviation, expansion);
                 }
             }
         }

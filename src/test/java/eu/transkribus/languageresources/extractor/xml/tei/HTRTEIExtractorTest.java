@@ -157,6 +157,6 @@ public class HTRTEIExtractorTest
         assertEquals(1, extractedAbbreviations.getEntries().size());
         assertTrue(extractedAbbreviations.containsKey("i"));
         assertEquals(1, extractedAbbreviations.getEntry("i").getValues().size());
-        assertTrue(extractedAbbreviations.getEntry("i").containsKey("in"));
+        assertTrue(extractedAbbreviations.getEntry("i").containsValue("in"));
     }
 }

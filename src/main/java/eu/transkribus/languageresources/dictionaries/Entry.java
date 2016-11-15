@@ -3,6 +3,7 @@ package eu.transkribus.languageresources.dictionaries;
 import eu.transkribus.languageresources.interfaces.IEntry;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -23,16 +24,27 @@ public class Entry implements IEntry {
         this.values = new LinkedHashMap<>();
     }
 
-    public Map<String, Integer> getValues() {
-        return this.values;
-    }
-
-    public String getName() {
+    @Override
+    public String getKey() {
         return this.name;
     }
 
+    @Override
     public int getFrequency() {
         return this.frequency;
+    }
+
+    @Override
+    public int getFrequency(String name) throws NoSuchElementException {
+        if ( this.values.containsKey(name) )
+            return this.values.get(name);
+
+        throw new NoSuchElementException("Could not find value with given name: " + name);
+    }
+
+    @Override
+    public Map<String, Integer> getValues() {
+        return this.values;
     }
 
     public void increaseFrequency() {
@@ -51,7 +63,8 @@ public class Entry implements IEntry {
         this.values.put(name, this.values.containsKey(name) ? this.values.get(name) + frequency : frequency);
     }
 
-    public boolean containsKey(String name) {
+    @Override
+    public boolean containsValue(String name) {
         return this.values.containsKey(name);
     }
 
@@ -59,7 +72,7 @@ public class Entry implements IEntry {
     public boolean equals(Object obj) {
         if ( obj != null )
             if ( obj instanceof Entry )
-                if ( this.name == ((Entry)obj).getName() && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
+                if ( this.name == ((Entry)obj).getKey() && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
                     return true;
         return false;
     }

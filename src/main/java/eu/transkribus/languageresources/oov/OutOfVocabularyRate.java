@@ -25,13 +25,13 @@ public class OutOfVocabularyRate
         for (String token : tokenizedText)
         {
             if ( key ) {
-                if (dictionary.containsKey(token))
+                if ( dictionary.containsKey(token) )
                     typesInDict.add(token);
                 else
                     typesNotInDict.add(token);
             }
             else {
-                if (dictionary.containsValue(token))
+                if ( dictionary.containsValue(token) )
                     typesInDict.add(token);
                 else
                     typesNotInDict.add(token);
@@ -50,16 +50,17 @@ public class OutOfVocabularyRate
         int numTokensSeen = 0;
         int numTokensNotInDict = 0;
 
-        for (String token : tokenizedText)
+        for ( String token : tokenizedText)
         {
-            numTokensSeen += 1;
+            numTokensSeen++;
 
-            if ( key )
-                if (!dictionary.containsKey(token))
-                    numTokensNotInDict += 1;
+            if ( key ) {
+                if ( !dictionary.containsKey(token) )
+                    numTokensNotInDict++;
+            }
             else
-                if (!dictionary.containsValue(token))
-                    numTokensNotInDict += 1;
+                if ( !dictionary.containsValue(token) )
+                    numTokensNotInDict++;
         }
 
         return (double) numTokensNotInDict / (double) numTokensSeen;

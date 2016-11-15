@@ -60,7 +60,7 @@ public class DictionaryTest
     @Test
     public void testBasic()
     {
-        IDictionary dictionary = new Dictionary();
+        Dictionary dictionary = new Dictionary();
         dictionary.addEntry("abk");
         dictionary.addValue("abk", "abkürzung");
 
@@ -68,7 +68,7 @@ public class DictionaryTest
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(1, dictionary.getEntry("abk").getValues().size());
-        assertTrue(dictionary.getEntry("abk").containsKey("abkürzung"));
+        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
         assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
 
         dictionary.addValue("abk", "abkürzung");
@@ -77,7 +77,7 @@ public class DictionaryTest
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(1, dictionary.getEntry("abk").getValues().size());
-        assertTrue(dictionary.getEntry("abk").containsKey("abkürzung"));
+        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
         assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
 
         dictionary.addValue("abk", "Abkürzung");
@@ -86,8 +86,8 @@ public class DictionaryTest
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(2, dictionary.getEntry("abk").getValues().size());
-        assertTrue(dictionary.getEntry("abk").containsKey("abkürzung"));
-        assertTrue(dictionary.getEntry("abk").containsKey("Abkürzung"));
+        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
+        assertTrue(dictionary.getEntry("abk").containsValue("Abkürzung"));
         assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
         assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("Abkürzung"));
     }
@@ -100,13 +100,13 @@ public class DictionaryTest
             File tmpFile = File.createTempFile("dict_freq", "txt");
             tmpFile.deleteOnExit();
 
-            IDictionary dictionary1 = new Dictionary();
+            Dictionary dictionary1 = new Dictionary();
             dictionary1.addEntry("abk");
             dictionary1.addValue("abk", "abkürzung");
 
             DictionaryWriter.writeDictionray(dictionary1, tmpFile, true, false, false);
 
-            IDictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
+            Dictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
             assertEquals(dictionary1, dictionary2);
         } catch (IOException ex)
         {
@@ -188,7 +188,7 @@ public class DictionaryTest
 
             List<String> tokenizedText = tokenizer.tokenize(text);
 
-            IDictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
+            Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
             /*DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false, true, true);
 
             String[] loadFileLineByLine = Utils.loadFileLineByLine(tmpFile);

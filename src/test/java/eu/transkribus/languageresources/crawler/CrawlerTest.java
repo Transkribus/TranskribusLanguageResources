@@ -39,7 +39,7 @@ public class CrawlerTest
         {
             for (String token : tokenizer.tokenize(e.getValue()))
             {
-                dictionary.addEntry(token);
+                ((Dictionary)dictionary).addEntry(token);
             }
         }
     }

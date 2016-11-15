@@ -135,7 +135,7 @@ public class PAGEXMLAbbreviationsTest
 
         assertEquals(1, abbrevations.getEntries().size());
         assertTrue(abbrevations.containsKey("Ho:Mo:"));
-        assertTrue(abbrevations.getEntry("Ho:Mo:").containsKey("Hooch-Mogende"));
+        assertTrue(abbrevations.getEntry("Ho:Mo:").containsValue("Hooch-Mogende"));
     }
 
 }

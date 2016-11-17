@@ -6,14 +6,15 @@
 package eu.transkribus.languageresources.dictionaries;
 
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
+import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -25,7 +26,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author max
+ * @author max, jnphilipp
  */
 public class DictionaryTest
 {
@@ -93,25 +94,33 @@ public class DictionaryTest
     }
 
     @Test
-    public void testWriteReadWithFrequencies()
-    {
-        /*try
-        {
-            File tmpFile = File.createTempFile("dict_freq", "txt");
-            tmpFile.deleteOnExit();
+    public void testWriteReadWithFrequencies() throws ARPAParseException, FileNotFoundException, IOException {
+        Dictionary dictionary1 = new Dictionary();
+        dictionary1.setName("TestDictionary");
+        dictionary1.setDescription("Lorem ipsum dolrem sid amet...");
+        dictionary1.addEntry("abk");
+        dictionary1.addEntry("abk");
+        dictionary1.addValue("abk", "abkürzung");
+        dictionary1.addEntry("Das");
+        dictionary1.addEntry("Auto");
+        dictionary1.addValue("Auto", "Au");
+        dictionary1.addEntry("ist");
+        dictionary1.addEntry("grün");
 
-            Dictionary dictionary1 = new Dictionary();
-            dictionary1.addEntry("abk");
-            dictionary1.addValue("abk", "abkürzung");
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/test-dictionary";
 
-            DictionaryWriter.writeDictionray(dictionary1, tmpFile, true, false, false);
+        DictionaryUtils.save(dictionaryPath, dictionary1);
+        assertTrue(new File(dictionaryPath).exists());
+        assertTrue(new File(dictionaryPath).isDirectory());
+        assertTrue(new File(dictionaryPath + "/metadata.properties").exists());
+        assertTrue(new File(dictionaryPath + "/entries.arpa").exists());
+        assertTrue(new File(dictionaryPath + "/entry-character-table.arpa").exists());
+        assertTrue(new File(dictionaryPath + "/value-character-table.arpa").exists());
 
-            Dictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
-            assertEquals(dictionary1, dictionary2);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);
+        assertEquals(dictionary1.getEntries(), dictionary2.getEntries());
+        assertEquals(dictionary1, dictionary2);
     }
 
     /*@Test

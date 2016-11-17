@@ -47,6 +47,10 @@ public class Entry implements IEntry {
         return this.values;
     }
 
+    public void decreaseFrequency(int decrement) {
+        this.frequency -= decrement;
+    }
+
     public void increaseFrequency() {
         this.frequency++;
     }
@@ -72,7 +76,7 @@ public class Entry implements IEntry {
     public boolean equals(Object obj) {
         if ( obj != null )
             if ( obj instanceof Entry )
-                if ( this.name == ((Entry)obj).getKey() && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
+                if ( this.name.equals(((Entry)obj).getKey()) && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
                     return true;
         return false;
     }

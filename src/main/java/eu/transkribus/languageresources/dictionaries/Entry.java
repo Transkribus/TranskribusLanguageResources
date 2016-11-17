@@ -1,9 +1,10 @@
 package eu.transkribus.languageresources.dictionaries;
 
-import eu.transkribus.languageresources.interfaces.IEntry;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import eu.transkribus.interfaces.IEntry;
 
 /**
  *

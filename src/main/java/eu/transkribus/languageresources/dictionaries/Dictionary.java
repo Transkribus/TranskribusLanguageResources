@@ -1,7 +1,5 @@
 package eu.transkribus.languageresources.dictionaries;
 
-import eu.transkribus.languageresources.interfaces.IDictionary;
-import eu.transkribus.languageresources.interfaces.IEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -10,6 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.interfaces.IEntry;
+
 import java.util.Map;
 
 /**

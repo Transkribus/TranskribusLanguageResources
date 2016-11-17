@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import eu.transkribus.interfaces.IDictionary;
+
 /**
  *
  * @author jnphilipp

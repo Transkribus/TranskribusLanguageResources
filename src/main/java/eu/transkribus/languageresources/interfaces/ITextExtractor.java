@@ -8,6 +8,8 @@ package eu.transkribus.languageresources.interfaces;
 import java.util.Map;
 import java.util.Set;
 
+import eu.transkribus.interfaces.IDictionary;
+
 /**
  *
  * @author max

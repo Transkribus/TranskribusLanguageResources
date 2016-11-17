@@ -5,9 +5,9 @@
  */
 package eu.transkribus.languageresources.extractor.xml.tei;
 
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.util.ArrayList;
 import java.util.Collections;

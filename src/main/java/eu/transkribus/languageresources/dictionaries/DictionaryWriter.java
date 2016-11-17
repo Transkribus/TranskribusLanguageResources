@@ -5,7 +5,6 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -13,6 +12,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import eu.transkribus.interfaces.IDictionary;
 
 /**
  *

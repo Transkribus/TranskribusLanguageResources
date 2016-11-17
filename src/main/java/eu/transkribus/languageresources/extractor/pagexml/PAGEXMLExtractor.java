@@ -5,9 +5,9 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;

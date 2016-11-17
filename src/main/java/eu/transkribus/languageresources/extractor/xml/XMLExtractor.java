@@ -1,7 +1,7 @@
 package eu.transkribus.languageresources.extractor.xml;
 
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.interfaces.ITextExtractor;
 import java.io.File;
 import java.io.FileInputStream;

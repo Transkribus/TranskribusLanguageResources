@@ -5,13 +5,15 @@
  */
 package eu.transkribus.languageresources.extractor.xml;
 
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import eu.transkribus.interfaces.IDictionary;
+
 import static org.junit.Assert.*;
 
 /**

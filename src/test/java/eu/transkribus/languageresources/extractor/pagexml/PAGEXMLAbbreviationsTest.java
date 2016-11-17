@@ -5,7 +5,6 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.io.File;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +13,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import eu.transkribus.interfaces.IDictionary;
+
 import static org.junit.Assert.*;
 
 /**

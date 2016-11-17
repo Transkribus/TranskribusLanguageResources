@@ -6,8 +6,8 @@
 package eu.transkribus.languageresources.dictionaries;
 
 import de.unileipzig.asv.neuralnetwork.utils.Utils;
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
 import java.io.FileNotFoundException;

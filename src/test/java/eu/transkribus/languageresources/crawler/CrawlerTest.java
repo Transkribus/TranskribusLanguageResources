@@ -5,8 +5,8 @@
  */
 package eu.transkribus.languageresources.crawler;
 
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.util.Map;
 import org.junit.Test;

@@ -5,10 +5,11 @@
  */
 package eu.transkribus.languageresources.oov;
 
-import eu.transkribus.languageresources.interfaces.IDictionary;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import eu.transkribus.interfaces.IDictionary;
 
 /**
  *

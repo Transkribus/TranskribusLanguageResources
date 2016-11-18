@@ -23,9 +23,9 @@ Abbreviations can be extracted if the given format contains annotated abbrevitio
 The tokenizer can be called with a `properties` file. An example can be found [here](https://github.com/Transkribus/TranskribusLanguageResources/blob/master/src/test/resources/tokenizer_config.properties).
 
 ### Rules
-* Normalization 
-* Dehyphanation signs 
-* Delimiter signs 
+* Normalization
+* Dehyphanation signs
+* Delimiter signs
 * Delimiter signs being kept as tokens
 
 ### Further explanation:
@@ -74,12 +74,32 @@ A language model in the ARPA format can be used using the class `ARPALanguageMod
 
 A language model in the form of a neural network can be used using the class `NeuralLanguageModel`. It needs to be initialized with a path to the zip file containing the network. When using `getProbabilitiesForNextToken`, the given sequence is mapped onto a matrix with dimensions `(sequence_length, num_types)`, whereas at each timestamp, the index of the given token will be set `1`. It returns a vector with probabilities for the next token. The returned `double[]` is transformed into a map which contains the type as key and its probability as value. If the given sequence contains an unkown token, an `UnsupportedSequenceException` will be thrown.
 
+
+## Dictionaries
+
+A Dictionary holds a list of entries. Each entry has a key and frequency and a list of associated words with their frequency. The functions to query a dictionary are defined by the interface `IDictionary` and `IEntry.` In addition entries can be added to a dictionary e.g.
+
+    dictionary.addEntry("Die")
+    dictionary.addValue("Uni", "Universität")
+    dictionary.addEntry("Leipzig")
+    dictionary.addEntry("ist")
+    dictionary.addEntry("schön")
+
+This results in the entries *Die*, *Uni*, *Leipzig*, *ist*, *schön* and the entry *Uni* has *Universität* as an associated word. All frequencies are 1.
+
+### DictionaryUtils
+
+The class `DictionaryUtils` holds functions to save and load a dictionary. Both required a path to a folder. The save function store a meta data file, three arpa files and two csv. The `entries.arpa` file represents the entries of a dictionary with their frequency as uni- and bigrams. The other two arpa files store the character tables for entries and their value, same as the csv.
+
+To load a dictionary two files are necessary, the meta data file and the `entries.arpa`.
+
+
 ## Building
 Here is a short guide with steps that need to be performed
 to build your project.
 
 ### Requirements
-- Java >= version 7
+- Java >= version 8
 - Maven
 - All further dependencies are gathered via Maven
 

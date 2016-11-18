@@ -89,7 +89,12 @@ This results in the entries *Die*, *Uni*, *Leipzig*, *ist*, *schön* and the ent
 
 ### DictionaryUtils
 
-The class `DictionaryUtils` holds functions to save and load a dictionary. Both required a path to a folder. The save function store a meta data file, three arpa files and two csv. The `entries.arpa` file represents the entries of a dictionary with their frequency as uni- and bigrams. The other two arpa files store the character tables for entries and their value, same as the csv.
+The class `DictionaryUtils` holds functions to save and load a dictionary. Both required a path to a folder. The save function stores:
+ * meta data file (`metadata.properties`)
+ * three arpa files (`entries.arpa`, `entry-character-table.arpa`, `value-character-table.arpa`)
+ * two csv (`entry-character-table.csv`, `value-character-table.csv`)
+
+The `entries.arpa` file represents the entries of a dictionary with their frequency as uni- and bigrams. The other two arpa files store the character tables for entries and their value, same as the csv.
 
 To load a dictionary two files are necessary, the meta data file and the `entries.arpa`.
 

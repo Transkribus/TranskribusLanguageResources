@@ -1,8 +1,8 @@
 package eu.transkribus.languageresources.dictionaries;
 
+import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.interfaces.IEntry;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
-import eu.transkribus.languageresources.interfaces.IDictionary;
-import eu.transkribus.languageresources.interfaces.IEntry;
 import eu.transkribus.languageresources.util.ARPAFileHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.time.LocalDateTime;
@@ -53,8 +54,9 @@ public class DictionaryUtils {
         writeMetadataFile(new File(path.getAbsolutePath() + "/metadata.properties"), dictionary);
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entries.arpa"), ((Dictionary)dictionary).toNgrams());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entry-character-table.arpa"), ((Dictionary)dictionary).entryCharacterTableToNgrams());
+        writeCharacterTable(new File(path.getAbsolutePath() + "/entry-character-table.csv"), ((Dictionary)dictionary).getEntryCharacterTable());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/value-character-table.arpa"), ((Dictionary)dictionary).valueCharacterTableToNgrams());
-        // write character tables as csv
+        writeCharacterTable(new File(path.getAbsolutePath() + "/value-character-table.csv"), ((Dictionary)dictionary).getValueCharacterTable());
     }
 
     private static void readMetadataFile(File file, IDictionary dictionary) throws FileNotFoundException, IOException {
@@ -80,6 +82,14 @@ public class DictionaryUtils {
 
         Writer writer = new BufferedWriter(new FileWriter(file));
         properties.store(writer, null);
+        writer.close();
+    }
+
+    private static void writeCharacterTable(File file, Map<Character, Integer> characterTable) throws FileNotFoundException, IOException {
+        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+        writer.println("\"char\",\"unicode\",\"unicode_name\",\"frequency\"");
+        for ( Map.Entry<Character, Integer> v : characterTable.entrySet() )
+            writer.println(String.format("\"%s\",\"\\u%s\",\"%s\",\"%d\"", v.getKey(), Integer.toHexString(v.getKey() | 0x10000), Character.getName(v.getKey()), v.getValue()));
         writer.close();
     }
 }

@@ -116,97 +116,12 @@ public class DictionaryTest
         assertTrue(new File(dictionaryPath + "/metadata.properties").exists());
         assertTrue(new File(dictionaryPath + "/entries.arpa").exists());
         assertTrue(new File(dictionaryPath + "/entry-character-table.arpa").exists());
+        assertTrue(new File(dictionaryPath + "/entry-character-table.csv").exists());
         assertTrue(new File(dictionaryPath + "/value-character-table.arpa").exists());
+        assertTrue(new File(dictionaryPath + "/value-character-table.csv").exists());
 
         IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);
         assertEquals(dictionary1.getEntries(), dictionary2.getEntries());
         assertEquals(dictionary1, dictionary2);
-    }
-
-    /*@Test
-    public void testWriteReadWithoutFrequencies()
-    {
-        try
-        {
-            File tmpFile = File.createTempFile("dict_no_freq", "txt");
-            tmpFile.deleteOnExit();
-
-            Dictionary dictionary1 = new Dictionary();
-            dictionary1.addEntry("abk");
-            dictionary1.addValue("abk", "abkürzung");
-
-            DictionaryWriter.writeDictionray(dictionary1, tmpFile, false, false, false);
-
-            Dictionary dictionary2 = DictionaryReader.readDictionary(tmpFile);
-
-            assertEquals(1, dictionary2.getEntries().size());
-            assertEquals(true, dictionary2.containsKey("abk"));
-            assertEquals(false, dictionary2.containsKey("abkürzung"));
-            assertEquals(1, dictionary2.getEntry("abk").getValues().size());
-            assertEquals("abkürzung", dictionary2.getEntry("abk").getValues().get("abkürzung").getName());
-            assertEquals(1, dictionary2.getEntry("abk").getValues().get("abkürzung").getFrequency());
-        } catch (IOException ex)
-        {
-            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Test
-    public void createCharacterDictionary()
-    {
-        try
-        {
-            File tmpFile = File.createTempFile("dict_character_freq", "txt");
-            tmpFile.deleteOnExit();
-
-            String text = "Hello! test, test, test...";
-
-            Properties tokenizerProperties = new Properties();
-            tokenizerProperties.setProperty("delimiter_signs", "!., ");
-            tokenizerProperties.setProperty("tokenize_character_wise", "true");
-            ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
-
-            List<String> tokenizedText = tokenizer.tokenize(text);
-
-            Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
-            DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false, false, false);
-
-            Dictionary readDictionary = DictionaryReader.readDictionary(tmpFile);
-
-            assertEquals(6, readDictionary.getEntries().size());
-        } catch (IOException ex)
-        {
-            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
-
-    @Test
-    public void createExtendedCharacterDictionary()
-    {
-        try
-        {
-            File tmpFile = File.createTempFile("dict_character_freq", "txt");
-            tmpFile.deleteOnExit();
-
-            String text = "Hi!";
-
-            Properties tokenizerProperties = new Properties();
-            tokenizerProperties.setProperty("delimiter_signs", "!., ");
-            tokenizerProperties.setProperty("tokenize_character_wise", "true");
-            ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
-
-            List<String> tokenizedText = tokenizer.tokenize(text);
-
-            Dictionary characterFrequencyDictionary = new Dictionary(tokenizedText);
-            /*DictionaryWriter.writeDictionray(characterFrequencyDictionary, tmpFile, false, true, true);
-
-            String[] loadFileLineByLine = Utils.loadFileLineByLine(tmpFile);
-            String expected = "[H|\\u0048|LATIN CAPITAL LETTER H, i|\\u0069|LATIN SMALL LETTER I]";
-            assertEquals(expected, Arrays.toString(loadFileLineByLine));*/
-
-        } catch (IOException ex)
-        {
-            Logger.getLogger(DictionaryTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

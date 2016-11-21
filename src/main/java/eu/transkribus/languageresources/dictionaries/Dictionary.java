@@ -201,6 +201,11 @@ public class Dictionary implements IDictionary {
             this.addEntry(e);
     }
 
+    @Override
+    public String[] getTags(IEntry entry) {
+        return null;
+    }
+
     public void fromNgrams(Map<Integer, Map<List<String>, Map<String, Double>>> ngrams) {
         Map<List<String>, Map<String, Double>> oneGrams = ngrams.get(1);
         Map<List<String>, Map<String, Double>> twoGrams = ngrams.get(2);

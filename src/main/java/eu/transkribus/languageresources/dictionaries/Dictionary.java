@@ -208,13 +208,14 @@ public class Dictionary implements IDictionary {
         for ( Map.Entry<List<String>, Map<String, Double>> v : oneGrams.entrySet() )
             this.addEntry(v.getKey().get(0), v.getValue().get("").intValue());
 
-        for ( Map.Entry<List<String>, Map<String, Double>> v : twoGrams.entrySet() )
-            for ( Map.Entry<String, Double> w : v.getValue().entrySet() ) {
-                this.addValue(v.getKey().get(0), w.getKey(), w.getValue().intValue());
-                ((Entry)this.entries.get(w.getKey())).decreaseFrequency(w.getValue().intValue());
-                this.numberTokens -= w.getValue().intValue();
-                this.updateEntryCharacterTable(w.getKey(), w.getValue().intValue() * -1);
-            }
+        if ( twoGrams != null )
+            for ( Map.Entry<List<String>, Map<String, Double>> v : twoGrams.entrySet() )
+                for ( Map.Entry<String, Double> w : v.getValue().entrySet() ) {
+                    this.addValue(v.getKey().get(0), w.getKey(), w.getValue().intValue());
+                    ((Entry)this.entries.get(w.getKey())).decreaseFrequency(w.getValue().intValue());
+                    this.numberTokens -= w.getValue().intValue();
+                    this.updateEntryCharacterTable(w.getKey(), w.getValue().intValue() * -1);
+                }
 
         Iterator it = this.entries.values().iterator();
         while ( it.hasNext() )

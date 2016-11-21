@@ -122,6 +122,14 @@ public class DictionaryTest
 
         IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);
         assertEquals(dictionary1.getEntries(), dictionary2.getEntries());
+        assertEquals(dictionary1.getEntryCharacterTable(), dictionary2.getEntryCharacterTable());
+        assertEquals(dictionary1.getValueCharacterTable(), dictionary2.getValueCharacterTable());
+        assertEquals(dictionary1.getNumberTokens(), dictionary2.getNumberTokens());
+        assertEquals(dictionary1.getNumberTypes(), dictionary2.getNumberTypes());
+        assertEquals(dictionary1.getName(), dictionary2.getName());
+        assertEquals(dictionary1.getDescription(), dictionary2.getDescription());
+        assertEquals(dictionary1.getLanguage(), dictionary2.getLanguage());
+        assertEquals(dictionary1.getCreationDate(), dictionary2.getCreationDate());
         assertEquals(dictionary1, dictionary2);
     }
 }

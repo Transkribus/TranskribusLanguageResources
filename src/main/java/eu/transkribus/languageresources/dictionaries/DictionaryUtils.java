@@ -65,8 +65,8 @@ public class DictionaryUtils {
         properties.load(reader);
         reader.close();
 
-        ((Dictionary)dictionary).setName(properties.getProperty("name"));
-        ((Dictionary)dictionary).setDescription(properties.getProperty("description"));
+        ((Dictionary)dictionary).setName(properties.getProperty("name", "").isEmpty() ? null : properties.getProperty("name", ""));
+        ((Dictionary)dictionary).setDescription(properties.getProperty("description", "").isEmpty() ? null : properties.getProperty("description", ""));
         ((Dictionary)dictionary).setLanguage(properties.getProperty("language", "").isEmpty() ? null : properties.getProperty("language", ""));
         ((Dictionary)dictionary).setCreationDate(LocalDateTime.parse(properties.getProperty("creation_date")));
     }

@@ -109,13 +109,16 @@ public class ARPAFileHandler {
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         writer.println("\\data\\");
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() )
-            writer.println(String.format("ngram %d=%d", ngram.getKey(), ngram.getValue().size()));
+            if ( ngram.getValue().size() > 0 )
+                writer.println(String.format("ngram %d=%d", ngram.getKey(), ngram.getValue().size()));
         writer.println();
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() ) {
-            writer.println(String.format("\\%d-grams:", ngram.getKey()));
-            for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
-                for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
-                    writer.println(String.format("%f\t%s %s", word.getValue(), String.join(" ", words.getKey()), word.getKey()).trim());
+            if ( ngram.getValue().size() > 0 ) {
+                writer.println(String.format("\\%d-grams:", ngram.getKey()));
+                for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
+                    for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
+                        writer.println(String.format("%f\t%s %s", word.getValue(), String.join(" ", words.getKey()), word.getKey()).trim());
+            }
             writer.println();
         }
         writer.println("\\end\\");

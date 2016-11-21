@@ -15,7 +15,6 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -113,28 +112,19 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         }
 
         File folder = new File(path);
-        File[] files = folder.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.getName().endsWith(".xml");
-            }
-        });
-        List<File> listOfFiles = Arrays.asList(folder.listFiles());
-        List<String> fileNames = new ArrayList<>(listOfFiles.size());
-        for(File f : listOfFiles)
-        {
+        List<String> fileNames = new ArrayList<>();
+        for ( File f : folder.listFiles(new FileFilter() {
+                public boolean accept(File pathname) {
+                    return pathname.getName().endsWith(".xml");
+                }
+            }) )
             fileNames.add(f.getName());
-        }
 
-        Comparator c = new PAGEFileComparator();
-        Collections.sort(fileNames, c);
-
-        List<File> orderedFileList = new ArrayList<>(listOfFiles.size());
-        for (String fileName : fileNames)
-        {
-            orderedFileList.add(new File(path + "/" + fileName));
-        }
-
-        return orderedFileList;
+        Collections.sort(fileNames, new PAGEFileComparator());
+        List<File> files = new ArrayList<>();
+        for ( String fileName : fileNames )
+            files.add(new File(path + "/" + fileName));
+        return files;
     }
 
     private NodeList getNodesFromFile(File f)

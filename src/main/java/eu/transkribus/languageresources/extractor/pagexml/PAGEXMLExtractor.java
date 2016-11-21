@@ -11,6 +11,7 @@ import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -112,7 +113,11 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         }
 
         File folder = new File(path);
-        File[] files = folder.listFiles();
+        File[] files = folder.listFiles(new FileFilter() {
+            public boolean accept(File pathname) {
+                return pathname.getName().endsWith(".xml");
+            }
+        });
         List<File> listOfFiles = Arrays.asList(folder.listFiles());
         List<String> fileNames = new ArrayList<>(listOfFiles.size());
         for(File f : listOfFiles)

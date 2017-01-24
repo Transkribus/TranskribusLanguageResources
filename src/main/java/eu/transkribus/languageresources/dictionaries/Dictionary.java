@@ -16,6 +16,7 @@ import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.interfaces.IEntry;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -26,7 +27,7 @@ public class Dictionary implements IDictionary {
     private String description;
     private String language;
     private int numberTypes;
-    private int numberTokens;
+    private long numberTokens;
     private Map<Character, Integer> entryCharacterTable;
     private Map<Character, Integer> valueCharacterTable;
     private LocalDateTime creationDate = LocalDateTime.now();
@@ -73,7 +74,7 @@ public class Dictionary implements IDictionary {
     }
 
     @Override
-    public int getNumberTokens() {
+    public long getNumberTokens() {
         return this.numberTokens;
     }
 
@@ -313,17 +314,17 @@ public class Dictionary implements IDictionary {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = this.name == null ? hash : 23 * hash + this.name.hashCode();
-        hash = this.description == null ? hash : 11 * hash + this.description.hashCode();
-        hash = this.language == null ? hash : 2 * hash + this.language.hashCode();
-        hash = 53 * hash + this.numberTypes;
-        hash = 41 * hash + this.numberTokens;
-        hash = 61 * hash + this.entryCharacterTable.hashCode();
-        hash = 71 * hash + this.valueCharacterTable.hashCode();
-        hash = 97 * hash + this.creationDate.hashCode();
-        hash = 43 * hash + this.entries.hashCode();
+    public int hashCode()
+    {
+        int hash = 5;
+        hash = 73 * hash + Objects.hashCode(this.name);
+        hash = 73 * hash + Objects.hashCode(this.description);
+        hash = 73 * hash + Objects.hashCode(this.language);
+        hash = 73 * hash + this.numberTypes;
+        hash = 73 * hash + (int) (this.numberTokens ^ (this.numberTokens >>> 32));
+        hash = 73 * hash + Objects.hashCode(this.entryCharacterTable);
+        hash = 73 * hash + Objects.hashCode(this.valueCharacterTable);
+        hash = 73 * hash + Objects.hashCode(this.creationDate);
         return hash;
     }
 }

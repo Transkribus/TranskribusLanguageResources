@@ -5,18 +5,11 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
-import de.unileipzig.asv.neuralnetwork.utils.Utils;
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

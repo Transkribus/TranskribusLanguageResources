@@ -12,10 +12,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -106,6 +108,11 @@ public class ARPAFileHandler {
     }
 
     public static void write(File file, Map<Integer, Map<List<String>, Map<String, Double>>> ngrams) throws FileNotFoundException, IOException {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.ROOT);
+		numberFormat.setMinimumFractionDigits(8);
+		numberFormat.setMaximumFractionDigits(8);
+        numberFormat.setGroupingUsed(false);
+        
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         writer.println("\\data\\");
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() )
@@ -117,7 +124,7 @@ public class ARPAFileHandler {
                 writer.println(String.format("\\%d-grams:", ngram.getKey()));
                 for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
                     for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
-                        writer.println(String.format("%f\t%s %s", word.getValue(), String.join(" ", words.getKey()), word.getKey()).trim());
+                        writer.println(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
             }
             writer.println();
         }

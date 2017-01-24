@@ -77,7 +77,7 @@ public class DictionaryUtils {
         properties.setProperty("description", dictionary.getDescription() == null ? "" : dictionary.getDescription());
         properties.setProperty("language", dictionary.getLanguage() == null ? "" : dictionary.getLanguage());
         properties.setProperty("number_types", Integer.toString(dictionary.getNumberTypes()));
-        properties.setProperty("number_tokens", Integer.toString(dictionary.getNumberTokens()));
+        properties.setProperty("number_tokens", Long.toString(dictionary.getNumberTokens()));
         properties.setProperty("creation_date", dictionary.getCreationDate().toString());
 
         Writer writer = new BufferedWriter(new FileWriter(file));

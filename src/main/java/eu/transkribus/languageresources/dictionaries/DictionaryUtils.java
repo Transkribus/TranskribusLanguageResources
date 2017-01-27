@@ -4,6 +4,7 @@ import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.interfaces.IEntry;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.util.ARPAFileHandler;
+import eu.transkribus.languageresources.util.SimpleDictFileHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,11 +54,14 @@ public class DictionaryUtils {
 
         writeMetadataFile(new File(path.getAbsolutePath() + "/metadata.properties"), dictionary);
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entries.arpa"), ((Dictionary)dictionary).toNgrams());
+        SimpleDictFileHandler.write(new File(path.getAbsolutePath() + "/entries.dict"), ((Dictionary)dictionary).getEntries());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entry-character-table.arpa"), ((Dictionary)dictionary).entryCharacterTableToNgrams());
         writeCharacterTable(new File(path.getAbsolutePath() + "/entry-character-table.csv"), ((Dictionary)dictionary).getEntryCharacterTable());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/value-character-table.arpa"), ((Dictionary)dictionary).valueCharacterTableToNgrams());
         writeCharacterTable(new File(path.getAbsolutePath() + "/value-character-table.csv"), ((Dictionary)dictionary).getValueCharacterTable());
     }
+    
+    
 
     private static void readMetadataFile(File file, IDictionary dictionary) throws FileNotFoundException, IOException {
         Properties properties = new Properties();

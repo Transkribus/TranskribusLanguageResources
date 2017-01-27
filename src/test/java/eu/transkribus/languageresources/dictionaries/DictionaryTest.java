@@ -108,6 +108,7 @@ public class DictionaryTest
         assertTrue(new File(dictionaryPath).isDirectory());
         assertTrue(new File(dictionaryPath + "/metadata.properties").exists());
         assertTrue(new File(dictionaryPath + "/entries.arpa").exists());
+        assertTrue(new File(dictionaryPath + "/entries.dict").exists());
         assertTrue(new File(dictionaryPath + "/entry-character-table.arpa").exists());
         assertTrue(new File(dictionaryPath + "/entry-character-table.csv").exists());
         assertTrue(new File(dictionaryPath + "/value-character-table.arpa").exists());

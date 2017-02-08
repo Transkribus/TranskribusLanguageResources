@@ -67,9 +67,15 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     @Override
     public String extractTextFromDocument(String path, String splitCharacter)
     {
-        StringBuilder content = new StringBuilder();
         List<File> files = getFileList(path);
 
+        return extractTextFromFileList(files, splitCharacter);
+    }
+    
+    public String extractTextFromFileList(List<File> files, String splitCharacter)
+    {
+    	StringBuilder content = new StringBuilder();
+        
         for (int fileIndex = 0; fileIndex < files.size(); fileIndex++)
         {
             content.append(getTextFromFile(files.get(fileIndex)));

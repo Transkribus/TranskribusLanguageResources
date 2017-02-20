@@ -73,6 +73,11 @@ public class Dictionary implements IDictionary {
         this.language = language;
     }
 
+//    @Override
+//    public long getNumberTokens() {
+//        return this.numberTokens;
+//    }
+    
     @Override
     public long getNumberTokens() {
         return this.numberTokens;

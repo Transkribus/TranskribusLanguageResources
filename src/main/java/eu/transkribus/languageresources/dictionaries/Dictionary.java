@@ -1,7 +1,5 @@
 package eu.transkribus.languageresources.dictionaries;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,6 +15,8 @@ import eu.transkribus.interfaces.IEntry;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -179,6 +179,13 @@ public class Dictionary implements IDictionary {
     @Override
     public Collection<IEntry> getEntries() {
         return new LinkedList<IEntry>(this.entries.values());
+    }    
+    
+    public Collection<IEntry> getEntries(IDictionaryFilter filter) {
+        return this.entries.values().stream().filter((IEntry t) ->
+                {
+                    return filter.keep(t.getKey());
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -240,30 +247,40 @@ public class Dictionary implements IDictionary {
             if ( ((Map.Entry<Character, Integer>)it.next()).getValue() == 0 )
                 it.remove();
     }
-
-    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams() {
+    
+    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams(IDictionaryFilter filter) {            
         Map<Integer, Map<List<String>, Map<String, Double>>> ngrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> oneGrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> twoGrams = new LinkedHashMap<>();
         for ( IEntry e : this.entries.values() ) {
-            int f = e.getFrequency();
-            for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
-                f -= v.getValue();
-                if ( !oneGrams.containsKey(v.getKey()) )
-                    oneGrams.put(Arrays.asList(new String[] {v.getKey()}), new LinkedHashMap<String, Double>());
-                oneGrams.get(Arrays.asList(new String[] {v.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {v.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {v.getKey()})).get("") + v.getValue() : (double) v.getValue());
-                if ( !twoGrams.containsKey(e.getKey()) )
-                    twoGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
-                twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
-            }
+            if (filter.keep(e.getKey()))
+            {
+                int f = e.getFrequency();
+                for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
+                    if (filter.keep(v.getKey()))
+                    {
+                        f -= v.getValue();
+                        if ( !oneGrams.containsKey(v.getKey()) )
+                            oneGrams.put(Arrays.asList(new String[] {v.getKey()}), new LinkedHashMap<String, Double>());
+                        oneGrams.get(Arrays.asList(new String[] {v.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {v.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {v.getKey()})).get("") + v.getValue() : (double) v.getValue());
+                        if ( !twoGrams.containsKey(e.getKey()) )
+                            twoGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
+                        twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
+                    }
+                }
 
-            if ( !oneGrams.containsKey(e.getKey()) )
-                oneGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
-            oneGrams.get(Arrays.asList(new String[] {e.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {e.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {e.getKey()})).get("") + f : (double) f);
+                if ( !oneGrams.containsKey(e.getKey()) )
+                    oneGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
+                oneGrams.get(Arrays.asList(new String[] {e.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {e.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {e.getKey()})).get("") + f : (double) f);
+            }
         }
         ngrams.put(1, oneGrams);
         ngrams.put(2, twoGrams);
         return ngrams;
+}
+    
+    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams() {
+        return toNgrams((String type) -> {return true;});
     }
 
     public Map<Integer, Map<List<String>, Map<String, Double>>> entryCharacterTableToNgrams() {

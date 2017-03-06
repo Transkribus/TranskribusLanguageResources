@@ -95,13 +95,16 @@ public class DictionaryTest
         dictionary1.setName("TestDictionary");
         dictionary1.setDescription("Lorem ipsum dolrem sid amet...");
         dictionary1.addEntry("abk");
-        dictionary1.addEntry("abk");
+        dictionary1.addEntry("abk", 2);
         dictionary1.addValue("abk", "abkürzung");
         dictionary1.addEntry("Das");
+        dictionary1.addEntry("Auto");
         dictionary1.addEntry("Auto");
         dictionary1.addValue("Auto", "Au");
         dictionary1.addEntry("ist");
         dictionary1.addEntry("grün");
+        dictionary1.addEntry("rot", 5);
+        dictionary1.addValue("z.B.", "zum_Beispiel", 3);
 
         ClassLoader classLoader = getClass().getClassLoader();
         String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/test-dictionary";
@@ -122,7 +125,8 @@ public class DictionaryTest
         assertTrue(new File(dictionaryPath + "/entriesPunctuationMarks.dict").exists());
 
         IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);
-        assertEquals(dictionary1.getEntries(), dictionary2.getEntries());
+        assertTrue(dictionary1.getEntries().containsAll(dictionary2.getEntries()));
+        assertTrue(dictionary2.getEntries().containsAll(dictionary1.getEntries()));
         assertEquals(dictionary1.getEntryCharacterTable(), dictionary2.getEntryCharacterTable());
         assertEquals(dictionary1.getValueCharacterTable(), dictionary2.getValueCharacterTable());
         assertEquals(dictionary1.getNumberTokens(), dictionary2.getNumberTokens());
@@ -133,7 +137,7 @@ public class DictionaryTest
         assertEquals(dictionary1.getCreationDate(), dictionary2.getCreationDate());
         assertEquals(dictionary1, dictionary2);
     }
-    
+
     @Test
     public void testWriteReadWordAndPunctuationFiles() throws ARPAParseException, FileNotFoundException, IOException {
         Dictionary dictionary3 = new Dictionary();
@@ -146,17 +150,17 @@ public class DictionaryTest
         dictionary3.addEntry(".");
         dictionary3.addEntry("High8");
         dictionary3.addEntry("Los!");
-        
+
         ClassLoader classLoader = getClass().getClassLoader();
         String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/test-dictionary3";
-        
+
         DictionaryUtils.save(dictionaryPath, dictionary3);
         assertTrue(new File(dictionaryPath).exists());
         assertTrue(new File(dictionaryPath).isDirectory());
-        
+
         Dictionary dictionary4 = new Dictionary();
         ((Dictionary)dictionary4).fromNgrams(ARPAFileHandler.read(new File(dictionaryPath + "/entriesWords.arpa")));
-        
+
         assertEquals(dictionary4.getEntries().size(), 3);
         assertTrue(dictionary4.containsKey("Wörter"));
         assertTrue(dictionary4.containsKey("Hallo"));
@@ -165,29 +169,25 @@ public class DictionaryTest
         assertEquals(dictionary4.getEntry("Hallo").getValues().size(), 1);
         assertEquals(dictionary4.getEntry("High8").getValues().size(), 0);
         assertTrue(dictionary4.getEntry("Hallo").containsValue("greeting"));
-        
-        
+
+
         Map<String, Integer> entriesWord = SimpleDictFileHandler.read(new File(dictionaryPath + "/entriesWords.dict"));
         assertTrue(entriesWord.containsKey("Wörter"));
         assertTrue(entriesWord.containsKey("Hallo"));
-        
+
 
         dictionary4 = new Dictionary();
         ((Dictionary)dictionary4).fromNgrams(ARPAFileHandler.read(new File(dictionaryPath + "/entriesPunctuationMarks.arpa")));
-        
+
         assertEquals(dictionary4.getEntries().size(), 2);
         assertTrue(dictionary4.containsKey("!"));
         assertTrue(dictionary4.containsKey("."));
         assertEquals(dictionary4.getEntry("!").getValues().size(), 0);
         assertEquals(dictionary4.getEntry(".").getValues().size(), 0);
 
-        
+
         entriesWord = SimpleDictFileHandler.read(new File(dictionaryPath + "/entriesPunctuationMarks.dict"));
         assertTrue(entriesWord.containsKey("!"));
         assertTrue(entriesWord.containsKey("."));
-        
-        
-        
-        
-    }    
+    }
 }

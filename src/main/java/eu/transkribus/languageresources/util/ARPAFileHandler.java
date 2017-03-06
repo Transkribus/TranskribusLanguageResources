@@ -15,7 +15,10 @@ import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +115,7 @@ public class ARPAFileHandler {
 		numberFormat.setMinimumFractionDigits(8);
 		numberFormat.setMaximumFractionDigits(8);
         numberFormat.setGroupingUsed(false);
-        
+
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         writer.println("\\data\\");
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() )
@@ -122,9 +125,17 @@ public class ARPAFileHandler {
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() ) {
             if ( ngram.getValue().size() > 0 ) {
                 writer.println(String.format("\\%d-grams:", ngram.getKey()));
+                List<Object[]> list = new LinkedList<>();
                 for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
                     for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
-                        writer.println(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
+                        list.add(new Object[] {word.getValue(), String.format("%s %s", String.join(" ", words.getKey()), word.getKey()).trim()});
+                Collections.sort(list, new Comparator<Object[]>() {
+                    public int compare(Object[] o1, Object[] o2) {
+                        return ((Double) o1[0]).compareTo((Double) o2[0]);
+                    }
+                }.reversed());
+                for ( Object[] o : list )
+                    writer.println(String.format("%s\t%s", numberFormat.format(o[0]), o[1]).trim());
             }
             writer.println();
         }

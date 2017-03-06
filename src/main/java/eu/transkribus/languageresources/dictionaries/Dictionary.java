@@ -73,11 +73,6 @@ public class Dictionary implements IDictionary {
         this.language = language;
     }
 
-//    @Override
-//    public long getNumberTokens() {
-//        return this.numberTokens;
-//    }
-    
     @Override
     public long getNumberTokens() {
         return this.numberTokens;
@@ -158,7 +153,7 @@ public class Dictionary implements IDictionary {
             e.addValue(name, frequency);
             this.entries.put(key, e);
             this.numberTypes += 2;
-            this.numberTokens += 1 + frequency;
+            this.numberTokens += frequency;
         }
         this.updateValueCharacterTable(name, frequency);
     }
@@ -179,8 +174,8 @@ public class Dictionary implements IDictionary {
     @Override
     public Collection<IEntry> getEntries() {
         return new LinkedList<IEntry>(this.entries.values());
-    }    
-    
+    }
+
     public Collection<IEntry> getEntries(IDictionaryFilter filter) {
         return this.entries.values().stream().filter((IEntry t) ->
                 {
@@ -247,8 +242,8 @@ public class Dictionary implements IDictionary {
             if ( ((Map.Entry<Character, Integer>)it.next()).getValue() == 0 )
                 it.remove();
     }
-    
-    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams(IDictionaryFilter filter) {            
+
+    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams(IDictionaryFilter filter) {
         Map<Integer, Map<List<String>, Map<String, Double>>> ngrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> oneGrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> twoGrams = new LinkedHashMap<>();
@@ -277,8 +272,8 @@ public class Dictionary implements IDictionary {
         ngrams.put(1, oneGrams);
         ngrams.put(2, twoGrams);
         return ngrams;
-}
-    
+    }
+
     public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams() {
         return toNgrams((String type) -> {return true;});
     }
@@ -330,7 +325,7 @@ public class Dictionary implements IDictionary {
         if ( obj != null )
             if ( obj instanceof Dictionary )
                 if ( ((this.name != null && this.name.equals(((Dictionary)obj).getName())) || (this.name == null && ((Dictionary)obj).getName() == null)) && ((this.description != null && this.description.equals(((Dictionary)obj).getDescription())) || (this.description == null && ((Dictionary)obj).getDescription() == null)) && ((this.language != null && this.language.equals(((Dictionary)obj).getLanguage())) || (this.language == null && ((Dictionary)obj).getLanguage() == null)) && this.numberTypes == ((Dictionary)obj).getNumberTypes() &&
-                    this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.entryCharacterTable.equals(((Dictionary)obj).getEntryCharacterTable()) && this.valueCharacterTable.equals(((Dictionary)obj).getValueCharacterTable()) && this.creationDate.equals(((Dictionary)obj).getCreationDate()) && this.getEntries().equals(((Dictionary)obj).getEntries()) )
+                    this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.entryCharacterTable.equals(((Dictionary)obj).getEntryCharacterTable()) && this.valueCharacterTable.equals(((Dictionary)obj).getValueCharacterTable()) && this.creationDate.equals(((Dictionary)obj).getCreationDate()) && this.getEntries().containsAll(((Dictionary)obj).getEntries()) && ((Dictionary)obj).getEntries().containsAll(this.getEntries()) )
                     return true;
         return false;
     }

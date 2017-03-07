@@ -9,9 +9,12 @@ import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.util.ARPAFileHandler;
 import eu.transkribus.languageresources.util.SimpleDictFileHandler;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -124,6 +127,9 @@ public class DictionaryTest
         assertTrue(new File(dictionaryPath + "/entriesPunctuationMarks.arpa").exists());
         assertTrue(new File(dictionaryPath + "/entriesPunctuationMarks.dict").exists());
 
+        String entriesArpa = "\\data\\\nngram 1=10\nngram 2=3\n\n\\1-grams:\n5.00000000\trot\n3.00000000\tzum_Beispiel\n3.00000000\tabk\n2.00000000\tAuto\n1.00000000\tist\n1.00000000\tgrün\n1.00000000\tabkürzung\n1.00000000\tDas\n1.00000000\tAu\n0.00000000\tz.B.\n\n\\2-grams:\n3.00000000\tz.B. zum_Beispiel\n1.00000000\tabk abkürzung\n1.00000000\tAuto Au\n\n\\end\\\n";
+        assertEquals(entriesArpa, readFile(dictionaryPath + "/entries.arpa"));
+
         IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);
         assertTrue(dictionary1.getEntries().containsAll(dictionary2.getEntries()));
         assertTrue(dictionary2.getEntries().containsAll(dictionary1.getEntries()));
@@ -189,5 +195,18 @@ public class DictionaryTest
         entriesWord = SimpleDictFileHandler.read(new File(dictionaryPath + "/entriesPunctuationMarks.dict"));
         assertTrue(entriesWord.containsKey("!"));
         assertTrue(entriesWord.containsKey("."));
+    }
+
+    private String readFile(String path) throws IOException, FileNotFoundException {
+        String s = "";
+        try ( Reader reader = new BufferedReader(new FileReader(new File(path))) ) {
+            while ( true ) {
+                int c = reader.read();
+                if ( c == -1 )
+                    break;
+                s += (char)c;
+            }
+        }
+        return s;
     }
 }

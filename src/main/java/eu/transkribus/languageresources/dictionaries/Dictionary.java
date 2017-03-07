@@ -230,17 +230,17 @@ public class Dictionary implements IDictionary {
                     this.updateEntryCharacterTable(w.getKey(), w.getValue().intValue() * -1);
                 }
 
-        Iterator it = this.entries.values().iterator();
+        Iterator<IEntry> it = this.entries.values().iterator();
         while ( it.hasNext() )
             if ( ((IEntry)it.next()).getFrequency() == 0 ) {
                 it.remove();
                 this.numberTypes--;
             }
 
-        it = this.entryCharacterTable.entrySet().iterator();
-        while ( it.hasNext() )
-            if ( ((Map.Entry<Character, Integer>)it.next()).getValue() == 0 )
-                it.remove();
+        Iterator<Map.Entry<Character, Integer>> it2 = this.entryCharacterTable.entrySet().iterator();
+        while ( it2.hasNext() )
+            if ( ((Map.Entry<Character, Integer>) it2.next()).getValue() == 0 )
+                it2.remove();
     }
 
     public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams(IDictionaryFilter filter) {

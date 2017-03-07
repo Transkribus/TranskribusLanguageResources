@@ -84,7 +84,8 @@ public class DictionaryFromPAGEXMLTest
         Dictionary dictionary = new Dictionary(tokenizedText);
         DictionaryUtils.save(dictionaryFolder, dictionary);
         Dictionary dictionary2 = (Dictionary) DictionaryUtils.load(dictionaryFolder);
-        assertEquals(dictionary.getEntries(), dictionary2.getEntries());
+        assertTrue(dictionary.getEntries().containsAll(dictionary2.getEntries()));
+        assertTrue(dictionary2.getEntries().containsAll(dictionary.getEntries()));
         assertEquals(dictionary.getEntryCharacterTable(), dictionary2.getEntryCharacterTable());
         assertEquals(dictionary.getValueCharacterTable(), dictionary2.getValueCharacterTable());
         assertEquals(dictionary.getNumberTokens(), dictionary2.getNumberTokens());

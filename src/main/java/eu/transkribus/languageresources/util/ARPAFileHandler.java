@@ -125,17 +125,15 @@ public class ARPAFileHandler {
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() ) {
             if ( ngram.getValue().size() > 0 ) {
                 writer.println(String.format("\\%d-grams:", ngram.getKey()));
-                List<Object[]> list = new LinkedList<>();
+
+                List<String> list = new LinkedList<>();
                 for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
                     for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
-                        list.add(new Object[] {word.getValue(), String.format("%s %s", String.join(" ", words.getKey()), word.getKey()).trim()});
-                Collections.sort(list, new Comparator<Object[]>() {
-                    public int compare(Object[] o1, Object[] o2) {
-                        return ((Double) o1[0]).compareTo((Double) o2[0]);
-                    }
-                }.reversed());
-                for ( Object[] o : list )
-                    writer.println(String.format("%s\t%s", numberFormat.format(o[0]), o[1]).trim());
+                        list.add(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
+
+                list.sort(Comparator.comparing((String s) -> s).reversed());
+                for ( String s : list )
+                    writer.println(s.trim());
             }
             writer.println();
         }

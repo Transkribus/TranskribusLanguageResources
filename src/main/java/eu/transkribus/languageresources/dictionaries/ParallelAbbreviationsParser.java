@@ -23,35 +23,10 @@ import java.util.stream.Collectors;
  *
  * @author max
  */
-public class ParallelAbbreviations
+public class ParallelAbbreviationsParser
 {
 
-    private final String fileAbbreviated;
-    private final String fileExpanded;
-
-    public ParallelAbbreviations(String fileAbbreviated, String fileExpanded)
-    {
-        this.fileAbbreviated = fileAbbreviated;
-        this.fileExpanded = fileExpanded;
-    }
-
-    private List<String> getLinesFromFile(String pathToFile) throws FileNotFoundException, IOException
-    {
-        List<String> lines = new ArrayList<>();
-
-        File file = new File(pathToFile);
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
-        String line;
-        while ((line = br.readLine()) != null)
-        {
-            lines.add(line);
-        }
-
-        return lines;
-    }
-
-    public IDictionary createDictionary() throws IOException, URISyntaxException
+    public static IDictionary createDictionary(String fileAbbreviated, String fileExpanded) throws IOException, URISyntaxException
     {
         List<String> linesAbbreviated = getLinesFromFile(fileAbbreviated);
         List<String> linesExpanded = getLinesFromFile(fileExpanded);
@@ -70,7 +45,23 @@ public class ParallelAbbreviations
         return dict;
     }
 
-    private void compareLines(Dictionary dict, String lineAbbreviated, String lineExpanded)
+    private static List<String> getLinesFromFile(String pathToFile) throws FileNotFoundException, IOException
+    {
+        List<String> lines = new ArrayList<>();
+
+        File file = new File(pathToFile);
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        String line;
+        while ((line = br.readLine()) != null)
+        {
+            lines.add(line);
+        }
+
+        return lines;
+    }
+
+    private static void compareLines(Dictionary dict, String lineAbbreviated, String lineExpanded)
     {
         String[] tokensAbbreviated = lineAbbreviated.split(" ");
         String[] tokensExpanded = lineExpanded.split(" ");

@@ -60,8 +60,7 @@ public class ParallelAbbrevationsDict
      @Test
      public void dictionaryFromParallelAbbreviations() throws ARPAParseException, FileNotFoundException, IOException, URISyntaxException
      {
-        ParallelAbbreviations pa = new ParallelAbbreviations(pathToAbbreviated, pathToExpanded);
-        IDictionary dictionary = pa.createDictionary();
+        IDictionary dictionary = ParallelAbbreviationsParser.createDictionary(pathToAbbreviated, pathToExpanded);
         
         DictionaryUtils.save(dictionaryFolder, dictionary);
         Dictionary dictionary2 = (Dictionary) DictionaryUtils.load(dictionaryFolder);

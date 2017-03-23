@@ -5,14 +5,12 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
-import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
+import java.net.URISyntaxException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,17 +22,19 @@ import static org.junit.Assert.*;
  *
  * @author max
  */
-public class DictionaryFromPAGEXMLTest
+public class ParallelAbbrevationsDict
 {
 
-    private final String pathToFile;
+    private final String pathToAbbreviated;
+    private final String pathToExpanded;
     private final String dictionaryFolder;
 
-    public DictionaryFromPAGEXMLTest()
+    public ParallelAbbrevationsDict()
     {
         ClassLoader classLoader = getClass().getClassLoader();
-        pathToFile = new File(classLoader.getResource("page/").getFile()).getAbsolutePath();
-        dictionaryFolder = new File(classLoader.getResource("page/").getFile()).getAbsolutePath() + "/dictionary";
+        pathToAbbreviated = new File(classLoader.getResource("itineria/train_input.txt").getFile()).getAbsolutePath();
+        pathToExpanded = new File(classLoader.getResource("itineria/train_target.txt").getFile()).getAbsolutePath();
+        dictionaryFolder = new File(classLoader.getResource("itineria/").getFile()).getAbsolutePath();
     }
 
     @BeforeClass
@@ -58,30 +58,11 @@ public class DictionaryFromPAGEXMLTest
     }
 
      @Test
-     public void dictionaryFromPAGEXML() throws ARPAParseException, FileNotFoundException, IOException
+     public void dictionaryFromParallelAbbreviations() throws ARPAParseException, FileNotFoundException, IOException, URISyntaxException
      {
-        // first, we extract the text from the page xml folder
-        PAGEXMLExtractor textExtraktor = new PAGEXMLExtractor();
-        String text = textExtraktor.extractTextFromDocument(pathToFile, " ");
-
-        Properties tokenizerProperties = new Properties();
-
-        // we use simple dehyphenation
-        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
-
-        // new lines, dots and commas are not treated as types
-        // example: word.word -> 'word', '.', 'word'
-        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
-
-        // the emptry string means we do not keep the delimiter signs
-        tokenizerProperties.setProperty("keep_delimiter_signs", "");
-
-        ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
-        List<String> tokenizedText = tokenizer.tokenize(text);
-
-        // the dictionary is created with the tokenized text
-        // and is written into a file without frequencies
-        Dictionary dictionary = new Dictionary(tokenizedText);
+        ParallelAbbreviations pa = new ParallelAbbreviations(pathToAbbreviated, pathToExpanded);
+        IDictionary dictionary = pa.createDictionary();
+        
         DictionaryUtils.save(dictionaryFolder, dictionary);
         Dictionary dictionary2 = (Dictionary) DictionaryUtils.load(dictionaryFolder);
         assertEquals(dictionary.getEntries(), dictionary2.getEntries());

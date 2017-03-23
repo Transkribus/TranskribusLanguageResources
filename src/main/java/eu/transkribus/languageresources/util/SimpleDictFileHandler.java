@@ -17,8 +17,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,11 +65,15 @@ public class SimpleDictFileHandler
         numberFormat.setMaximumFractionDigits(0);
         numberFormat.setGroupingUsed(false);
 
-        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-        for (IEntry entry : entries)
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file))))
         {
-            writer.println(String.format("%s,%d", entry.getKey(), entry.getFrequency()));
+            List<IEntry> entriesList = new ArrayList(entries);
+            entriesList.sort((IEntry o1, IEntry o2) -> -new Integer(o1.getFrequency()).compareTo(o2.getFrequency()));
+            
+            for (IEntry entry : entriesList)
+            {
+                writer.println(String.format("%s,%d", entry.getKey(), entry.getFrequency()));
+            }
         }
-        writer.close();
     }
 }

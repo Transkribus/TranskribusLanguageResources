@@ -21,6 +21,7 @@ public class Entry implements IEntry {
     public Entry(String name, int frequency) {
         this.name = name;
         this.values = new LinkedHashMap<>();
+        this.values.put(this.name, frequency);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class Entry implements IEntry {
     }
 
     public void addValue(String name) {
-        this.values.put(name, this.values.containsKey(name) ? this.values.get(name) + 1 : 0);
+        this.values.put(name, this.values.containsKey(name) ? this.values.get(name) + 1 : 1);
     }
 
     public void addValue(String name, int frequency) {

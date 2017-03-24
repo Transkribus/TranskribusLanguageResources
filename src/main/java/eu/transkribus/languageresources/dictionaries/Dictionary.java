@@ -15,7 +15,6 @@ import eu.transkribus.interfaces.IEntry;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +107,7 @@ public class Dictionary implements IDictionary {
 
     public void addEntry(String key, int frequency) {
         if ( this.entries.containsKey(key) )
-            ((Entry)this.entries.get(key)).increaseFrequency(frequency);
+            ((Entry)this.entries.get(key)).addValue(key, frequency);
         else {
             this.entries.put(key, new Entry(key, frequency));
             this.numberTypes++;
@@ -144,8 +143,8 @@ public class Dictionary implements IDictionary {
         if ( this.entries.containsKey(key) ) {
             if ( !this.entries.get(key).containsValue(name) )
                 this.numberTypes += 1;
-            this.numberTokens += frequency;
-            ((Entry)this.entries.get(key)).increaseFrequency(frequency);
+            this.numberTokens += frequency + 1;
+            ((Entry)this.entries.get(key)).addValue(key, frequency);
             ((Entry)this.entries.get(key)).addValue(name, frequency);
         }
         else {
@@ -153,7 +152,7 @@ public class Dictionary implements IDictionary {
             e.addValue(name, frequency);
             this.entries.put(key, e);
             this.numberTypes += 2;
-            this.numberTokens += frequency;
+            this.numberTokens += frequency + 1;
         }
         this.updateValueCharacterTable(name, frequency);
     }
@@ -225,7 +224,7 @@ public class Dictionary implements IDictionary {
             for ( Map.Entry<List<String>, Map<String, Double>> v : twoGrams.entrySet() )
                 for ( Map.Entry<String, Double> w : v.getValue().entrySet() ) {
                     this.addValue(v.getKey().get(0), w.getKey(), w.getValue().intValue());
-                    ((Entry)this.entries.get(w.getKey())).decreaseFrequency(w.getValue().intValue());
+                    ((Entry)this.entries.get(w.getKey())).addValue(w.getKey(), w.getValue().intValue() * -1);
                     this.numberTokens -= w.getValue().intValue();
                     this.updateEntryCharacterTable(w.getKey(), w.getValue().intValue() * -1);
                 }
@@ -253,6 +252,9 @@ public class Dictionary implements IDictionary {
                 List<String> eKey = Arrays.asList(new String[] {e.getKey()});
                 int f = e.getFrequency();
                 for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
+                    if ( e.getKey().equals(v.getKey()) )
+                        continue;
+
                     List<String> vKey = Arrays.asList(new String[] {v.getKey()});
                     if (filter.keep(v.getKey()))
                     {

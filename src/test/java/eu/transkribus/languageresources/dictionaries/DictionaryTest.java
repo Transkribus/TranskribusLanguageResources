@@ -65,30 +65,36 @@ public class DictionaryTest
         dictionary.addValue("abk", "abkürzung");
 
         assertEquals(1, dictionary.getEntries().size());
-        assertTrue(dictionary.containsKey("abk"));
-        assertFalse(dictionary.containsKey("abkürzung"));
-        assertEquals(1, dictionary.getEntry("abk").getValues().size());
-        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
-        assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
-
-        dictionary.addValue("abk", "abkürzung");
-
-        assertEquals(1, dictionary.getEntries().size());
-        assertTrue(dictionary.containsKey("abk"));
-        assertFalse(dictionary.containsKey("abkürzung"));
-        assertEquals(1, dictionary.getEntry("abk").getValues().size());
-        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
-        assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
-
-        dictionary.addValue("abk", "Abkürzung");
-
-        assertEquals(1, dictionary.getEntries().size());
+        assertEquals(2, dictionary.getNumberTypes());
+        assertEquals(3, dictionary.getNumberTokens());
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(2, dictionary.getEntry("abk").getValues().size());
         assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
+        assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
+
+        dictionary.addValue("abk", "abkürzung", 2);
+
+        assertEquals(1, dictionary.getEntries().size());
+        assertEquals(2, dictionary.getNumberTypes());
+        assertEquals(6, dictionary.getNumberTokens());
+        assertTrue(dictionary.containsKey("abk"));
+        assertFalse(dictionary.containsKey("abkürzung"));
+        assertEquals(2, dictionary.getEntry("abk").getValues().size());
+        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
+        assertEquals(3, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
+
+        dictionary.addValue("abk", "Abkürzung");
+
+        assertEquals(1, dictionary.getEntries().size());
+        assertEquals(3, dictionary.getNumberTypes());
+        assertEquals(8, dictionary.getNumberTokens());
+        assertTrue(dictionary.containsKey("abk"));
+        assertFalse(dictionary.containsKey("abkürzung"));
+        assertEquals(3, dictionary.getEntry("abk").getValues().size());
+        assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
         assertTrue(dictionary.getEntry("abk").containsValue("Abkürzung"));
-        assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
+        assertEquals(3, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
         assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("Abkürzung"));
     }
 
@@ -171,9 +177,9 @@ public class DictionaryTest
         assertTrue(dictionary4.containsKey("Wörter"));
         assertTrue(dictionary4.containsKey("Hallo"));
         assertTrue(dictionary4.containsKey("High8"));
-        assertEquals(dictionary4.getEntry("Wörter").getValues().size(), 0);
-        assertEquals(dictionary4.getEntry("Hallo").getValues().size(), 1);
-        assertEquals(dictionary4.getEntry("High8").getValues().size(), 0);
+        assertEquals(dictionary4.getEntry("Wörter").getValues().size(), 1);
+        assertEquals(dictionary4.getEntry("Hallo").getValues().size(), 2);
+        assertEquals(dictionary4.getEntry("High8").getValues().size(), 1);
         assertTrue(dictionary4.getEntry("Hallo").containsValue("greeting"));
 
 
@@ -188,8 +194,8 @@ public class DictionaryTest
         assertEquals(dictionary4.getEntries().size(), 2);
         assertTrue(dictionary4.containsKey("!"));
         assertTrue(dictionary4.containsKey("."));
-        assertEquals(dictionary4.getEntry("!").getValues().size(), 0);
-        assertEquals(dictionary4.getEntry(".").getValues().size(), 0);
+        assertEquals(dictionary4.getEntry("!").getValues().size(), 1);
+        assertEquals(dictionary4.getEntry(".").getValues().size(), 1);
 
 
         entriesWord = SimpleDictFileHandler.read(new File(dictionaryPath + "/entriesPunctuationMarks.dict"));

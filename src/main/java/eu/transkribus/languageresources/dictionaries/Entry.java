@@ -12,7 +12,6 @@ import eu.transkribus.interfaces.IEntry;
  */
 public class Entry implements IEntry {
     private String name;
-    private int frequency;
     private Map<String, Integer> values;
 
     public Entry(String name) {
@@ -21,7 +20,6 @@ public class Entry implements IEntry {
 
     public Entry(String name, int frequency) {
         this.name = name;
-        this.frequency = frequency;
         this.values = new LinkedHashMap<>();
     }
 
@@ -32,7 +30,7 @@ public class Entry implements IEntry {
 
     @Override
     public int getFrequency() {
-        return this.frequency;
+        return this.values.get(this.name);
     }
 
     @Override
@@ -46,18 +44,6 @@ public class Entry implements IEntry {
     @Override
     public Map<String, Integer> getValues() {
         return this.values;
-    }
-
-    public void decreaseFrequency(int decrement) {
-        this.frequency -= decrement;
-    }
-
-    public void increaseFrequency() {
-        this.frequency++;
-    }
-
-    public void increaseFrequency(int increment) {
-        this.frequency += increment;
     }
 
     public void addValue(String name) {
@@ -77,7 +63,7 @@ public class Entry implements IEntry {
     public boolean equals(Object obj) {
         if ( obj != null )
             if ( obj instanceof Entry )
-                if ( this.name.equals(((Entry)obj).getKey()) && this.frequency == ((Entry)obj).getFrequency() && this.values.equals(((Entry)obj).getValues()) )
+                if ( this.name.equals(((Entry)obj).getKey()) && this.values.equals(((Entry)obj).getValues()) )
                     return true;
         return false;
     }
@@ -86,7 +72,6 @@ public class Entry implements IEntry {
     public int hashCode() {
         int hash = 7;
         hash = 23 * hash + this.name.hashCode();
-        hash = 11 * hash + this.frequency;
         hash = 53 * hash + this.values.hashCode();
         return hash;
     }

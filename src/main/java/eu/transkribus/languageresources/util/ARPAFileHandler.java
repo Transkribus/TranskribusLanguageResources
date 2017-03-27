@@ -15,7 +15,10 @@ import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +115,7 @@ public class ARPAFileHandler {
 		numberFormat.setMinimumFractionDigits(8);
 		numberFormat.setMaximumFractionDigits(8);
         numberFormat.setGroupingUsed(false);
-        
+
         PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         writer.println("\\data\\");
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() )
@@ -122,9 +125,15 @@ public class ARPAFileHandler {
         for ( Map.Entry<Integer,  Map<List<String>, Map<String, Double>>> ngram : ngrams.entrySet() ) {
             if ( ngram.getValue().size() > 0 ) {
                 writer.println(String.format("\\%d-grams:", ngram.getKey()));
+
+                List<String> list = new LinkedList<>();
                 for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
                     for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
-                        writer.println(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
+                        list.add(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
+
+                list.sort(Comparator.comparing((String s) -> s).reversed());
+                for ( String s : list )
+                    writer.println(s.trim());
             }
             writer.println();
         }

@@ -1,7 +1,6 @@
 package eu.transkribus.languageresources.dictionaries;
 
 import eu.transkribus.interfaces.IDictionary;
-import eu.transkribus.interfaces.IEntry;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.util.ARPAFileHandler;
 import eu.transkribus.languageresources.util.SimpleDictFileHandler;
@@ -16,8 +15,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,9 +56,24 @@ public class DictionaryUtils {
         writeCharacterTable(new File(path.getAbsolutePath() + "/entry-character-table.csv"), ((Dictionary)dictionary).getEntryCharacterTable());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/value-character-table.arpa"), ((Dictionary)dictionary).valueCharacterTableToNgrams());
         writeCharacterTable(new File(path.getAbsolutePath() + "/value-character-table.csv"), ((Dictionary)dictionary).getValueCharacterTable());
+        
+        ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entriesWords.arpa"), ((Dictionary)dictionary).toNgrams((String type) ->
+        {
+            return type.matches("[\\p{L}\\p{N}\\p{Z}\\p{M}]+");
+        }));
+        SimpleDictFileHandler.write(new File(path.getAbsolutePath() + "/entriesWords.dict"), ((Dictionary)dictionary).getEntries((String type) ->
+        {
+            return type.matches("[\\p{L}\\p{N}\\p{Z}\\p{M}]+");
+        }));
+        ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entriesPunctuationMarks.arpa"), ((Dictionary)dictionary).toNgrams((String type) ->
+        {
+            return type.matches("\\p{P}+");
+        }));
+        SimpleDictFileHandler.write(new File(path.getAbsolutePath() + "/entriesPunctuationMarks.dict"), ((Dictionary)dictionary).getEntries((String type) ->
+        {
+            return type.matches("\\p{P}+");
+        }));
     }
-    
-    
 
     private static void readMetadataFile(File file, IDictionary dictionary) throws FileNotFoundException, IOException {
         Properties properties = new Properties();

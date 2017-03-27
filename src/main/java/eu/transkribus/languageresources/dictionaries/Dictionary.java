@@ -1,7 +1,5 @@
 package eu.transkribus.languageresources.dictionaries;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,6 +15,8 @@ import eu.transkribus.interfaces.IEntry;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -73,11 +73,6 @@ public class Dictionary implements IDictionary {
         this.language = language;
     }
 
-//    @Override
-//    public long getNumberTokens() {
-//        return this.numberTokens;
-//    }
-    
     @Override
     public long getNumberTokens() {
         return this.numberTokens;
@@ -158,7 +153,7 @@ public class Dictionary implements IDictionary {
             e.addValue(name, frequency);
             this.entries.put(key, e);
             this.numberTypes += 2;
-            this.numberTokens += 1 + frequency;
+            this.numberTokens += frequency;
         }
         this.updateValueCharacterTable(name, frequency);
     }
@@ -179,6 +174,13 @@ public class Dictionary implements IDictionary {
     @Override
     public Collection<IEntry> getEntries() {
         return new LinkedList<IEntry>(this.entries.values());
+    }
+
+    public Collection<IEntry> getEntries(IDictionaryFilter filter) {
+        return this.entries.values().stream().filter((IEntry t) ->
+                {
+                    return filter.keep(t.getKey());
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -228,42 +230,52 @@ public class Dictionary implements IDictionary {
                     this.updateEntryCharacterTable(w.getKey(), w.getValue().intValue() * -1);
                 }
 
-        Iterator it = this.entries.values().iterator();
+        Iterator<IEntry> it = this.entries.values().iterator();
         while ( it.hasNext() )
             if ( ((IEntry)it.next()).getFrequency() == 0 ) {
                 it.remove();
                 this.numberTypes--;
             }
 
-        it = this.entryCharacterTable.entrySet().iterator();
-        while ( it.hasNext() )
-            if ( ((Map.Entry<Character, Integer>)it.next()).getValue() == 0 )
-                it.remove();
+        Iterator<Map.Entry<Character, Integer>> it2 = this.entryCharacterTable.entrySet().iterator();
+        while ( it2.hasNext() )
+            if ( ((Map.Entry<Character, Integer>) it2.next()).getValue() == 0 )
+                it2.remove();
     }
 
-    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams() {
+    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams(IDictionaryFilter filter) {
         Map<Integer, Map<List<String>, Map<String, Double>>> ngrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> oneGrams = new LinkedHashMap<>();
         Map<List<String>, Map<String, Double>> twoGrams = new LinkedHashMap<>();
         for ( IEntry e : this.entries.values() ) {
-            int f = e.getFrequency();
-            for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
-                f -= v.getValue();
-                if ( !oneGrams.containsKey(v.getKey()) )
-                    oneGrams.put(Arrays.asList(new String[] {v.getKey()}), new LinkedHashMap<String, Double>());
-                oneGrams.get(Arrays.asList(new String[] {v.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {v.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {v.getKey()})).get("") + v.getValue() : (double) v.getValue());
-                if ( !twoGrams.containsKey(e.getKey()) )
-                    twoGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
-                twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
-            }
+            if (filter.keep(e.getKey()))
+            {
+                int f = e.getFrequency();
+                for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
+                    if (filter.keep(v.getKey()))
+                    {
+                        f -= v.getValue();
+                        if ( !oneGrams.containsKey(v.getKey()) )
+                            oneGrams.put(Arrays.asList(new String[] {v.getKey()}), new LinkedHashMap<String, Double>());
+                        oneGrams.get(Arrays.asList(new String[] {v.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {v.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {v.getKey()})).get("") + v.getValue() : (double) v.getValue());
+                        if ( !twoGrams.containsKey(e.getKey()) )
+                            twoGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
+                        twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
+                    }
+                }
 
-            if ( !oneGrams.containsKey(e.getKey()) )
-                oneGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
-            oneGrams.get(Arrays.asList(new String[] {e.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {e.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {e.getKey()})).get("") + f : (double) f);
+                if ( !oneGrams.containsKey(e.getKey()) )
+                    oneGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
+                oneGrams.get(Arrays.asList(new String[] {e.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {e.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {e.getKey()})).get("") + f : (double) f);
+            }
         }
         ngrams.put(1, oneGrams);
         ngrams.put(2, twoGrams);
         return ngrams;
+    }
+
+    public Map<Integer, Map<List<String>, Map<String, Double>>> toNgrams() {
+        return toNgrams((String type) -> {return true;});
     }
 
     public Map<Integer, Map<List<String>, Map<String, Double>>> entryCharacterTableToNgrams() {
@@ -313,7 +325,7 @@ public class Dictionary implements IDictionary {
         if ( obj != null )
             if ( obj instanceof Dictionary )
                 if ( ((this.name != null && this.name.equals(((Dictionary)obj).getName())) || (this.name == null && ((Dictionary)obj).getName() == null)) && ((this.description != null && this.description.equals(((Dictionary)obj).getDescription())) || (this.description == null && ((Dictionary)obj).getDescription() == null)) && ((this.language != null && this.language.equals(((Dictionary)obj).getLanguage())) || (this.language == null && ((Dictionary)obj).getLanguage() == null)) && this.numberTypes == ((Dictionary)obj).getNumberTypes() &&
-                    this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.entryCharacterTable.equals(((Dictionary)obj).getEntryCharacterTable()) && this.valueCharacterTable.equals(((Dictionary)obj).getValueCharacterTable()) && this.creationDate.equals(((Dictionary)obj).getCreationDate()) && this.getEntries().equals(((Dictionary)obj).getEntries()) )
+                    this.numberTokens == ((Dictionary)obj).getNumberTokens() && this.entryCharacterTable.equals(((Dictionary)obj).getEntryCharacterTable()) && this.valueCharacterTable.equals(((Dictionary)obj).getValueCharacterTable()) && this.creationDate.equals(((Dictionary)obj).getCreationDate()) && this.getEntries().containsAll(((Dictionary)obj).getEntries()) && ((Dictionary)obj).getEntries().containsAll(this.getEntries()) )
                     return true;
         return false;
     }

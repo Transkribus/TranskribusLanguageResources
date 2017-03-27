@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import com.google.common.io.Files;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
 import eu.transkribus.languageresources.extractor.pdf.PDFExtraktor;
@@ -35,11 +36,7 @@ public class DictionaryFromPDFTest
     {
         ClassLoader classLoader = getClass().getClassLoader();
         pathToFile = new File(classLoader.getResource("Brief103BoeckhanVarnhagen.de.pdf").getFile()).getAbsolutePath();
-        
-        File folder = new File(classLoader.getResource("pdf_test/").getFile());
-        if(!folder.exists())
-            folder.mkdir();
-        dictionaryFolder = folder.getAbsolutePath();
+        dictionaryFolder = Files.createTempDir().getAbsolutePath();
     }
 
     @BeforeClass
@@ -89,7 +86,7 @@ public class DictionaryFromPDFTest
         Dictionary dictionary = new Dictionary(tokenizedText);
         DictionaryUtils.save(dictionaryFolder, dictionary);
         Dictionary dictionary2 = (Dictionary) DictionaryUtils.load(dictionaryFolder);
-        assertEquals(dictionary.getEntries(), dictionary2.getEntries());
+        assertEquals(dictionary.getEntries().size(), dictionary2.getEntries().size());
         assertEquals(dictionary.getEntryCharacterTable(), dictionary2.getEntryCharacterTable());
         assertEquals(dictionary.getValueCharacterTable(), dictionary2.getValueCharacterTable());
         assertEquals(dictionary.getNumberTokens(), dictionary2.getNumberTokens());

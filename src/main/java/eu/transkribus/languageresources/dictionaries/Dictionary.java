@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.interfaces.IEntry;
+import java.util.Comparator;
 
 import java.util.Map;
 import java.util.Objects;
@@ -189,6 +190,18 @@ public class Dictionary implements IDictionary {
             return this.entries.get(key);
 
         throw new NoSuchElementException("Could not find entry with given key: " + key);
+    }
+    
+    public String getMostFrequentValue(String key)
+    {
+        return this.entries
+                .get(key)
+                .getValues()
+                .entrySet()
+                .stream()
+                .max((Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) -> o1.getValue().compareTo(o2.getValue()))
+                .get()
+                .getKey();
     }
 
     @Override

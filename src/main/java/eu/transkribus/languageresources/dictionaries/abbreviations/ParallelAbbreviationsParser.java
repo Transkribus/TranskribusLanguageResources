@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.transkribus.languageresources.dictionaries;
+package eu.transkribus.languageresources.dictionaries.abbreviations;
 
 import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -70,10 +71,7 @@ public class ParallelAbbreviationsParser
         {
             for (int i = 0; i < tokensAbbreviated.length; i++)
             {
-                if (!tokensAbbreviated[i].equals(tokensExpanded[i]))
-                {
-                    dict.addValue(tokensAbbreviated[i], tokensExpanded[i], 1);
-                }
+                dict.addValue(tokensAbbreviated[i], tokensExpanded[i], 1);
             }
         }
     }

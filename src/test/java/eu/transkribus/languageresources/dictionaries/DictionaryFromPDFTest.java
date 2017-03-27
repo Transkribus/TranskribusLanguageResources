@@ -35,7 +35,11 @@ public class DictionaryFromPDFTest
     {
         ClassLoader classLoader = getClass().getClassLoader();
         pathToFile = new File(classLoader.getResource("Brief103BoeckhanVarnhagen.de.pdf").getFile()).getAbsolutePath();
-        dictionaryFolder = new File(classLoader.getResource("pdf_test/").getFile()).getAbsolutePath();
+        
+        File folder = new File(classLoader.getResource("pdf_test/").getFile());
+        if(!folder.exists())
+            folder.mkdir();
+        dictionaryFolder = folder.getAbsolutePath();
     }
 
     @BeforeClass

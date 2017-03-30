@@ -133,7 +133,7 @@ public class DictionaryTest
         assertTrue(new File(dictionaryPath + "/entriesPunctuationMarks.arpa").exists());
         assertTrue(new File(dictionaryPath + "/entriesPunctuationMarks.dict").exists());
 
-        String entriesArpa = "\\data\\\nngram 1=10\nngram 2=3\n\n\\1-grams:\n5.00000000\trot\n3.00000000\tzum_Beispiel\n3.00000000\tabk\n2.00000000\tAuto\n1.00000000\tist\n1.00000000\tgrün\n1.00000000\tabkürzung\n1.00000000\tDas\n1.00000000\tAu\n0.00000000\tz.B.\n\n\\2-grams:\n3.00000000\tz.B. zum_Beispiel\n1.00000000\tabk abkürzung\n1.00000000\tAuto Au\n\n\\end\\\n";
+        String entriesArpa = "\\data\\\nngram 1=10\nngram 2=3\n\n\\1-grams:\n5.00000000\trot\n3.00000000\tabk\n3.00000000\tzum_Beispiel\n2.00000000\tAuto\n1.00000000\tabkürzung\n1.00000000\tDas\n1.00000000\tAu\n1.00000000\tist\n1.00000000\tgrün\n0.00000000\tz.B.\n\n\\2-grams:\n3.00000000\tz.B. zum_Beispiel\n1.00000000\tabk abkürzung\n1.00000000\tAuto Au\n\n\\end\\\n";
         assertEquals(entriesArpa, readFile(dictionaryPath + "/entries.arpa"));
 
         IDictionary dictionary2 = DictionaryUtils.load(dictionaryPath);

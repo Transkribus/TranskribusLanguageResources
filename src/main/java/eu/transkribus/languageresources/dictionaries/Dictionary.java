@@ -1,5 +1,7 @@
 package eu.transkribus.languageresources.dictionaries;
 
+import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.interfaces.IEntry;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,15 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
-import eu.transkribus.interfaces.IDictionary;
-import eu.transkribus.interfaces.IEntry;
-import java.util.Comparator;
-
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -191,7 +187,7 @@ public class Dictionary implements IDictionary {
 
         throw new NoSuchElementException("Could not find entry with given key: " + key);
     }
-    
+
     public String getMostFrequentValue(String key)
     {
         return this.entries
@@ -263,23 +259,25 @@ public class Dictionary implements IDictionary {
         for ( IEntry e : this.entries.values() ) {
             if (filter.keep(e.getKey()))
             {
+                List<String> eKey = Arrays.asList(new String[]{e.getKey()});
                 int f = e.getFrequency();
                 for ( Map.Entry<String, Integer> v : e.getValues().entrySet() ) {
+                    List<String> vKey = Arrays.asList(new String[]{v.getKey()});
                     if (filter.keep(v.getKey()))
                     {
                         f -= v.getValue();
-                        if ( !oneGrams.containsKey(v.getKey()) )
-                            oneGrams.put(Arrays.asList(new String[] {v.getKey()}), new LinkedHashMap<String, Double>());
-                        oneGrams.get(Arrays.asList(new String[] {v.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {v.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {v.getKey()})).get("") + v.getValue() : (double) v.getValue());
-                        if ( !twoGrams.containsKey(e.getKey()) )
-                            twoGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
+                        if ( !oneGrams.containsKey(vKey) )
+                            oneGrams.put(Arrays.asList(new String[]{v.getKey()}), new LinkedHashMap<>());
+                        oneGrams.get(Arrays.asList(new String[]{v.getKey()})).put("", oneGrams.get(vKey).containsKey("") ? oneGrams.get(vKey).get("") + v.getValue() : (double) v.getValue());
+                        if ( !twoGrams.containsKey(eKey) )
+                            twoGrams.put(Arrays.asList(new String[]{e.getKey()}), new LinkedHashMap<>());
                         twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
                     }
                 }
 
-                if ( !oneGrams.containsKey(e.getKey()) )
-                    oneGrams.put(Arrays.asList(new String[] {e.getKey()}), new LinkedHashMap<String, Double>());
-                oneGrams.get(Arrays.asList(new String[] {e.getKey()})).put("", oneGrams.get(Arrays.asList(new String[] {e.getKey()})).containsKey("") ? oneGrams.get(Arrays.asList(new String[] {e.getKey()})).get("") + f : (double) f);
+                if ( !oneGrams.containsKey(eKey) )
+                    oneGrams.put(Arrays.asList(new String[]{e.getKey()}), new LinkedHashMap<>());
+                oneGrams.get(Arrays.asList(new String[]{e.getKey()})).put("", oneGrams.get(eKey).containsKey("") ? oneGrams.get(eKey).get("") + f : (double) f);
             }
         }
         ngrams.put(1, oneGrams);

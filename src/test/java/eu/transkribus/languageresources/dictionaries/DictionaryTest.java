@@ -18,10 +18,10 @@ import java.io.Reader;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -65,30 +65,36 @@ public class DictionaryTest
         dictionary.addValue("abk", "abkürzung");
 
         assertEquals(1, dictionary.getEntries().size());
+        assertEquals(2, dictionary.getNumberTypes());
+        assertEquals(2, dictionary.getNumberTokens());
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(1, dictionary.getEntry("abk").getValues().size());
         assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
         assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
 
-        dictionary.addValue("abk", "abkürzung");
+        dictionary.addValue("abk", "abkürzung", 2);
 
         assertEquals(1, dictionary.getEntries().size());
+        assertEquals(2, dictionary.getNumberTypes());
+        assertEquals(4, dictionary.getNumberTokens());
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(1, dictionary.getEntry("abk").getValues().size());
         assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
-        assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
+        assertEquals(3, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
 
         dictionary.addValue("abk", "Abkürzung");
 
         assertEquals(1, dictionary.getEntries().size());
+        assertEquals(3, dictionary.getNumberTypes());
+        assertEquals(5, dictionary.getNumberTokens());
         assertTrue(dictionary.containsKey("abk"));
         assertFalse(dictionary.containsKey("abkürzung"));
         assertEquals(2, dictionary.getEntry("abk").getValues().size());
         assertTrue(dictionary.getEntry("abk").containsValue("abkürzung"));
         assertTrue(dictionary.getEntry("abk").containsValue("Abkürzung"));
-        assertEquals(2, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
+        assertEquals(3, (int) dictionary.getEntry("abk").getValues().get("abkürzung"));
         assertEquals(1, (int) dictionary.getEntry("abk").getValues().get("Abkürzung"));
     }
 

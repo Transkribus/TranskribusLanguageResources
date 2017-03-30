@@ -39,8 +39,9 @@ public class Dictionary implements IDictionary {
     public Dictionary(List<String> tokenizedText) {
         this();
 
-        for ( String token : tokenizedText )
-           this.addEntry(token);
+        tokenizedText.stream().filter((token) -> (!token.trim().isEmpty())).forEachOrdered((token) -> {
+            this.addEntry(token.trim());
+        });
     }
 
     @Override

@@ -77,6 +77,10 @@ public class AbbreviationsExpanderTest
         expander.addDict((Dictionary) dict);
         
         List<String> result = expander.expandLineGreedily(line);
+        
+        System.out.println("input line: "+line);
+        System.out.println("expanded line: "+result);
+        
         assertEquals(expResult, result);
     }
 
@@ -90,35 +94,43 @@ public class AbbreviationsExpanderTest
         expander.addDict((Dictionary) dict);
         
         Map<String, Double> suggestions = expander.getSuggestions("I");
+        System.out.println("suggestions for 'I': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("I"), 0);
         
         suggestions = expander.getSuggestions("m");
+        System.out.println("suggestions for 'm': "+suggestions);
         assertEquals(2, suggestions.size());
         assertEquals(0.5, suggestions.get("m"), 0);
         assertEquals(0.5, suggestions.get("am"), 0);
         
         suggestions = expander.getSuggestions("a");
+        System.out.println("suggestions for 'a': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("a"), 0);
         
         suggestions = expander.getSuggestions("sh");
+        System.out.println("suggestions for 'sh': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("short"), 0);
         
         suggestions = expander.getSuggestions("test");
+        System.out.println("suggestions for 'test': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("test"), 0);
         
         suggestions = expander.getSuggestions("sent");
+        System.out.println("suggestions for 'sent': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("sentence"), 0);
         
         suggestions = expander.getSuggestions("num");
+        System.out.println("suggestions for 'num': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("number"), 0);
         
         suggestions = expander.getSuggestions("two");
+        System.out.println("suggestions for 'two': "+suggestions);
         assertEquals(1, suggestions.size());
         assertEquals(1, suggestions.get("two"), 0);
     }

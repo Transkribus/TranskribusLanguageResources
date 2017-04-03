@@ -34,27 +34,6 @@ When having the OOV rate calculted by tokens, the number of tokens in the dictio
 
 Example: There are 100 tokens in a text but only two types, `word1` and `word2`. `word1` appears 99 times and is in the dictionary, `word2` appears only once and is not in the dictionary. The OOV would be calculated as such: `oov_rate = 1 / (99 + 1) = 0.01`
 
-## Language Models
-
-Two types of language models are supported: ARPA and neuronal networks.
-
-The offered method by the interface `ILanguageModel` looks like this:
-
-    Map<String, Double> getProbabilitiesForNextToken(List<String> sequence) throws UnsupportedSequenceException;
-
-It takes a list of string of which each string represents one token. The returned `Map<String, Double>` contains the probability for each type depending on the given sequence. The two formats both hold a list of known types.
-
-
-### ARPA
-
-A language model in the ARPA format can be used using the class `ARPALanguageModel`. It is initialized with the path to the file with the ARPA format. The constructor throws an `ARPAParseException` if the file is malformed. When using `getProbabilitiesForNextToken`, the method looks for a sequence length `n` and return the probability of token `n + 1`. It throws an `UnsupportedSequenceException` if the given list of tokens has either a length which was not in the file or if the sequence is unkown.
-
-
-### Neural Network
-
-A language model in the form of a neural network can be used using the class `NeuralLanguageModel`. It needs to be initialized with a path to the zip file containing the network. When using `getProbabilitiesForNextToken`, the given sequence is mapped onto a matrix with dimensions `(sequence_length, num_types)`, whereas at each timestamp, the index of the given token will be set `1`. It returns a vector with probabilities for the next token. The returned `double[]` is transformed into a map which contains the type as key and its probability as value. If the given sequence contains an unkown token, an `UnsupportedSequenceException` will be thrown.
-
-
 ## Dictionaries
 
 A Dictionary holds a list of entries. Each entry has a key and frequency and a list of associated words with their frequency. The functions to query a dictionary are defined by the interface `IDictionary` and `IEntry.` In addition entries can be added to a dictionary e.g.

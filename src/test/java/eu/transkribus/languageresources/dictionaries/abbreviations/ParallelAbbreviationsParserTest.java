@@ -7,6 +7,7 @@ package eu.transkribus.languageresources.dictionaries.abbreviations;
 
 import eu.transkribus.languageresources.dictionaries.abbreviations.ParallelAbbreviationsParser;
 import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.languageresources.dictionaries.DictionaryUtils;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,12 +25,18 @@ public class ParallelAbbreviationsParserTest
 
     private final String pathToAbbreviated;
     private final String pathToExpanded;
+    
+    private final String itineria_pathToAbbreviated;
+    private final String itineria_pathToExpanded;
 
     public ParallelAbbreviationsParserTest()
     {
         ClassLoader classLoader = getClass().getClassLoader();
         pathToAbbreviated = new File(classLoader.getResource("abbr/abbr.txt").getFile()).getAbsolutePath();
         pathToExpanded = new File(classLoader.getResource("abbr/exp.txt").getFile()).getAbsolutePath();
+        
+        itineria_pathToAbbreviated = new File(classLoader.getResource("itineria/train_input.txt").getFile()).getAbsolutePath();
+        itineria_pathToExpanded = new File(classLoader.getResource("itineria/train_target.txt").getFile()).getAbsolutePath();
     }
 
     @BeforeClass
@@ -95,5 +102,11 @@ public class ParallelAbbreviationsParserTest
         assertEquals(1, dict.getEntry("two").getValues().size());
         assertEquals(1, (int)dict.getEntry("two").getValues().get("two"));
     }
-
+    
+    @Test
+    public void testCreateItineriaDictionary() throws Exception
+    {
+        IDictionary dict = ParallelAbbreviationsParser.createDictionary(itineria_pathToAbbreviated, itineria_pathToExpanded, true);
+        DictionaryUtils.save("itineria/abbr_dict", dict);
+    }
 }

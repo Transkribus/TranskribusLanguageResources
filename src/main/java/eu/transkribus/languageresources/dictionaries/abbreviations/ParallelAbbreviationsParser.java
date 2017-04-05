@@ -29,6 +29,11 @@ public class ParallelAbbreviationsParser
 
     public static IDictionary createDictionary(String fileAbbreviated, String fileExpanded) throws IOException, URISyntaxException
     {
+        return createDictionary(fileAbbreviated, fileExpanded, true);
+    }
+
+    public static IDictionary createDictionary(String fileAbbreviated, String fileExpanded, boolean gatherAllWords) throws IOException, URISyntaxException
+    {
         List<String> linesAbbreviated = getLinesFromFile(fileAbbreviated);
         List<String> linesExpanded = getLinesFromFile(fileExpanded);
 
@@ -40,7 +45,7 @@ public class ParallelAbbreviationsParser
         Dictionary dict = new Dictionary();
         for (int i = 0; i < linesAbbreviated.size(); i++)
         {
-            compareLines(dict, linesAbbreviated.get(i), linesExpanded.get(i));
+            compareLines(dict, linesAbbreviated.get(i), linesExpanded.get(i), gatherAllWords);
         }
 
         return dict;
@@ -62,7 +67,7 @@ public class ParallelAbbreviationsParser
         return lines;
     }
 
-    private static void compareLines(Dictionary dict, String lineAbbreviated, String lineExpanded)
+    private static void compareLines(Dictionary dict, String lineAbbreviated, String lineExpanded, boolean gatherAllWords)
     {
         String[] tokensAbbreviated = lineAbbreviated.split(" ");
         String[] tokensExpanded = lineExpanded.split(" ");
@@ -71,7 +76,10 @@ public class ParallelAbbreviationsParser
         {
             for (int i = 0; i < tokensAbbreviated.length; i++)
             {
-                dict.addValue(tokensAbbreviated[i], tokensExpanded[i], 1);
+                if (gatherAllWords || !tokensAbbreviated[i].equals(tokensExpanded[i]))
+                {
+                    dict.addValue(tokensAbbreviated[i], tokensExpanded[i], 1);
+                }
             }
         }
     }

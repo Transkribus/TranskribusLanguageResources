@@ -273,6 +273,11 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
 
         return abbreviations;
     }
+    
+    public IDictionary extractAbbrevations(String line)
+    {
+        return listToDictionary(extractAbbrevationsFromLine(line, "abbr"));
+    }
 
     public IDictionary extractAbbrevations(String line, String customTagValue)
     {

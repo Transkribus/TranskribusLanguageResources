@@ -105,6 +105,9 @@ public class Dictionary implements IDictionary {
     }
 
     public void addEntry(String key, int frequency) {
+        if ( key.trim().isEmpty() )
+            return;
+
         if ( this.entries.containsKey(key) )
             ((Entry)this.entries.get(key)).increaseFrequency(frequency);
         else {
@@ -139,6 +142,9 @@ public class Dictionary implements IDictionary {
     }
 
     public void addValue(String key, String name, int frequency) {
+        if ( key.trim().isEmpty() || name.trim().isEmpty() )
+            return;
+
         if ( this.entries.containsKey(key) ) {
             if ( !this.entries.get(key).containsValue(name) )
                 this.numberTypes += 1;

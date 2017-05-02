@@ -1,7 +1,7 @@
 package eu.transkribus.languageresources.extractor.xml.tei;
 
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLAbbreviation;
+import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAbbreviation;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import java.io.File;

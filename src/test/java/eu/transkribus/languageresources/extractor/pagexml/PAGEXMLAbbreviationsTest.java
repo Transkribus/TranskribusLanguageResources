@@ -6,8 +6,6 @@
 package eu.transkribus.languageresources.extractor.pagexml;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,6 +13,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.languageresources.extractor.pagexml.tagextractor.AbbreviationsBuilder;
+import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAbbreviation;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
@@ -133,7 +134,8 @@ public class PAGEXMLAbbreviationsTest
         String customTagValue = "readingOrder {index:17;} abbrev {offset:25; length:6;expansion:Hooch-Mogende;} abbrev {offset:32; length:6;}";
         String textOriginal = "#reert synde hebben haer Ho:Mo: Ho:Mo: hun daermede";
 
-        IDictionary abbrevations = extractor_simple.extractAbbrevations(textOriginal, customTagValue);
+        AbbreviationsBuilder builder = new AbbreviationsBuilder();
+        IDictionary abbrevations = builder.toDictionary(extractor_simple.<PAGEXMLAbbreviation>extractValueFromLine(new LinkedList<>(), textOriginal, customTagValue, builder, 0, 0));
 
         assertEquals(1, abbrevations.getEntries().size());
         assertTrue(abbrevations.containsKey("Ho:Mo:"));

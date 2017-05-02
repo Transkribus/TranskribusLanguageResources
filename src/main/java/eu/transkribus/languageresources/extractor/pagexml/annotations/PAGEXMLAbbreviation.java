@@ -3,47 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.transkribus.languageresources.extractor.pagexml;
+package eu.transkribus.languageresources.extractor.pagexml.annotations;
 
 /**
  *
  * @author max
  */
-public class PAGEXMLAbbreviation
+public class PAGEXMLAbbreviation extends PAGEXMLAnnotation
 {
     private String abbreviation;
     private String expansion;
-    private int length;
-    private int offset;
 
     public String getAbbreviation()
     {
         return abbreviation;
     }
 
-    public void setAbbreviationFromLine(String line)
+    public void setAbbreviation(String abbreviation)
     {
-        this.abbreviation = line.substring(offset, offset+length);
-    }
-
-    public void setLength(String length)
-    {
-        this.length = Integer.parseInt(length);
-    }
-
-    public int getLength()
-    {
-        return length;
-    }
-
-    public void setOffset(String offset)
-    {
-        this.offset = Integer.parseInt(offset);
-    }
-
-    public int getOffset()
-    {
-        return offset;
+        this.abbreviation = abbreviation;
     }
     
     public void setExpansion(String expansion)

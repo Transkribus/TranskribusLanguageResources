@@ -242,7 +242,7 @@ public class XMLExtractor implements ITextExtractor {
         return underTextNode(n.getParentNode());
     }
 
-    private Dictionary extractTag(String path, String tagName)
+    protected Dictionary extractTag(String path, String tagName)
     {
         Dictionary dictionary = new Dictionary();
 
@@ -261,13 +261,13 @@ public class XMLExtractor implements ITextExtractor {
     }
 
     @Override
-    public Dictionary extractPlaceNames(String path)
+    public IDictionary extractPlaceNames(String path)
     {
         return extractTag(path, "placeName");
     }
 
     @Override
-    public Dictionary extractPersonNames(String path)
+    public IDictionary extractPersonNames(String path)
     {
         return extractTag(path, "persName");
     }

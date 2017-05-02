@@ -24,9 +24,9 @@ import static org.junit.Assert.*;
 public class PAGEXMLExtractorTest
 {
     
-    String page1;
-    String page2;
-    String pathToFile;
+    private final String page1;
+    private final String page2;
+    private final String pathToFile;
             
     public PAGEXMLExtractorTest()
     {

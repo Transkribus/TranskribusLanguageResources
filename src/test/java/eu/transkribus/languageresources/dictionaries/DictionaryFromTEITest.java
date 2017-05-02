@@ -105,7 +105,7 @@ public class DictionaryFromTEITest
         DTATEIExtractor textExtraktor = new DTATEIExtractor();
         Dictionary dict = (Dictionary) textExtraktor.extractAbbreviations(pathToFile);
         
-        assertEquals(27, dict.getEntries().size());
+        assertEquals(26, dict.getEntries().size());
     }
     
     @Test

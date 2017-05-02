@@ -29,14 +29,12 @@ public class PAGEXMLNERTest
 {
 
     private final PAGEXMLExtractor extractor;
-    private final String pageFolderBig;
     private final String pageTest1;
 
     public PAGEXMLNERTest()
     {
         extractor = new PAGEXMLExtractor();
         ClassLoader classLoader = getClass().getClassLoader();
-        pageFolderBig = new File(classLoader.getResource("HS_115").getFile()).getAbsolutePath();
         pageTest1 = new File(classLoader.getResource("PXML_NER_TEST_1").getFile()).getAbsolutePath();
     }
 
@@ -125,6 +123,9 @@ public class PAGEXMLNERTest
     @Ignore
     public void testBigNER()
     {
+        ClassLoader classLoader = getClass().getClassLoader();
+        String pageFolderBig = new File(classLoader.getResource("HS_115").getFile()).getAbsolutePath();
+        
         List<PAGEXMLAbbreviation> abbreviationsList = extractor.extractAbbreviationsAsList(pageFolderBig);
         List<PAGEXMLAnnotation> placesList = extractor.extractPlaceNamesAsList(pageFolderBig);
         List<PAGEXMLAnnotation> personsList = extractor.extractPersonNamesAsList(pageFolderBig);

@@ -9,6 +9,7 @@ import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import java.util.Map;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -19,6 +20,7 @@ public class CrawlerTest
 {
 
     @Test
+    @Ignore
     public void testCrawl()
     {
         CrawlerController c = new CrawlerController();
@@ -26,6 +28,7 @@ public class CrawlerTest
     }
 
     @Test
+    @Ignore
     public void testCreateDictionaryFromURL()
     {
         CrawlerController c = new CrawlerController();

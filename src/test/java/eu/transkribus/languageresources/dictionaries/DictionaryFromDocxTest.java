@@ -32,20 +32,23 @@ import org.junit.Test;
 public class DictionaryFromDocxTest
 {
 
-    private final String dictionaryFolder;
-    private final String pathToInputFile;
-    private File outputFile;
+    private final String pathToInputFile1;
+    private final String pathToInputFile2;
+    private final String pathToInputFile3;
+    private File outputFile1;
+    private File outputFile2;
 
     public DictionaryFromDocxTest()
     {
-        dictionaryFolder = Files.createTempDir().getAbsolutePath();
-
         ClassLoader classLoader = getClass().getClassLoader();
-        pathToInputFile = new File(classLoader.getResource("ttexter.docx").getFile()).getAbsolutePath();
+        pathToInputFile1 = new File(classLoader.getResource("ttexter.docx").getFile()).getAbsolutePath();
+        pathToInputFile2 = new File(classLoader.getResource("Weingartner_Tagebuecher_1.docx").getFile()).getAbsolutePath();
+        pathToInputFile3 = new File(classLoader.getResource("deutsch.dict").getFile()).getAbsolutePath();
         
         try
         {
-            outputFile = File.createTempFile("ttexter", "dict");
+            outputFile1 = File.createTempFile("ttexter", "dict");
+            outputFile2 = File.createTempFile("deutsch2", "dict");
         } catch (IOException ex)
         {
         }
@@ -72,12 +75,11 @@ public class DictionaryFromDocxTest
     }
 
     @Test
-    public void dictionaryFromDocx() throws ARPAParseException, FileNotFoundException, IOException
+    public void dictionaryFromDocx() throws IOException
     {
-        // first, we extract the text from the page xml folder
-
+        // first, we extract the text from the docx file
         DocxExtraktor instance = new DocxExtraktor();
-        String text = instance.extractTextFromDocument(pathToInputFile);
+        String text = instance.extractTextFromDocument(pathToInputFile1);
 
         Properties tokenizerProperties = new Properties();
 
@@ -95,11 +97,37 @@ public class DictionaryFromDocxTest
         List<String> tokenizedText = tokenizer.tokenize(text);
 
         // the dictionary is created with the tokenized text
-        // and is written into a file without frequencies
         Dictionary dictionary = new Dictionary(tokenizedText);
-        SimpleDictFileHandler.write(outputFile, dictionary.getEntries());
-        Map<String, Integer> dictionary2 = SimpleDictFileHandler.read(outputFile);
+        SimpleDictFileHandler.write(outputFile1, dictionary.getEntries());
+    }
+    
+    @Test
+    public void testExtractTextFromDocumentAndMerge() throws IOException
+    {
+        // first, we extract the text from the docx file
+        DocxExtraktor instance = new DocxExtraktor();
+        String text = instance.extractTextFromDocument(pathToInputFile2);
+
+        Properties tokenizerProperties = new Properties();
+
+        // we use simple dehyphenation
+        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
+
+        // new lines, dots and commas are not treated as types
+        // example: word.word -> 'word', '.', 'word'
+        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
+
+        // the emptry string means we do not keep the delimiter signs
+        tokenizerProperties.setProperty("keep_delimiter_signs", "");
+
+        ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+        List<String> tokenizedText = tokenizer.tokenize(text);
+
+        // the dictionary is created with the tokenized text
+        Dictionary dictionary = new Dictionary(tokenizedText);
+        Dictionary otherDictionary = SimpleDictFileHandler.readAsDictionary(pathToInputFile3);
+        dictionary.merge(otherDictionary);
         
-        assertEquals(52929, dictionary2.size());
+        SimpleDictFileHandler.write(outputFile2, dictionary.getEntries());
     }
 }

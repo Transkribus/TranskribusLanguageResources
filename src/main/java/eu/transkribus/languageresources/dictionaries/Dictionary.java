@@ -362,4 +362,9 @@ public class Dictionary implements IDictionary {
         hash = 73 * hash + Objects.hashCode(this.creationDate);
         return hash;
     }
+
+    void merge(Map<String, Integer> otherDictionary)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

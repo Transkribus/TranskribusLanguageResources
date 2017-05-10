@@ -6,6 +6,7 @@
 package eu.transkribus.languageresources.util;
 
 import eu.transkribus.interfaces.IEntry;
+import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -31,13 +32,26 @@ import java.util.Map;
  */
 public class SimpleDictFileHandler
 {
+    public static Dictionary readAsDictionary(String file) throws IOException
+    {
+        Map<String, Integer> entries = read(new File(file));
+        Dictionary dict = new Dictionary();
+        
+        for(Map.Entry<String, Integer> entry : entries.entrySet())
+        {
+            dict.addEntry(entry.getKey(), entry.getValue());
+        }
+        
+        return dict;
+    }
 
-    public static Map<String, Integer> read(String file) throws ARPAParseException, IOException
+
+    public static Map<String, Integer> read(String file) throws IOException
     {
         return read(new File(file));
     }
 
-    public static Map<String, Integer> read(File file) throws ARPAParseException, FileNotFoundException, IOException
+    public static Map<String, Integer> read(File file) throws FileNotFoundException, IOException
     {
         Map<String, Integer> dict = new HashMap<>();
 

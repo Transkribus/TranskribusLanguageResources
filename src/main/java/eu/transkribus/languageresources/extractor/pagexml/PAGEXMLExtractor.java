@@ -5,31 +5,31 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
-import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAbbreviation;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import eu.transkribus.interfaces.IDictionary;
-import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.extractor.pagexml.tagextractor.AbbreviationsBuilder;
-import eu.transkribus.languageresources.extractor.pagexml.tagextractor.PAGEXMLValueBuilder;
+import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAbbreviation;
 import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAnnotation;
 import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLIndex;
+import eu.transkribus.languageresources.extractor.pagexml.tagextractor.AbbreviationsBuilder;
+import eu.transkribus.languageresources.extractor.pagexml.tagextractor.PAGEXMLValueBuilder;
 import eu.transkribus.languageresources.extractor.pagexml.tagextractor.SimpleBuilder;
 import eu.transkribus.languageresources.extractor.pagexml.tagextractor.TokenBuilder;
 import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -138,14 +138,10 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return files;
     }
 
-    private NodeList getNodesFromFile(File f)
+    private NodeList getNodesFromXml(Document doc)
     {
         try
         {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(f);
-
             return doc.getElementsByTagName("Unicode");
 
         } catch (Exception ex)
@@ -154,12 +150,39 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             throw new RuntimeException("Could not load nodes from file!");
         }
     }
-
-    private String getTextFromFile(File f)
+    
+    private NodeList getNodesFromFile(File f)
     {
-        StringBuilder content = new StringBuilder();
+        try
+        {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(f);
 
+            return getNodesFromXml(doc);
+
+        } catch (Exception ex)
+        {
+            System.out.println(ex);
+            throw new RuntimeException("Could not load nodes from file!");
+        }
+    }
+
+    protected String getTextFromXml(Document d) 
+    {
+        NodeList unicodeNodes = getNodesFromXml(d);
+        return getTextFromNodeList(unicodeNodes);
+    }
+    
+    protected String getTextFromFile(File f)
+    {
         NodeList unicodeNodes = getNodesFromFile(f);
+        return getTextFromNodeList(unicodeNodes);
+    }
+    
+    private String getTextFromNodeList(NodeList unicodeNodes)
+    {
+    	StringBuilder content = new StringBuilder();
         Node unicodeNode;
 
         int numNodes = unicodeNodes.getLength();

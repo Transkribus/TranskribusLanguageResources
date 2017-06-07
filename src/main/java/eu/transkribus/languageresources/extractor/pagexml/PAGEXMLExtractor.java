@@ -38,14 +38,6 @@ import org.w3c.dom.NodeList;
 public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtractor
 {
 
-    // Patterns do take time to compile, thus make them
-    // static for performance reasons.
-    private static Pattern patternAbbrev = Pattern.compile("abbrev\\s*\\{([\\w-,:;\\s]*)\\}");
-    private static Pattern patternAbbrevExpansion = Pattern.compile(".*expansion:([\\w-]*);.*");
-    private static Pattern patternPlace = Pattern.compile("place\\s*\\{([\\w-,:;\\s]*)\\}");
-    private static Pattern patternOffset = Pattern.compile(".*offset:([0-9]*);.*");
-    private static Pattern patternLength = Pattern.compile(".*length:([0-9]*);.*");
-
     public PAGEXMLExtractor()
     {
         super();
@@ -137,8 +129,13 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
 //        files = files.subList(0, 3);
         return files;
     }
+    
+    private boolean checkIfTextLineNode(Node item)
+    {
+        return item.getParentNode().getParentNode().getNodeName().equals("TextLine");
+    }
 
-    private NodeList getNodesFromFile(File f)
+    private List<Node> getNodesFromFile(File f)
     {
         try
         {
@@ -146,7 +143,16 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(f);
 
-            return doc.getElementsByTagName("Unicode");
+            NodeList unicodeNodes = doc.getElementsByTagName("Unicode");
+            List<Node> nodeList = new LinkedList<>();
+            
+            for(int i = 0; i < unicodeNodes.getLength(); i++)
+            {
+                if(checkIfTextLineNode(unicodeNodes.item(i)))
+                    nodeList.add(unicodeNodes.item(i));
+            }
+            
+            return nodeList;
 
         } catch (Exception ex)
         {
@@ -159,17 +165,15 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     {
         StringBuilder content = new StringBuilder();
 
-        NodeList unicodeNodes = getNodesFromFile(f);
+        List<Node> unicodeNodes = getNodesFromFile(f);
         Node unicodeNode;
 
-        int numNodes = unicodeNodes.getLength();
-
-        for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++)
+        for (int nodeIndex = 0; nodeIndex < unicodeNodes.size(); nodeIndex++)
         {
-            unicodeNode = unicodeNodes.item(nodeIndex);
+            unicodeNode = unicodeNodes.get(nodeIndex);
             content.append(getTextFromNode(unicodeNode));
 
-            if (nodeIndex + 1 < numNodes)
+            if (nodeIndex + 1 < unicodeNodes.size())
             {
                 content.append("\n");
             }
@@ -324,13 +328,13 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
 
     private <A extends PAGEXMLAnnotation> List<A> extractValuesFromPage(List<A> list, File file, PAGEXMLValueBuilder builder, int pageIndex)
     {
-        NodeList unicodeNodes = getNodesFromFile(file);
+        List<Node> unicodeNodes = getNodesFromFile(file);
 
-        for (int i = 0; i < unicodeNodes.getLength(); i++)
+        for (int i = 0; i < unicodeNodes.size(); i++)
         {
-            if (unicodeNodes.item(i).getParentNode().getParentNode().getNodeName().equals("TextLine"))
+            if (unicodeNodes.get(i).getParentNode().getParentNode().getNodeName().equals("TextLine"))
             {
-                list = extractValuesFromLine(list, unicodeNodes.item(i), builder, pageIndex, i);
+                list = extractValuesFromLine(list, unicodeNodes.get(i), builder, pageIndex, i);
             }
         }
 

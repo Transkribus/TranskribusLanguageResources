@@ -124,9 +124,15 @@ public class ARPAFileHandler {
                     writer.println(String.format("\\%d-grams:", ngram.getKey()));
 
                     List<String> list = new LinkedList<>();
-                    for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() )
-                        for ( Map.Entry<String, Double> word : words.getValue().entrySet() )
+                    for ( Map.Entry<List<String>, Map<String, Double>> words : ngram.getValue().entrySet() ) {
+                        if ( String.join("", words.getKey()).matches(".*\\p{Space}.*") )
+                            throw new RuntimeException(String.format("The String \"%s\" contains unsupported characters.", String.join("", words.getKey())));
+                        for ( Map.Entry<String, Double> word : words.getValue().entrySet() ) {
+                            if ( word.getKey().matches(".*\\p{Space}.*") )
+                                throw new RuntimeException(String.format("The String \"%s\" contains unsupported characters.", String.join("", words.getKey())));
                             list.add(String.format("%s\t%s %s", numberFormat.format(word.getValue()), String.join(" ", words.getKey()), word.getKey()).trim());
+                        }
+                    }
 
                     list.sort(Comparator.comparing((String s) -> Double.valueOf(s.substring(0, s.indexOf("\t")))).reversed());
                     for ( String s : list )

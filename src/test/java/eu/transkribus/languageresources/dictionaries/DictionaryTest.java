@@ -204,15 +204,14 @@ public class DictionaryTest
     }
 
     private String readFile(String path) throws IOException, FileNotFoundException {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         try ( Reader reader = new BufferedReader(new FileReader(new File(path))) ) {
-            while ( true ) {
-                int c = reader.read();
-                if ( c == -1 )
-                    break;
-                s += (char)c;
+            String line;
+            while ( (line = ((BufferedReader) reader).readLine()) != null ) {
+                s.append(line);
+                s.append(System.lineSeparator());
             }
         }
-        return s;
+        return s.toString();
     }
 }

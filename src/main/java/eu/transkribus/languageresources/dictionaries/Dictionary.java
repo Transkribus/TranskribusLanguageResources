@@ -108,6 +108,12 @@ public class Dictionary implements IDictionary {
         if ( key.trim().isEmpty() )
             return;
 
+        if ( key.matches(".+\\p{Space}.+") ) {
+            for ( String s : key.split("\\p{Space}") )
+                this.addEntry(s, frequency);
+            return;
+        }
+
         if ( this.entries.containsKey(key) )
             ((Entry)this.entries.get(key)).increaseFrequency(frequency);
         else {
@@ -144,6 +150,17 @@ public class Dictionary implements IDictionary {
     public void addValue(String key, String name, int frequency) {
         if ( key.trim().isEmpty() || name.trim().isEmpty() )
             return;
+
+        if ( key.matches(".+\\p{Space}.+") ) {
+            for ( String s : key.split("\\p{Space}") )
+                this.addValue(s, name, frequency);
+            return;
+        }
+        if ( name.matches(".+\\p{Space}.+") ) {
+            for ( String s : name.split("\\p{Space}") )
+                this.addValue(key, s, frequency);
+            return;
+        }
 
         if ( this.entries.containsKey(key) ) {
             if ( !this.entries.get(key).containsValue(name) )
@@ -274,17 +291,17 @@ public class Dictionary implements IDictionary {
                     {
                         f -= v.getValue();
                         if ( !oneGrams.containsKey(vKey) )
-                            oneGrams.put(Arrays.asList(new String[]{v.getKey()}), new LinkedHashMap<>());
-                        oneGrams.get(Arrays.asList(new String[]{v.getKey()})).put("", oneGrams.get(vKey).containsKey("") ? oneGrams.get(vKey).get("") + v.getValue() : (double) v.getValue());
+                            oneGrams.put(vKey, new LinkedHashMap<>());
+                        oneGrams.get(vKey).put("", oneGrams.get(vKey).containsKey("") ? oneGrams.get(vKey).get("") + v.getValue() : (double) v.getValue());
                         if ( !twoGrams.containsKey(eKey) )
-                            twoGrams.put(Arrays.asList(new String[]{e.getKey()}), new LinkedHashMap<>());
+                            twoGrams.put(eKey, new LinkedHashMap<>());
                         twoGrams.get(Arrays.asList(new String[] {e.getKey()})).put(v.getKey(), (double) v.getValue());
                     }
                 }
 
                 if ( !oneGrams.containsKey(eKey) )
-                    oneGrams.put(Arrays.asList(new String[]{e.getKey()}), new LinkedHashMap<>());
-                oneGrams.get(Arrays.asList(new String[]{e.getKey()})).put("", oneGrams.get(eKey).containsKey("") ? oneGrams.get(eKey).get("") + f : (double) f);
+                    oneGrams.put(eKey, new LinkedHashMap<>());
+                oneGrams.get(eKey).put("", oneGrams.get(eKey).containsKey("") ? oneGrams.get(eKey).get("") + f : (double) f);
             }
         }
         ngrams.put(1, oneGrams);

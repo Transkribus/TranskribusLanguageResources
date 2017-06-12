@@ -105,7 +105,8 @@ public class Dictionary implements IDictionary {
     }
 
     public void addEntry(String key, int frequency) {
-        if ( key.trim().isEmpty() )
+        key = key.trim();
+        if ( key.isEmpty() )
             return;
 
         if ( key.matches(".+\\p{Space}.+") ) {
@@ -148,7 +149,9 @@ public class Dictionary implements IDictionary {
     }
 
     public void addValue(String key, String name, int frequency) {
-        if ( key.trim().isEmpty() || name.trim().isEmpty() )
+        key = key.trim();
+        name = name.trim();
+        if ( key.isEmpty() || name.isEmpty() )
             return;
 
         if ( key.matches(".+\\p{Space}.+") ) {

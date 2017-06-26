@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
+import eu.transkribus.tokenizer.TokenizerConfig;
 
 public class SebisDictionaryTest {
 	
@@ -75,7 +75,7 @@ public class SebisDictionaryTest {
 		// the emptry string means we do not keep the delimiter signs
 		tokenizerProperties.setProperty("keep_delimiter_signs", "");
 
-		ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+		TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
 		List<String> tokenizedText = tokenizer.tokenize(text);
 
 		// the dictionary is created with the tokenized text

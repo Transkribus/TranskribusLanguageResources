@@ -1,5 +1,6 @@
 package eu.transkribus.languageresources.interfaces;
 
+import eu.transkribus.interfaces.languageresources.ITextExtractor;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

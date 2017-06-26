@@ -9,8 +9,8 @@ import com.google.common.io.Files;
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.extractor.docx.DocxExtraktor;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
 import eu.transkribus.languageresources.util.SimpleDictFileHandler;
+import eu.transkribus.tokenizer.TokenizerConfig;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -93,7 +93,7 @@ public class DictionaryFromDocxTest
         // the emptry string means we do not keep the delimiter signs
         tokenizerProperties.setProperty("keep_delimiter_signs", "");
 
-        ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
         List<String> tokenizedText = tokenizer.tokenize(text);
 
         // the dictionary is created with the tokenized text
@@ -120,7 +120,7 @@ public class DictionaryFromDocxTest
         // the emptry string means we do not keep the delimiter signs
         tokenizerProperties.setProperty("keep_delimiter_signs", "");
 
-        ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
         List<String> tokenizedText = tokenizer.tokenize(text);
 
         // the dictionary is created with the tokenized text

@@ -10,7 +10,7 @@ import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
 import eu.transkribus.languageresources.extractor.pdf.PDFExtraktor;
 import eu.transkribus.languageresources.extractor.xml.tei.DTATEIExtractor;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
+import eu.transkribus.tokenizer.TokenizerConfig;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class DictionaryFromTEITest
         // the emptry string means we do not keep the delimiter signs
         tokenizerProperties.setProperty("keep_delimiter_signs", "");
 
-        ConfigTokenizer tokenizer = new ConfigTokenizer(tokenizerProperties);
+        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
         List<String> tokenizedText = tokenizer.tokenize(text);
 
         // the dictionary is created with the tokenized text
@@ -114,7 +114,7 @@ public class DictionaryFromTEITest
         DTATEIExtractor textExtraktor = new DTATEIExtractor();
         Dictionary dict = (Dictionary) textExtraktor.extractPersonNames(pathToFile);
         
-        assertEquals(79, dict.getEntries().size());
+        assertEquals(91, dict.getEntries().size());
     }
     
     @Test

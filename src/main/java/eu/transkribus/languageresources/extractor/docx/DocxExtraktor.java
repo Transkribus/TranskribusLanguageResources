@@ -7,7 +7,7 @@ package eu.transkribus.languageresources.extractor.docx;
 
 import eu.transkribus.languageresources.extractor.pdf.*;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.interfaces.IPagewiseTextExtractor;
+import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

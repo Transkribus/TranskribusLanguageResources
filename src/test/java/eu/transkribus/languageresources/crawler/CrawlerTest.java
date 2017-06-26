@@ -7,7 +7,7 @@ package eu.transkribus.languageresources.crawler;
 
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.tokenizer.ConfigTokenizer;
+import eu.transkribus.tokenizer.TokenizerConfig;
 import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class CrawlerTest
         CrawlerController c = new CrawlerController();
         Map<String, String> crawledText = c.crawl("berliner-intellektuelle.eu");
 
-        ConfigTokenizer tokenizer = new ConfigTokenizer();
+        TokenizerConfig tokenizer = new TokenizerConfig();
 
         IDictionary dictionary = new Dictionary();
 

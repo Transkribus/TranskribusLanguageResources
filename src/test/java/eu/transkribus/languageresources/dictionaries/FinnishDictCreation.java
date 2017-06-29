@@ -26,12 +26,12 @@ import org.junit.Test;
  *
  * @author max
  */
-public class FinishDictCreation
+public class FinnishDictCreation
 {
 
     private final String pathToFile;
 
-    public FinishDictCreation()
+    public FinnishDictCreation()
     {
         ClassLoader classLoader = getClass().getClassLoader();
         pathToFile = new File(classLoader.getResource("klk_fi_1grams_all").getFile()).getAbsolutePath();

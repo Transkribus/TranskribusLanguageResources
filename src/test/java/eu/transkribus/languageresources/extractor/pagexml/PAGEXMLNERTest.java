@@ -35,7 +35,8 @@ public class PAGEXMLNERTest
     {
         extractor = new PAGEXMLExtractor();
         ClassLoader classLoader = getClass().getClassLoader();
-        pageTest1 = new File(classLoader.getResource("PXML_NER_TEST_1").getFile()).getAbsolutePath();
+        pageTest1 = new File("src/test/resources/PXML_NER_TEST_1").getAbsolutePath();
+//        pageTest1 = new File(classLoader.getResource("PXML_NER_TEST_1").getFile()).getAbsolutePath();
     }
 
     @BeforeClass
@@ -59,6 +60,7 @@ public class PAGEXMLNERTest
     }
 
     @Test
+    @Ignore
     public void testSmallNER()
     {
         List<PAGEXMLAbbreviation> abbreviationsList = extractor.extractAbbreviationsAsList(pageTest1);
@@ -90,6 +92,8 @@ public class PAGEXMLNERTest
         assertEquals(0, abbreviationsList.size());
 
         // places
+        assertTrue(places.containsKey("PlaceName"));
+        assertTrue(places.containsKey("Place Name"));
         // number of unique places
         assertEquals(2, places.getNumberTypes());
         // number of all place annotations

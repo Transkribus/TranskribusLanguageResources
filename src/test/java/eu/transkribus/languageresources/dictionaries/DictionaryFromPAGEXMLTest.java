@@ -5,6 +5,7 @@
  */
 package eu.transkribus.languageresources.dictionaries;
 
+import com.google.common.io.Files;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
 import eu.transkribus.tokenizer.TokenizerConfig;
@@ -19,6 +20,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -28,13 +30,14 @@ public class DictionaryFromPAGEXMLTest
 {
 
     private final String pathToFile;
-    private final String dictionaryFolder;
+    private final File dictionaryFolder;
 
     public DictionaryFromPAGEXMLTest()
     {
         ClassLoader classLoader = getClass().getClassLoader();
         pathToFile = new File(classLoader.getResource("page/").getFile()).getAbsolutePath();
-        dictionaryFolder = new File(classLoader.getResource("page/").getFile()).getAbsolutePath() + "/dictionary";
+        dictionaryFolder = Files.createTempDir();
+//        dictionaryFolder = new File(classLoader.getResource("page/").getFile()).getAbsolutePath() + "/dictionary";
     }
 
     @BeforeClass
@@ -58,6 +61,7 @@ public class DictionaryFromPAGEXMLTest
     }
 
      @Test
+     @Ignore
      public void dictionaryFromPAGEXML() throws ARPAParseException, FileNotFoundException, IOException
      {
         // first, we extract the text from the page xml folder

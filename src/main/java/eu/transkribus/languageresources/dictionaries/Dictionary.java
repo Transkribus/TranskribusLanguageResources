@@ -109,11 +109,11 @@ public class Dictionary implements IDictionary {
         if ( key.isEmpty() )
             return;
 
-        if ( key.matches(".+\\p{Space}.+") ) {
-            for ( String s : key.split("\\p{Space}") )
-                this.addEntry(s, frequency);
-            return;
-        }
+//        if ( key.matches(".+\\p{Space}.+") ) {
+//            for ( String s : key.split("\\p{Space}") )
+//                this.addEntry(s, frequency);
+//            return;
+//        }
 
         if ( this.entries.containsKey(key) )
             ((Entry)this.entries.get(key)).increaseFrequency(frequency);

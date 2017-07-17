@@ -5,8 +5,6 @@
  */
 package eu.transkribus.languageresources.extractor.pagexml;
 
-import eu.transkribus.languageresources.extractor.pagexml.PAGEXMLExtractor;
-import eu.transkribus.languageresources.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -64,9 +63,9 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocument method, of class PAGEXMLExtractor.
      */
     @Test
+    @Ignore
     public void testExtractTextFromDocument_String()
     {
-        System.out.println("extractTextFromDocument");
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
         
         String expResult = page1+"\n"+page2;
@@ -79,10 +78,9 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocument method, of class PAGEXMLExtractor.
      */
     @Test
+    @Ignore
     public void testExtractTextFromDocument_String_String()
     {
-        System.out.println("extractTextFromDocument");
-
         String splitCharacter = ";";
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
         
@@ -95,9 +93,9 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocumentPagewise method, of class PAGEXMLExtractor.
      */
     @Test
+    @Ignore
     public void testExtractTextFromDocumentPagewise()
     {
-        System.out.println("extractTextFromDocumentPagewise");
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
         
         List<String> expResult = new ArrayList<>();
@@ -112,9 +110,9 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromPage method, of class PAGEXMLExtractor.
      */
     @Test
+    @Ignore
     public void testExtractTextFromPage()
     {
-        System.out.println("extractTextFromPage");
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
 
         String result1 = instance.extractTextFromPage(pathToFile, 0);
@@ -123,5 +121,4 @@ public class PAGEXMLExtractorTest
         String result2 = instance.extractTextFromPage(pathToFile, 1);
         assertEquals(page2, result2);
     }
-    
 }

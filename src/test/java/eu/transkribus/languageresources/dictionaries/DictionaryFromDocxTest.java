@@ -35,8 +35,11 @@ public class DictionaryFromDocxTest
     private final String pathToInputFile1;
     private final String pathToInputFile2;
     private final String pathToInputFile3;
+    private final String pathToInputFile4;
+    private final String pathToInputFile5;
     private File outputFile1;
     private File outputFile2;
+    private File outputFile3;
 
     public DictionaryFromDocxTest()
     {
@@ -45,10 +48,15 @@ public class DictionaryFromDocxTest
         pathToInputFile2 = new File(classLoader.getResource("Weingartner_Tagebuecher_1.docx").getFile()).getAbsolutePath();
         pathToInputFile3 = new File(classLoader.getResource("deutsch.dict").getFile()).getAbsolutePath();
         
+        pathToInputFile4 = new File(classLoader.getResource("Hendschel/Hendschel.docx").getFile()).getAbsolutePath();
+        pathToInputFile5 = new File(classLoader.getResource("Hendschel/deutsch.dict").getFile()).getAbsolutePath();
+        
         try
         {
             outputFile1 = File.createTempFile("ttexter", "dict");
             outputFile2 = File.createTempFile("deutsch2", "dict");
+            outputFile3 = new File("Hendschel_und_deutsch.dict");
+//            outputFile3 = new File("Hendschel/Hendschel_und_deutsch.dict", "dict");
         } catch (IOException ex)
         {
         }
@@ -84,16 +92,16 @@ public class DictionaryFromDocxTest
         Properties tokenizerProperties = new Properties();
 
         // we use simple dehyphenation
-        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
+//        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
 
         // new lines, dots and commas are not treated as types
         // example: word.word -> 'word', '.', 'word'
-        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
+//        tokenizerProperties.setProperty("delimiter_signs", "\n.,„“ ");
 
         // the emptry string means we do not keep the delimiter signs
-        tokenizerProperties.setProperty("keep_delimiter_signs", "");
+//        tokenizerProperties.setProperty("keep_delimiter_signs", "");
 
-        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
+        TokenizerConfig tokenizer = new TokenizerConfig();
         List<String> tokenizedText = tokenizer.tokenize(text);
 
         // the dictionary is created with the tokenized text
@@ -129,5 +137,35 @@ public class DictionaryFromDocxTest
         dictionary.merge(otherDictionary);
         
         SimpleDictFileHandler.write(outputFile2, dictionary.getEntries());
+    }
+    
+    @Test
+    public void mergeDictsTest() throws IOException
+    {
+        // first, we extract the text from the docx file
+        DocxExtraktor instance = new DocxExtraktor();
+        String text = instance.extractTextFromDocument(pathToInputFile4);
+
+        Properties tokenizerProperties = new Properties();
+
+        // we use simple dehyphenation
+        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
+
+        // new lines, dots and commas are not treated as types
+        // example: word.word -> 'word', '.', 'word'
+        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
+
+        // the emptry string means we do not keep the delimiter signs
+        tokenizerProperties.setProperty("keep_delimiter_signs", "");
+
+        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
+        List<String> tokenizedText = tokenizer.tokenize(text);
+
+        // the dictionary is created with the tokenized text
+        Dictionary dictionary = new Dictionary(tokenizedText);
+        Dictionary otherDictionary = SimpleDictFileHandler.readAsDictionary(pathToInputFile5);
+        dictionary.merge(otherDictionary);
+        
+        SimpleDictFileHandler.write(outputFile3, dictionary.getEntries());
     }
 }

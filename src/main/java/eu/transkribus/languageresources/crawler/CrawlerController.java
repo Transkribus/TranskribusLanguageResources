@@ -23,17 +23,20 @@ import java.util.logging.Logger;
  */
 public class CrawlerController
 {
-
     public Map<String, String> crawl(String startUrl)
     {
-        int numberOfCrawlers = 1;
+        return crawl(startUrl, 1);
+    }
 
+    public Map<String, String> crawl(String startUrl, int numberOfCrawlers)
+    {
         CrawlerConfig config = new CrawlerConfig();
         config.setCrawlStorageFolder(Files.createTempDir().getAbsolutePath());
-        config.setPolitenessDelay(5000);
+        config.setPolitenessDelay(10);
         config.setIncludeBinaryContentInCrawling(false);
         config.setResumableCrawling(false);
         config.setSeed(startUrl);
+        config.setMaxPagesToFetch(10000);
 
         /*
          * Instantiate the controller for this crawl.
@@ -64,19 +67,20 @@ public class CrawlerController
          * will reach the line after this only when crawling is finished.
          */
         controller.start(Crawler.class, numberOfCrawlers);
+//        controller.
 
         return config.getCrawledText();
     }
 
-    public static void main(String[] args)
-    {
-        File tmpDir = Files.createTempDir();
-        CrawlerController c = new CrawlerController();
-        Map<String, String> crawl = c.crawl("http://www.berliner-intellektuelle.eu/");
-
-//            for(Map.Entry<String, String> e : crawl.entrySet())
-//            {
-//                System.out.println(e.getKey()+": "+e.getValue());
-//            }
-    }
+//    public static void main(String[] args)
+//    {
+//        File tmpDir = Files.createTempDir();
+//        CrawlerController c = new CrawlerController();
+//        Map<String, String> crawl = c.crawl("http://www.berliner-intellektuelle.eu/");
+//
+////            for(Map.Entry<String, String> e : crawl.entrySet())
+////            {
+////                System.out.println(e.getKey()+": "+e.getValue());
+////            }
+//    }
 }

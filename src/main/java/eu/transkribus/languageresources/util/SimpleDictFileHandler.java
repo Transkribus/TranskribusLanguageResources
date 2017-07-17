@@ -90,4 +90,9 @@ public class SimpleDictFileHandler
             }
         }
     }
+
+    public static void write(String stazhdict, Collection<IEntry> entries)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

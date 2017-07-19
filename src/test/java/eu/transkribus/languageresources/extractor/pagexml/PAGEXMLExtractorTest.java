@@ -35,8 +35,7 @@ public class PAGEXMLExtractorTest
                 "in in , seit\nDie in\nder\n,";
         page2 = "";
         
-        ClassLoader classLoader = getClass().getClassLoader();
-        pathToFile = new File(classLoader.getResource("page/").getFile()).getAbsolutePath();
+        pathToFile = new File("src/test/resources/page/").getAbsolutePath();
     }
     
     @BeforeClass
@@ -63,7 +62,6 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocument method, of class PAGEXMLExtractor.
      */
     @Test
-    @Ignore
     public void testExtractTextFromDocument_String()
     {
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
@@ -78,7 +76,6 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocument method, of class PAGEXMLExtractor.
      */
     @Test
-    @Ignore
     public void testExtractTextFromDocument_String_String()
     {
         String splitCharacter = ";";
@@ -93,7 +90,6 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromDocumentPagewise method, of class PAGEXMLExtractor.
      */
     @Test
-    @Ignore
     public void testExtractTextFromDocumentPagewise()
     {
         PAGEXMLExtractor instance = new PAGEXMLExtractor();
@@ -110,7 +106,6 @@ public class PAGEXMLExtractorTest
      * Test of extractTextFromPage method, of class PAGEXMLExtractor.
      */
     @Test
-    @Ignore
     public void testExtractTextFromPage()
     {
         PAGEXMLExtractor instance = new PAGEXMLExtractor();

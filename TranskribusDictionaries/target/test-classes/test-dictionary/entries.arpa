@@ -1,0 +1,22 @@
+\data\
+ngram 1=10
+ngram 2=3
+
+\1-grams:
+5.00000000	rot
+3.00000000	abk
+3.00000000	zum_Beispiel
+2.00000000	Auto
+1.00000000	abkürzung
+1.00000000	Das
+1.00000000	Au
+1.00000000	ist
+1.00000000	grün
+0.00000000	z.B.
+
+\2-grams:
+3.00000000	z.B. zum_Beispiel
+1.00000000	abk abkürzung
+1.00000000	Auto Au
+
+\end\

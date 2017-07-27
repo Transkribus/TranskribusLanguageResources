@@ -1,0 +1,13 @@
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/TokenizerConfig.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/properties/Properties.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategorizerCharacterConfigurable.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategorizerWordDftConfigurable.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/interfaces/IDehyphenator.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategorizerWordDft.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/dehyphenator/DehyphenatorSimple.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/dehyphenator/DehyphenatorComplex.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/TokenizerCategorizer.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/interfaces/ICategorizer.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategoryUtils.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategorizerCharacterDft.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusTokenizer/src/main/java/eu/transkribus/tokenizer/categorizer/CategorizerWordMergeGroups.java

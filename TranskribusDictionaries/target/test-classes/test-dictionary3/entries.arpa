@@ -1,0 +1,19 @@
+\data\
+ngram 1=8
+ngram 2=2
+
+\1-grams:
+1.00000000	Wörter
+1.00000000	greeting
+1.00000000	Hallo
+1.00000000	Ausrufungszeichen
+1.00000000	!
+1.00000000	.
+1.00000000	High8
+1.00000000	Los!
+
+\2-grams:
+1.00000000	Hallo greeting
+1.00000000	! Ausrufungszeichen
+
+\end\

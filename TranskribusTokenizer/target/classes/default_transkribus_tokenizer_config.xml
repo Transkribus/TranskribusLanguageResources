@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE properties 
+  SYSTEM "http://java.sun.com/dtd/properties.dtd"> 
+<properties> 
+   <entry key="keep_delimiter_signs"></entry> 
+   <!-- mind the newline (\n) at the beginning of the delimiter signs -->
+   <entry key="delimiter_signs"> 
+., </entry> 
+   <entry key="dehyphenation_signs">¬</entry> 
+</properties> 

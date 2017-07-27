@@ -1,0 +1,14 @@
+eu/transkribus/tokenizer/TokenizerConfig.class
+eu/transkribus/tokenizer/categorizer/CategorizerWordMergeGroups.class
+eu/transkribus/tokenizer/properties/Properties.class
+eu/transkribus/tokenizer/interfaces/ICategorizer$IPropertyConfigurable.class
+eu/transkribus/tokenizer/dehyphenator/DehyphenatorComplex.class
+eu/transkribus/tokenizer/TokenizerCategorizer.class
+eu/transkribus/tokenizer/interfaces/IDehyphenator.class
+eu/transkribus/tokenizer/dehyphenator/DehyphenatorSimple.class
+eu/transkribus/tokenizer/categorizer/CategorizerWordDftConfigurable.class
+eu/transkribus/tokenizer/categorizer/CategorizerWordDft.class
+eu/transkribus/tokenizer/categorizer/CategoryUtils.class
+eu/transkribus/tokenizer/interfaces/ICategorizer.class
+eu/transkribus/tokenizer/categorizer/CategorizerCharacterDft.class
+eu/transkribus/tokenizer/categorizer/CategorizerCharacterConfigurable.class

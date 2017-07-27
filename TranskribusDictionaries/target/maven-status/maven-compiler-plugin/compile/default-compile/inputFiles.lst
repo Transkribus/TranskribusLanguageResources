@@ -1,0 +1,10 @@
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/Entry.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/util/PAGEFileComparator.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/Dictionary.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/util/SimpleDictFileHandler.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/DictionaryUtils.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/util/ARPAFileHandler.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/abbreviations/ParallelAbbreviationsParser.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/abbreviations/AbbreviationsExpander.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/exceptions/ARPAParseException.java
+/home/max/NetbeansProjects/ASV_Repository/TranskribusDictionaries/src/main/java/eu/transkribus/languageresources/dictionaries/IDictionaryFilter.java

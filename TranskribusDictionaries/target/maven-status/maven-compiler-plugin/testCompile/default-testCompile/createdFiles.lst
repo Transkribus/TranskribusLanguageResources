@@ -1,0 +1,4 @@
+eu/transkribus/languageresources/dictionaries/FinnishDictCreation.class
+eu/transkribus/languageresources/dictionaries/DictionaryTest.class
+eu/transkribus/languageresources/dictionaries/abbreviations/ParallelAbbreviationsParserTest.class
+eu/transkribus/languageresources/dictionaries/abbreviations/AbbreviationsExpanderTest.class

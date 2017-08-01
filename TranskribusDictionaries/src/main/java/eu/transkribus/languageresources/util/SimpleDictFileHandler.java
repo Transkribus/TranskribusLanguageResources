@@ -32,19 +32,19 @@ import java.util.Map;
  */
 public class SimpleDictFileHandler
 {
+
     public static Dictionary readAsDictionary(String file) throws IOException
     {
         Map<String, Integer> entries = read(new File(file));
         Dictionary dict = new Dictionary();
-        
-        for(Map.Entry<String, Integer> entry : entries.entrySet())
+
+        for (Map.Entry<String, Integer> entry : entries.entrySet())
         {
             dict.addEntry(entry.getKey(), entry.getValue());
         }
-        
+
         return dict;
     }
-
 
     public static Map<String, Integer> read(String file) throws IOException
     {
@@ -64,8 +64,21 @@ public class SimpleDictFileHandler
                 break;
             }
 
-            String[] parts = line.split(",");
-            dict.put(parts[0], new Integer(parts[1]));
+            try
+            {
+                String[] parts = line.split(",");
+
+                if (parts.length == 3)
+                {
+                    dict.put(parts[0], new Integer(parts[2]));
+                } else
+                {
+                    dict.put(parts[0], new Integer(parts[1]));
+                }
+            } catch (NumberFormatException nfe)
+            {
+                System.out.println("Warning, had problems reading line: " + line);
+            }
         }
         reader.close();
 
@@ -83,7 +96,7 @@ public class SimpleDictFileHandler
         {
             List<IEntry> entriesList = new ArrayList(entries);
             entriesList.sort((IEntry o1, IEntry o2) -> -new Integer(o1.getFrequency()).compareTo(o2.getFrequency()));
-            
+
             for (IEntry entry : entriesList)
             {
                 writer.println(String.format("%s,%d", entry.getKey(), entry.getFrequency()));

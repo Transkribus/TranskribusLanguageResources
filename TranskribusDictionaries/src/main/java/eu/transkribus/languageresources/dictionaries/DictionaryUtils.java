@@ -1,6 +1,7 @@
 package eu.transkribus.languageresources.dictionaries;
 
 import eu.transkribus.interfaces.IDictionary;
+import eu.transkribus.interfaces.IEntry;
 import eu.transkribus.languageresources.exceptions.ARPAParseException;
 import eu.transkribus.languageresources.util.ARPAFileHandler;
 import eu.transkribus.languageresources.util.SimpleDictFileHandler;
@@ -107,5 +108,54 @@ public class DictionaryUtils {
         for ( Map.Entry<Character, Integer> v : characterTable.entrySet() )
             writer.println(String.format("\"%s\",\"\\u%s\",\"%s\",\"%d\"", v.getKey(), Integer.toHexString(v.getKey() | 0x10000), Character.getName(v.getKey()), v.getValue()));
         writer.close();
+    }
+    
+    /**
+     * Create a dictionary from another dictionary. The new dictionary cointains only types
+     * that seem not to belong in the given dictionary. As reference another dictionary
+     * will be used. An examplary use case would be if the givenDictionary should 
+     * contain only latin types, any non-latin type would be considered odd. The new
+     * dictionary will cointain types that are more likely to appear in the comparing
+     * dictionary than in the given one.
+     * @param givenDictionary dictionary to find odd tokens in
+     * @param comparingDictionary
+     * @param entry
+     * @return 
+     */
+    public static IDictionary getOddTypes(IDictionary givenDictionary, IDictionary comparingDictionary) {
+        Dictionary newDictionary = new Dictionary();
+        
+        for(IEntry entry : givenDictionary.getEntries())
+        {
+            if(entryIsOdd(givenDictionary, comparingDictionary, entry))
+                newDictionary.addEntry(entry);
+        }
+        
+        return newDictionary;
+    }
+
+    private static boolean entryIsOdd(IDictionary givenDictionary, IDictionary comparingDictionary, IEntry entry) {
+        if(!comparingDictionary.containsKey(entry.getKey()))
+           return false;
+        
+        long numTokensGivenDictionary = givenDictionary.getNumberTokens();
+        long numTokensComparingDictionary = comparingDictionary.getNumberTokens();
+        
+        double probabilityInGiven = entry.getFrequency() / (double)numTokensGivenDictionary;
+        double probabilityInComparing = comparingDictionary.getEntry(entry.getKey()).getFrequency() / (double)numTokensComparingDictionary;
+        
+        return probabilityInComparing >= probabilityInGiven;
+    }
+    
+    public static IDictionary subtractDictionary(IDictionary givenDictionary, IDictionary dictionaryToSubtract) {
+        Dictionary newDictionary = new Dictionary();
+        
+        for(IEntry entry : givenDictionary.getEntries())
+        {
+            if(!dictionaryToSubtract.containsKey(entry.getKey()))
+                newDictionary.addEntry(entry);
+        }
+        
+        return newDictionary;
     }
 }

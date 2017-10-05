@@ -140,11 +140,15 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return files;
     }
 
-    private List<Node> getNodesFromXml(Document doc)
+    private List<Node> getNodesFromXml(Document doc){
+        return getNodesFromXml(doc,"Unicode");
+    }
+    
+    private List<Node> getNodesFromXml(Document doc, String tagName)
     {
         try
         {
-            NodeList nodeList = doc.getElementsByTagName("Unicode");
+            NodeList nodeList = doc.getElementsByTagName(tagName);
             List<Node> unicodeNodes = new LinkedList<>();
 
             for (int i = 0; i < nodeList.getLength(); i++)
@@ -477,6 +481,21 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return true;
     }
 
+    private static Node getChild(Node parent, String name) {
+        NodeList childNodes = parent.getChildNodes();
+        Node res = null;
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node child = childNodes.item(i);
+            if (child.getNodeName().equals(name)) {
+                if (res != null) {
+                    throw new RuntimeException("there are more than one child with this name");
+                }
+                res = child;
+            }
+        }
+        return res;
+    }
+
     private boolean equalsBaseline(Node node1, Node node2)
     {
         if (node1 == node2)
@@ -484,8 +503,8 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             return true;
         }
         
-        String points1 = node1.getAttributes().getNamedItem("points").getTextContent();
-        String points2 = node2.getAttributes().getNamedItem("points").getTextContent();
+        String points1 = getChild(node1.getParentNode().getParentNode(),"Baseline").getAttributes().getNamedItem("points").getTextContent();
+        String points2 = getChild(node2.getParentNode().getParentNode(),"Baseline").getAttributes().getNamedItem("points").getTextContent();
         return points1.equals(points2);
     }
 }

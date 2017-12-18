@@ -38,6 +38,7 @@ public class XMLExtractor implements ITextExtractor {
     private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
     private static final Pattern PATTERN_ABBR_ATTR = Pattern.compile("<abbr expand=\"([^\"]+)\">(.+?)</abbr>");
     private static final Pattern PATTERN_EXPAN = Pattern.compile("<expan>(.+)</expan>");
+    protected String textNodeName = "text";
 
     protected final Properties properties;
 
@@ -73,7 +74,7 @@ public class XMLExtractor implements ITextExtractor {
         Document document = this.getDocumentFromFile(path);
         StringBuilder content = new StringBuilder();
 
-        NodeList nList = document.getElementsByTagName("text");
+        NodeList nList = document.getElementsByTagName(getTextNodeName());
         if (nList.getLength() > 0) {
             for (int i = 0; i < nList.getLength(); i++) {
                 content.append(this.parseAbbreviations(nList.item(i), this.properties.getProperty("abbreviation_expansion_mode", "keep")));
@@ -116,6 +117,11 @@ public class XMLExtractor implements ITextExtractor {
             }
         }
         return res;
+    }
+
+    protected String getTextNodeName()
+    {
+        return textNodeName;
     }
 
     public static class Line {

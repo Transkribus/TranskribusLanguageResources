@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -9,7 +9,9 @@ import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,7 +25,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  *
  * @author max
  */
-public class PDFExtraktor implements IPagewiseTextExtractor
+public class PDFExtractor implements IPagewiseTextExtractor
 {
 
     @Override
@@ -71,23 +73,29 @@ public class PDFExtraktor implements IPagewiseTextExtractor
             }
         } catch (IOException ex)
         {
-            Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
-            if ( pdDoc != null )
-                try {
+            Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
+        } finally
+        {
+            if (pdDoc != null)
+            {
+                try
+                {
                     pdDoc.close();
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                catch ( IOException ex ) {
-                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            if ( cosDoc != null )
-                try {
+            }
+            if (cosDoc != null)
+            {
+                try
+                {
                     cosDoc.close();
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                catch ( IOException ex ) {
-                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            }
         }
 
         return pageWiseText;
@@ -109,23 +117,29 @@ public class PDFExtraktor implements IPagewiseTextExtractor
             sb.append(extractTextFromPage(pdDoc, page));
         } catch (IOException ex)
         {
-            Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
-            if ( pdDoc != null )
-                try {
+            Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
+        } finally
+        {
+            if (pdDoc != null)
+            {
+                try
+                {
                     pdDoc.close();
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                catch ( IOException ex ) {
-                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            if ( cosDoc != null )
-                try {
+            }
+            if (cosDoc != null)
+            {
+                try
+                {
                     cosDoc.close();
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                catch ( IOException ex ) {
-                    Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            }
         }
 
         return sb.toString();
@@ -137,13 +151,13 @@ public class PDFExtraktor implements IPagewiseTextExtractor
         {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             pdDoc.getNumberOfPages();
-            pdfStripper.setStartPage(page+1);
-            pdfStripper.setEndPage(page+1);
+            pdfStripper.setStartPage(page + 1);
+            pdfStripper.setEndPage(page + 1);
 
             return pdfStripper.getText(pdDoc);
         } catch (IOException ex)
         {
-            Logger.getLogger(PDFExtraktor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PDFExtractor.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex.getMessage());
         }
     }

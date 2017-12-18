@@ -8,8 +8,12 @@ package eu.transkribus.languageresources.extractor.docx;
 import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -17,7 +21,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * @author max
  */
-public class DocxExtraktor implements IPagewiseTextExtractor
+public class DocxExtractor implements IPagewiseTextExtractor
 {
 
     @Override

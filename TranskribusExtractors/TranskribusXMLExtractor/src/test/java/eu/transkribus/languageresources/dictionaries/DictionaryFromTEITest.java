@@ -120,7 +120,7 @@ public class DictionaryFromTEITest
         DTATEIExtractor textExtraktor = new DTATEIExtractor();
         Dictionary dict = (Dictionary) textExtraktor.extractPersonNames(pathToFile);
 
-        assertEquals(91, dict.getEntries().size());
+        assertEquals(79, dict.getEntries().size());
     }
 
     @Test

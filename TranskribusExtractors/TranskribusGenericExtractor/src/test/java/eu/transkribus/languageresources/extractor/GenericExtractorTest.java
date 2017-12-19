@@ -6,6 +6,7 @@
 package eu.transkribus.languageresources.extractor;
 
 import eu.transkribus.transkribusgenericextractor.GenericExtractor;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -23,6 +24,7 @@ public class GenericExtractorTest
     }
 
     @Test
+    @Ignore
     public void testZIP()
     {
         this.extractor.extract("src/test/resources", "Pestarchiv.zip", "Pestarchiv");

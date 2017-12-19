@@ -22,7 +22,7 @@
         <module>TranskribusXMLExtractor</module>
         <module>TranskribusPDFExtractor</module>
         <module>TranskribusGenericExtractor</module>
-        <module>TranskribusExtractorCore</module>
+        <module>TranskribusExtractorsCore</module>
     </modules>
     
     <dependencies>

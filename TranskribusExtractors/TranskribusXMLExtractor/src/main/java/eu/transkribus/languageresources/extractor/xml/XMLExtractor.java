@@ -3,6 +3,7 @@ package eu.transkribus.languageresources.extractor.xml;
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.interfaces.languageresources.ITextExtractor;
+import eu.transkribus.languageresources.extractor.IntoSingleFileExtractor;
 import java.awt.Polygon;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +33,7 @@ import org.xml.sax.SAXException;
  *
  * @author jnphilipp
  */
-public class XMLExtractor implements ITextExtractor {
+public class XMLExtractor extends IntoSingleFileExtractor implements ITextExtractor {
 
     private static final Pattern PATTERN_CHOICE = Pattern.compile("<choice>(.*?)</choice>");
     private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
@@ -62,6 +63,12 @@ public class XMLExtractor implements ITextExtractor {
 
     public Properties getProperties() {
         return this.properties;
+    }
+    
+    @Override
+    protected String extractText(String inputFolder, String inputFileName)
+    {
+        return extractTextFromDocument(inputFolder + inputFileName);
     }
 
     @Override

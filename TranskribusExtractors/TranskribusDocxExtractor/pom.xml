@@ -39,11 +39,11 @@
     </parent>
     
     <dependencies>
-<!--        <dependency>
+        <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
             <version>0.3</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>

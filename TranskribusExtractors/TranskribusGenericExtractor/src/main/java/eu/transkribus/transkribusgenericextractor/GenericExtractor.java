@@ -5,8 +5,11 @@
  */
 package eu.transkribus.transkribusgenericextractor;
 
+import eu.transkribus.languageresources.extractor.IntoSingleFileExtractor;
+
 import eu.transkribus.languageresources.extractor.docx.DocxIntoFileExtractor;
 import eu.transkribus.languageresources.extractor.pdf.PDFIntoFileExtractor;
+import eu.transkribus.languageresources.extractor.xml.XMLExtractor;
 import eu.transkribus.languageresources.extractor.xml.tei.TEITXTExtractor;
 import java.io.PrintWriter;
 import java.util.List;
@@ -33,7 +36,7 @@ public class GenericExtractor
             inputFolder += '/';
         
         String fileExtension = getFileExtansion(inputFileName);
-        IntoFileExtractor ex;
+        IntoSingleFileExtractor ex;
 
         switch (fileExtension)
         {
@@ -51,7 +54,7 @@ public class GenericExtractor
                 ex = new PDFIntoFileExtractor();
                 break;
             case "xml":
-                ex = new TEITXTExtractor();
+                ex = new XMLExtractor();
                 break;
             default:
                 throw new RuntimeException("Unsupported file extension: " + fileExtension);

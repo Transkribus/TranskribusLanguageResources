@@ -5,18 +5,20 @@
  */
 package eu.transkribus.languageresources.extractor.docx;
 
+import eu.transkribus.languageresources.extractor.IntoSingleFileExtractor;
 
-///**
-// *
-// * @author max
-// */
-//public class DocxIntoFileExtractor extends IntoSingleFileExtractor
-//{
-//
-//    @Override
-//    protected String extractText(String inputFolder, String inputFileName)
-//    {
-//        DocxExtractor ex = new DocxExtractor();
-//        return ex.extractTextFromDocument(inputFolder + inputFileName);
-//    }
-//}
+
+/**
+ *
+ * @author max
+ */
+public class DocxIntoFileExtractor extends IntoSingleFileExtractor
+{
+
+    @Override
+    protected String extractText(String inputFolder, String inputFileName)
+    {
+        DocxExtractor ex = new DocxExtractor();
+        return ex.extractTextFromDocument(inputFolder + inputFileName);
+    }
+}

@@ -21,6 +21,8 @@
         <module>TranskribusDocxExtractor</module>
         <module>TranskribusXMLExtractor</module>
         <module>TranskribusPDFExtractor</module>
+        <module>TranskribusGenericExtractor</module>
+        <module>TranskribusExtractorsCore</module>
     </modules>
     
     <dependencies>

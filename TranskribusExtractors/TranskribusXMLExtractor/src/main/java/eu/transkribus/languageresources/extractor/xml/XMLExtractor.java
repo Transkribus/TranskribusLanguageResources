@@ -3,6 +3,7 @@ package eu.transkribus.languageresources.extractor.xml;
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.interfaces.languageresources.ITextExtractor;
+import eu.transkribus.languageresources.extractor.IntoSingleFileExtractor;
 import java.awt.Polygon;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,12 +33,13 @@ import org.xml.sax.SAXException;
  *
  * @author jnphilipp
  */
-public class XMLExtractor implements ITextExtractor {
+public class XMLExtractor extends IntoSingleFileExtractor implements ITextExtractor {
 
     private static final Pattern PATTERN_CHOICE = Pattern.compile("<choice>(.*?)</choice>");
     private static final Pattern PATTERN_ABBR = Pattern.compile("<abbr>(.+)</abbr>");
     private static final Pattern PATTERN_ABBR_ATTR = Pattern.compile("<abbr expand=\"([^\"]+)\">(.+?)</abbr>");
     private static final Pattern PATTERN_EXPAN = Pattern.compile("<expan>(.+)</expan>");
+    protected String textNodeName = "text";
 
     protected final Properties properties;
 
@@ -62,6 +64,12 @@ public class XMLExtractor implements ITextExtractor {
     public Properties getProperties() {
         return this.properties;
     }
+    
+    @Override
+    protected String extractText(String inputFolder, String inputFileName)
+    {
+        return extractTextFromDocument(inputFolder + inputFileName);
+    }
 
     @Override
     public String extractTextFromDocument(String path) {
@@ -73,7 +81,7 @@ public class XMLExtractor implements ITextExtractor {
         Document document = this.getDocumentFromFile(path);
         StringBuilder content = new StringBuilder();
 
-        NodeList nList = document.getElementsByTagName("text");
+        NodeList nList = document.getElementsByTagName(getTextNodeName());
         if (nList.getLength() > 0) {
             for (int i = 0; i < nList.getLength(); i++) {
                 content.append(this.parseAbbreviations(nList.item(i), this.properties.getProperty("abbreviation_expansion_mode", "keep")));
@@ -116,6 +124,11 @@ public class XMLExtractor implements ITextExtractor {
             }
         }
         return res;
+    }
+
+    protected String getTextNodeName()
+    {
+        return textNodeName;
     }
 
     public static class Line {

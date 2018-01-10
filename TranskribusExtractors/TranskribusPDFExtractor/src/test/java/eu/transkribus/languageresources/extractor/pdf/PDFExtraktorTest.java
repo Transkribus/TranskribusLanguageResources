@@ -5,7 +5,7 @@
  */
 package eu.transkribus.languageresources.extractor.pdf;
 
-import eu.transkribus.languageresources.extractor.pdf.PDFExtraktor;
+import eu.transkribus.languageresources.extractor.pdf.PDFExtractor;
 import eu.transkribus.languageresources.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class PDFExtraktorTest
     public void testExtractTextFromDocument_String()
     {
         
-        PDFExtraktor instance = new PDFExtraktor();
+        PDFExtractor instance = new PDFExtractor();
         
         String expResult = page1 + "\n" + page2;
         String result = instance.extractTextFromDocument(pathToFile);
@@ -82,7 +82,7 @@ public class PDFExtraktorTest
     {
         String splitCharacter = "\n";
 
-        PDFExtraktor instance = new PDFExtraktor();
+        PDFExtractor instance = new PDFExtractor();
         
         String expResult = page1 + splitCharacter + page2;
         String result = instance.extractTextFromDocument(pathToFile, splitCharacter);
@@ -96,7 +96,7 @@ public class PDFExtraktorTest
     @Test
     public void testExtractTextFromDocumentPagewise()
     {
-        PDFExtraktor instance = new PDFExtraktor();
+        PDFExtractor instance = new PDFExtractor();
         
         List<String> result = instance.extractTextFromDocumentPagewise(pathToFile);
         List<String> expResult = new ArrayList<>();
@@ -112,7 +112,7 @@ public class PDFExtraktorTest
     @Test
     public void testExtractTextFromPage()
     {
-        PDFExtraktor instance = new PDFExtraktor();
+        PDFExtractor instance = new PDFExtractor();
         
         int page = 0;
         String expResult = page1;

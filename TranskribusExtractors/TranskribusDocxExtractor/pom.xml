@@ -11,6 +11,27 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
+    <repositories>
+        <repository>
+            <id>dea-artifactory</id>
+            <name>dea-artifactory-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>dbis-halvar-artifactory</id>
+            <name>dbis-halvar-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release-local</url>
+        </repository>
+        <site>
+            <id>website</id>
+            <name>transkribus.eu</name>
+            <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
+        </site>
+    </distributionManagement>
+    
     <parent>
         <groupId>eu.transkribus</groupId>
         <artifactId>TranskribusExtractors</artifactId>
@@ -18,6 +39,11 @@
     </parent>
     
     <dependencies>
+        <dependency>
+            <groupId>eu.transkribus</groupId>
+            <artifactId>TranskribusExtractorsCore</artifactId>
+            <version>0.3</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>

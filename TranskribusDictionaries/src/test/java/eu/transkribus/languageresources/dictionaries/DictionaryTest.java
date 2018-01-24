@@ -203,6 +203,42 @@ public class DictionaryTest
         assertTrue(entriesWord.containsKey("."));
     }
 
+    @Test
+    public void testToJSON() throws FileNotFoundException, IOException {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setName("Test");
+        dictionary.setLanguage("de-DE");
+        dictionary.addEntry("Goethe");
+        dictionary.addEntry("hat");
+        dictionary.addEntry("die");
+        dictionary.addEntry("Leiden");
+        dictionary.addEntry("des");
+        dictionary.addEntry("jungen");
+        dictionary.addEntry("Werthers");
+        dictionary.addEntry("in");
+        dictionary.addEntry("Wetzlar");
+        dictionary.addEntry("geschrieben");
+
+        Dictionary abbreviationsDictionary = new Dictionary();
+
+        Dictionary personsDictionary = new Dictionary();
+        personsDictionary.addEntry("Goethe");
+
+        Dictionary placeNamesDictionary = new Dictionary();
+        placeNamesDictionary.addEntry("Wetzlar");
+
+        Dictionary organizationsDictionary = new Dictionary();
+
+        String result = DictionaryUtils.toJSON(dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary).toString();
+        assertEquals("{\"number_tokens\":\"10\",\"entries\":[{\"Goethe\":{\"frequency\":1,\"tags\":{\"Person\":1}}},{\"hat\":{\"frequency\":1,\"tags\":{}}},{\"die\":{\"frequency\":1,\"tags\":{}}},{\"Leiden\":{\"frequency\":1,\"tags\":{}}},{\"des\":{\"frequency\":1,\"tags\":{}}},{\"jungen\":{\"frequency\":1,\"tags\":{}}},{\"Werthers\":{\"frequency\":1,\"tags\":{}}},{\"in\":{\"frequency\":1,\"tags\":{}}},{\"Wetzlar\":{\"frequency\":1,\"tags\":{\"PlaceName\":1}}},{\"geschrieben\":{\"frequency\":1,\"tags\":{}}}],\"number_types\":\"10\",\"name\":\"Test\",\"description\":null,\"language\":\"de-DE\",\"creation_date\":\"" + dictionary.getCreationDate() + "\"}", result);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/dictionary.json";
+
+        DictionaryUtils.saveAsJSON(dictionaryPath, dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary);
+        assertTrue(new File(dictionaryPath).exists());
+    }
+
     private String readFile(String path) throws IOException, FileNotFoundException {
         StringBuilder s = new StringBuilder();
         try ( Reader reader = new BufferedReader(new FileReader(new File(path))) ) {

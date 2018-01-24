@@ -18,6 +18,8 @@ import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Properties;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -57,7 +59,7 @@ public class DictionaryUtils {
         writeCharacterTable(new File(path.getAbsolutePath() + "/entry-character-table.csv"), ((Dictionary)dictionary).getEntryCharacterTable());
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/value-character-table.arpa"), ((Dictionary)dictionary).valueCharacterTableToNgrams());
         writeCharacterTable(new File(path.getAbsolutePath() + "/value-character-table.csv"), ((Dictionary)dictionary).getValueCharacterTable());
-        
+
         ARPAFileHandler.write(new File(path.getAbsolutePath() + "/entriesWords.arpa"), ((Dictionary)dictionary).toNgrams((String type) ->
         {
             return type.matches("[\\p{L}\\p{N}\\p{Z}\\p{M}]+");
@@ -74,6 +76,16 @@ public class DictionaryUtils {
         {
             return type.matches("\\p{P}+");
         }));
+    }
+
+    public static void saveAsJSON(String file, IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations)  throws FileNotFoundException, IOException {
+        saveAsJSON(new File(file), dictionary, abbreviations, persons, placeNames, organizations);
+    }
+
+    public static void saveAsJSON(File file, IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations)  throws FileNotFoundException, IOException {
+        Writer writer = new BufferedWriter(new FileWriter(file));
+        toJSON(dictionary, abbreviations, persons, placeNames, organizations).writeJSONString(writer);
+        writer.close();
     }
 
     private static void readMetadataFile(File file, IDictionary dictionary) throws FileNotFoundException, IOException {
@@ -109,53 +121,88 @@ public class DictionaryUtils {
             writer.println(String.format("\"%s\",\"\\u%s\",\"%s\",\"%d\"", v.getKey(), Integer.toHexString(v.getKey() | 0x10000), Character.getName(v.getKey()), v.getValue()));
         writer.close();
     }
-    
+
     /**
      * Create a dictionary from another dictionary. The new dictionary cointains only types
      * that seem not to belong in the given dictionary. As reference another dictionary
-     * will be used. An examplary use case would be if the givenDictionary should 
+     * will be used. An examplary use case would be if the givenDictionary should
      * contain only latin types, any non-latin type would be considered odd. The new
      * dictionary will cointain types that are more likely to appear in the comparing
      * dictionary than in the given one.
      * @param givenDictionary dictionary to find odd tokens in
      * @param comparingDictionary
      * @param entry
-     * @return 
+     * @return
      */
     public static IDictionary getOddTypes(IDictionary givenDictionary, IDictionary comparingDictionary) {
         Dictionary newDictionary = new Dictionary();
-        
+
         for(IEntry entry : givenDictionary.getEntries())
         {
             if(entryIsOdd(givenDictionary, comparingDictionary, entry))
                 newDictionary.addEntry(entry);
         }
-        
+
         return newDictionary;
     }
 
     private static boolean entryIsOdd(IDictionary givenDictionary, IDictionary comparingDictionary, IEntry entry) {
         if(!comparingDictionary.containsKey(entry.getKey()))
            return false;
-        
+
         long numTokensGivenDictionary = givenDictionary.getNumberTokens();
         long numTokensComparingDictionary = comparingDictionary.getNumberTokens();
-        
+
         double probabilityInGiven = entry.getFrequency() / (double)numTokensGivenDictionary;
         double probabilityInComparing = comparingDictionary.getEntry(entry.getKey()).getFrequency() / (double)numTokensComparingDictionary;
-        
+
         return probabilityInComparing >= probabilityInGiven;
     }
-    
+
     public static IDictionary subtractDictionary(IDictionary givenDictionary, IDictionary dictionaryToSubtract) {
         Dictionary newDictionary = new Dictionary();
-        
+
         for(IEntry entry : givenDictionary.getEntries())
         {
             if(!dictionaryToSubtract.containsKey(entry.getKey()))
                 newDictionary.addEntry(entry);
         }
-        
+
         return newDictionary;
+    }
+
+    public static JSONObject toJSON(IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations) {
+        JSONObject obj = new JSONObject();
+
+        obj.put("name", dictionary.getName());
+        obj.put("description", dictionary.getDescription());
+        obj.put("language", dictionary.getLanguage());
+        obj.put("number_types", Integer.toString(dictionary.getNumberTypes()));
+        obj.put("number_tokens", Long.toString(dictionary.getNumberTokens()));
+        obj.put("creation_date", dictionary.getCreationDate().toString());
+
+        JSONArray entries = new JSONArray();
+        for ( IEntry entry : dictionary.getEntries() ) {
+            JSONObject value = new JSONObject();
+            value.put("frequency", entry.getFrequency());
+
+            JSONObject tags = new JSONObject();
+            if ( abbreviations.containsKey(entry.getKey()) )
+                tags.put("Abbreviation", abbreviations.getEntry(entry.getKey()).getFrequency());
+            if ( persons.containsKey(entry.getKey()) )
+                tags.put("Person", persons.getEntry(entry.getKey()).getFrequency());
+            if ( placeNames.containsKey(entry.getKey()) )
+                tags.put("PlaceName", placeNames.getEntry(entry.getKey()).getFrequency());
+            if ( organizations.containsKey(entry.getKey()) )
+                tags.put("Organization", organizations.getEntry(entry.getKey()).getFrequency());
+            value.put("tags", tags);
+
+            JSONObject e = new JSONObject();
+            e.put(entry.getKey(), value);
+            entries.add(e);
+        }
+
+        obj.put("entries", entries);
+        return obj;
     }
 }

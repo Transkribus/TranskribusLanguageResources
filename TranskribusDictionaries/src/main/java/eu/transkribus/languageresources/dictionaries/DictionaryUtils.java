@@ -204,13 +204,13 @@ public class DictionaryUtils {
             JsonObject abbr = new JsonObject();
             abbr.addProperty("Total", abbreviations.containsKey(entry.getKey()) ? abbreviations.getEntry(entry.getKey()).getFrequency() : 0);
             if ( abbreviations.containsKey(entry.getKey()) ) {
-                JsonObject expantions = new JsonObject();
+                JsonObject expansions = new JsonObject();
                 for ( Map.Entry<String, Integer> e : abbreviations.getEntry(entry.getKey()).getValues().entrySet() )
-                    expantions.addProperty(e.getKey(), e.getValue());
-                abbr.add("expantions", expantions);
+                    expansions.addProperty(e.getKey(), e.getValue());
+                abbr.add("expansions", expansions);
             }
             else
-                abbr.add("expantions", new JsonObject());
+                abbr.add("expansions", new JsonObject());
 
             tags.add("Abbreviation", abbr);
             tags.addProperty("Person", persons.containsKey(entry.getKey()) ? persons.getEntry(entry.getKey()).getFrequency() : 0);

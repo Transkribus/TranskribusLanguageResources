@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>eu.transkribus</groupId>
+    <artifactId>TranskribusGenericExtractor</artifactId>
+    <name>TranskribusGenericExtractor</name>
+    <version>0.3</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+
     <parent>
         <groupId>eu.transkribus</groupId>
         <artifactId>TranskribusExtractors</artifactId>
         <version>0.3</version>
     </parent>
-    <artifactId>TranskribusGenericExtractor</artifactId>
-    <packaging>jar</packaging>
-    
+
+
     <repositories>
         <repository>
             <id>dea-artifactory</id>
@@ -29,7 +40,7 @@
             <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
         </site>
     </distributionManagement>
-    
+
     <dependencies>
         <dependency>
             <groupId>eu.transkribus</groupId>

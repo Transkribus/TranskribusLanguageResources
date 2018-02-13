@@ -18,8 +18,11 @@ import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Properties;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -83,8 +86,9 @@ public class DictionaryUtils {
     }
 
     public static void saveAsJSON(File file, IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations)  throws FileNotFoundException, IOException {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Writer writer = new BufferedWriter(new FileWriter(file));
-        toJSON(dictionary, abbreviations, persons, placeNames, organizations).writeJSONString(writer);
+        writer.write(gson.toJson(new JsonParser().parse(toJSON(dictionary, abbreviations, persons, placeNames, organizations).toString())));
         writer.close();
     }
 
@@ -171,38 +175,55 @@ public class DictionaryUtils {
         return newDictionary;
     }
 
-    public static JSONObject toJSON(IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations) {
-        JSONObject obj = new JSONObject();
+    /**
+    *
+    * @param dictionary base dictionary
+    * @param abbreviations dictionary with abbreviations
+    * @param persons dictionary with person names
+    * @param placeNames dictionary wit place names
+    * @param organizations dictionary with organization names
+    * @return JSON object from the given dictionaties
+    */
+    public static JsonObject toJSON(IDictionary dictionary, IDictionary abbreviations, IDictionary persons, IDictionary placeNames, IDictionary organizations) {
+        JsonObject obj = new JsonObject();
 
-        obj.put("name", dictionary.getName());
-        obj.put("description", dictionary.getDescription());
-        obj.put("language", dictionary.getLanguage());
-        obj.put("number_types", Integer.toString(dictionary.getNumberTypes()));
-        obj.put("number_tokens", Long.toString(dictionary.getNumberTokens()));
-        obj.put("creation_date", dictionary.getCreationDate().toString());
+        obj.addProperty("name", dictionary.getName());
+        obj.addProperty("description", dictionary.getDescription());
+        obj.addProperty("language", dictionary.getLanguage());
+        obj.addProperty("number_types", Integer.toString(dictionary.getNumberTypes()));
+        obj.addProperty("number_tokens", Long.toString(dictionary.getNumberTokens()));
+        obj.addProperty("creation_date", dictionary.getCreationDate().toString());
 
-        JSONArray entries = new JSONArray();
+        JsonArray entries = new JsonArray();
         for ( IEntry entry : dictionary.getEntries() ) {
-            JSONObject value = new JSONObject();
-            value.put("frequency", entry.getFrequency());
+            JsonObject value = new JsonObject();
+            value.  addProperty("frequency", entry.getFrequency());
 
-            JSONObject tags = new JSONObject();
-            if ( abbreviations.containsKey(entry.getKey()) )
-                tags.put("Abbreviation", abbreviations.getEntry(entry.getKey()).getFrequency());
-            if ( persons.containsKey(entry.getKey()) )
-                tags.put("Person", persons.getEntry(entry.getKey()).getFrequency());
-            if ( placeNames.containsKey(entry.getKey()) )
-                tags.put("PlaceName", placeNames.getEntry(entry.getKey()).getFrequency());
-            if ( organizations.containsKey(entry.getKey()) )
-                tags.put("Organization", organizations.getEntry(entry.getKey()).getFrequency());
-            value.put("tags", tags);
+            JsonObject tags = new JsonObject();
 
-            JSONObject e = new JSONObject();
-            e.put(entry.getKey(), value);
+            JsonObject abbr = new JsonObject();
+            abbr.addProperty("Total", abbreviations.containsKey(entry.getKey()) ? abbreviations.getEntry(entry.getKey()).getFrequency() : 0);
+            if ( abbreviations.containsKey(entry.getKey()) ) {
+                JsonObject expantions = new JsonObject();
+                for ( Map.Entry<String, Integer> e : abbreviations.getEntry(entry.getKey()).getValues().entrySet() )
+                    expantions.addProperty(e.getKey(), e.getValue());
+                abbr.add("expantions", expantions);
+            }
+            else
+                abbr.add("expantions", new JsonObject());
+
+            tags.add("Abbreviation", abbr);
+            tags.addProperty("Person", persons.containsKey(entry.getKey()) ? persons.getEntry(entry.getKey()).getFrequency() : 0);
+            tags.addProperty("PlaceName", placeNames.containsKey(entry.getKey()) ? placeNames.getEntry(entry.getKey()).getFrequency() : 0);
+            tags.addProperty("Organization", organizations.containsKey(entry.getKey()) ? organizations.getEntry(entry.getKey()).getFrequency() : 0);
+            value.add("tags", tags);
+
+            JsonObject e = new JsonObject();
+            e.add(entry.getKey(), value);
             entries.add(e);
         }
 
-        obj.put("entries", entries);
+        obj.add("entries", entries);
         return obj;
     }
 }

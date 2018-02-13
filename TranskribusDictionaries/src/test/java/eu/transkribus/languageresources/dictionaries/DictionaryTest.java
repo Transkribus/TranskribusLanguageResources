@@ -218,11 +218,28 @@ public class DictionaryTest
         dictionary.addEntry("in");
         dictionary.addEntry("Wetzlar");
         dictionary.addEntry("geschrieben");
+        dictionary.addEntry("Goethe");
+        dictionary.addEntry("hat");
+        dictionary.addEntry("aber");
+        dictionary.addEntry("nicht");
+        dictionary.addEntry("Dr.");
+        dictionary.addEntry("Faustus");
+        dictionary.addEntry("geschrieben");
+        dictionary.addEntry("sondern");
+        dictionary.addEntry("das");
+        dictionary.addEntry("war");
+        dictionary.addEntry("Thomas");
+        dictionary.addEntry("Mann");
 
         Dictionary abbreviationsDictionary = new Dictionary();
+        abbreviationsDictionary.addValue("Dr.", "Doktor");
 
         Dictionary personsDictionary = new Dictionary();
         personsDictionary.addEntry("Goethe");
+        personsDictionary.addEntry("Werthers");
+        personsDictionary.addEntry("Faustus");
+        personsDictionary.addEntry("Thomas");
+        personsDictionary.addEntry("Mann");
 
         Dictionary placeNamesDictionary = new Dictionary();
         placeNamesDictionary.addEntry("Wetzlar");
@@ -230,7 +247,7 @@ public class DictionaryTest
         Dictionary organizationsDictionary = new Dictionary();
 
         String result = DictionaryUtils.toJSON(dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary).toString();
-        assertEquals("{\"number_tokens\":\"10\",\"entries\":[{\"Goethe\":{\"frequency\":1,\"tags\":{\"Person\":1}}},{\"hat\":{\"frequency\":1,\"tags\":{}}},{\"die\":{\"frequency\":1,\"tags\":{}}},{\"Leiden\":{\"frequency\":1,\"tags\":{}}},{\"des\":{\"frequency\":1,\"tags\":{}}},{\"jungen\":{\"frequency\":1,\"tags\":{}}},{\"Werthers\":{\"frequency\":1,\"tags\":{}}},{\"in\":{\"frequency\":1,\"tags\":{}}},{\"Wetzlar\":{\"frequency\":1,\"tags\":{\"PlaceName\":1}}},{\"geschrieben\":{\"frequency\":1,\"tags\":{}}}],\"number_types\":\"10\",\"name\":\"Test\",\"description\":null,\"language\":\"de-DE\",\"creation_date\":\"" + dictionary.getCreationDate() + "\"}", result);
+        assertEquals("{\"name\":\"Test\",\"description\":null,\"language\":\"de-DE\",\"number_types\":\"19\",\"number_tokens\":\"22\",\"creation_date\":\"" + dictionary.getCreationDate() + "\",\"entries\":[{\"Goethe\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"hat\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"die\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Leiden\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"des\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"jungen\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Werthers\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"in\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Wetzlar\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":1,\"Organization\":0}}},{\"geschrieben\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"aber\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"nicht\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Dr.\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":1,\"expantions\":{\"Doktor\":1}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Faustus\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"sondern\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"das\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"war\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Thomas\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"Mann\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expantions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}}]}", result);
 
         ClassLoader classLoader = getClass().getClassLoader();
         String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/dictionary.json";

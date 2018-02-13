@@ -131,25 +131,4 @@ public class DictionaryFromTEITest
 
         assertEquals(0, dict.getEntries().size());
     }
-
-    @Test
-    public void testToJSON() {
-        DTATEIExtractor textExtraktor = new DTATEIExtractor();
-        String text = textExtraktor.extractTextFromDocument(pathToFile, " ");
-
-        Properties tokenizerProperties = new Properties();
-        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
-        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
-        tokenizerProperties.setProperty("keep_delimiter_signs", "");
-
-        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
-        List<String> tokenizedText = tokenizer.tokenize(text);
-        Dictionary dictionary = new Dictionary(tokenizedText);
-
-        Dictionary personsDictionary = (Dictionary) textExtraktor.extractPersonNames(pathToFile);
-        Dictionary abbreviationsDictionary = (Dictionary) textExtraktor.extractAbbreviations(pathToFile);
-        Dictionary placeNamesDictionary = (Dictionary) textExtraktor.extractPlaceNames(pathToFile);
-        Dictionary organizationsDictionary = (Dictionary) textExtraktor.extractOrganizations(pathToFile);
-        String json = DictionaryUtils.toJSON(dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary).toString();
-    }
 }

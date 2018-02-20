@@ -107,4 +107,27 @@ public class DictionaryFromPAGEXMLTest
         assertEquals(dictionary.getCreationDate(), dictionary2.getCreationDate());
         assertEquals(dictionary, dictionary2);
     }
+
+    @Test
+    public void testToJSON() {
+        PAGEXMLExtractor textExtraktor = new PAGEXMLExtractor();
+        String text = textExtraktor.extractTextFromDocument(pathToFile, " ");
+
+        Properties tokenizerProperties = new Properties();
+        tokenizerProperties.setProperty("dehyphenation_signs", "¬");
+        tokenizerProperties.setProperty("delimiter_signs", "\n., ");
+        tokenizerProperties.setProperty("keep_delimiter_signs", "");
+
+        TokenizerConfig tokenizer = new TokenizerConfig(tokenizerProperties);
+        List<String> tokenizedText = tokenizer.tokenize(text);
+        Dictionary dictionary = new Dictionary(tokenizedText);
+
+        Dictionary personsDictionary = (Dictionary) textExtraktor.extractPersonNames(pathToFile);
+        Dictionary abbreviationsDictionary = (Dictionary) textExtraktor.extractAbbreviations(pathToFile);
+        Dictionary placeNamesDictionary = (Dictionary) textExtraktor.extractPlaceNames(pathToFile);
+        Dictionary organizationsDictionary = (Dictionary) textExtraktor.extractOrganizations(pathToFile);
+        String result = DictionaryUtils.toJSON(dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary).toString();
+        assertEquals("{\"name\":null,\"description\":null,\"language\":null,\"number_types\":\"13\",\"number_tokens\":\"123\",\"creation_date\":\"" + dictionary.getCreationDate() + "\",\"entries\":[{\"in\":{\"frequency\":58,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"den\":{\"frequency\":22,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"gegen\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Die\":{\"frequency\":3,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\",\":{\"frequency\":15,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"des\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\".\":{\"frequency\":5,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"der\":{\"frequency\":12,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"die\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Dr\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"ihren\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"werden\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"seit\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}}]}", result);
+
+    }
 }

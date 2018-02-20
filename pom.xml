@@ -32,7 +32,7 @@
             <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
         </site>
     </distributionManagement>
-    
+
     <modules>
         <module>TranskribusTokenizer</module>
         <module>TranskribusDictionaries</module>
@@ -102,7 +102,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin> 
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>

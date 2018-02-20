@@ -94,7 +94,7 @@ public class SimpleDictFileHandler
 
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file))))
         {
-            List<IEntry> entriesList = new ArrayList(entries);
+            List<IEntry> entriesList = new ArrayList<>(entries);
             entriesList.sort((IEntry o1, IEntry o2) -> -new Integer(o1.getFrequency()).compareTo(o2.getFrequency()));
 
             for (IEntry entry : entriesList)

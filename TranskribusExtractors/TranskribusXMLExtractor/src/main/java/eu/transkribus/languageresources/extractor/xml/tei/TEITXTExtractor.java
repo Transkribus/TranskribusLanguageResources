@@ -73,7 +73,7 @@ public class TEITXTExtractor
 
         ensureDir(new File(outputFolderName));
         DTATEIExtractor extractor = new TEI2TxtExtractor();
-        String extractTextFromDocument = extractor.extractTextFromDocument(fileInFile.getAbsolutePath());
+        String extractTextFromDocument = extractor.extractTextFromDocument(fileInFile.getAbsolutePath()).get("<default>");
 
         Matcher m = null;
         String path = null;

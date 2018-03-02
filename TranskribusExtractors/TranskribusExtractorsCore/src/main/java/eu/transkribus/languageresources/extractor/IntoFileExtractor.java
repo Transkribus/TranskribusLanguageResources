@@ -5,11 +5,13 @@
  */
 package eu.transkribus.languageresources.extractor;
 
+import java.util.Properties;
+
 /**
  *
  * @author max
  */
 public abstract class IntoFileExtractor
 {
-    public abstract void extractTextIntoFiles(String inputFolder, String inputFileName, String outputFolderName);
+    public abstract void extractTextIntoFiles(String inputFolder, String inputFileName, String outputFolderName, Properties properties);
 }

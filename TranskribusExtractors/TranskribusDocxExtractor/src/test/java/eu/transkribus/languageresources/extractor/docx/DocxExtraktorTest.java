@@ -53,7 +53,7 @@ public class DocxExtraktorTest
         
         for(File f : listOfFiles)
         {
-            String text = e.extractTextFromDocument(f.getAbsolutePath());
+            String text = e.extractTextFromDocument(f.getAbsolutePath()).get("<default>");
             String name = f.getName();
             name = name.split("\\.")[0];
             

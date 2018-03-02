@@ -63,7 +63,7 @@ public class SebisDictionaryTest {
 		
 		// first, we extract the text from the page xml folder
 		PAGEXMLExtractor textExtraktor = new PAGEXMLExtractor();
-		String text = textExtraktor.extractTextFromDocument(pathFoFile, " ");
+		String text = textExtraktor.extractTextFromDocument(pathFoFile, " ").get("<default>");
 
 		Properties tokenizerProperties = new Properties();
 

@@ -8,8 +8,6 @@ package eu.transkribus.languageresources.extractor.pagexml.tagextractor;
 import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAbbreviation;
 import eu.transkribus.interfaces.IDictionary;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.languageresources.extractor.pagexml.annotations.PAGEXMLAnnotation;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

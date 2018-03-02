@@ -8,12 +8,11 @@ package eu.transkribus.languageresources.extractor.docx;
 import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.dictionaries.Dictionary;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
+import java.util.Properties;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -23,21 +22,41 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  */
 public class DocxExtractor implements IPagewiseTextExtractor
 {
-
     @Override
-    public String extractTextFromDocument(String pathToFile)
+    public List<String> extractTextFromDocumentPagewise(String path)
     {
-        return extractTextFromDocument(pathToFile, "\n");
+        return extractTextFromDocumentPagewise(path, new Properties());
     }
 
     @Override
-    public String extractTextFromDocument(String pathToFile, String splitCharacter)
+    public Map<String, String> extractTextFromDocument(String path)
+    {
+        return extractTextFromDocument(path, new Properties());
+    }
+    
+    @Override
+    public Map<String, String> extractTextFromDocument(String pathToFile, String splitCharacter)
+    {
+        return extractTextFromDocument(pathToFile, splitCharacter, new Properties());
+    }
+
+    @Override
+    public Map<String, String> extractTextFromDocument(String pathToFile, Properties properties)
+    {
+        return extractTextFromDocument(pathToFile, "\n", properties);
+    }
+
+    @Override
+    public Map<String, String> extractTextFromDocument(String pathToFile, String splitCharacter, Properties properties)
     {
         try
         {
             XWPFDocument docx = new XWPFDocument(new FileInputStream(pathToFile));
             XWPFWordExtractor we = new XWPFWordExtractor(docx);
-            return we.getText();
+            
+            Map<String, String> contentPerPage = new HashMap<>();
+            contentPerPage.put("<default>", we.getText());
+            return contentPerPage;
         } catch (IOException ex)
         {
             throw new RuntimeException("Could not find docx for given path: "+pathToFile);
@@ -45,7 +64,7 @@ public class DocxExtractor implements IPagewiseTextExtractor
     }
 
     @Override
-    public List<String> extractTextFromDocumentPagewise(String pathToFile)
+    public List<String> extractTextFromDocumentPagewise(String pathToFile, Properties properties)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -58,6 +77,12 @@ public class DocxExtractor implements IPagewiseTextExtractor
 
     @Override
     public Dictionary extractAbbreviationsFromPage(String path, int page)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public String extractTextFromPage(String path, int page, Properties properties)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

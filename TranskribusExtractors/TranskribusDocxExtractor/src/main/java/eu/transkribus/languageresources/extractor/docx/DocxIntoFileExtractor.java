@@ -6,6 +6,8 @@
 package eu.transkribus.languageresources.extractor.docx;
 
 import eu.transkribus.languageresources.extractor.IntoSingleFileExtractor;
+import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -16,9 +18,9 @@ public class DocxIntoFileExtractor extends IntoSingleFileExtractor
 {
 
     @Override
-    protected String extractText(String inputFolder, String inputFileName)
+    protected Map<String, String> extractText(String inputFolder, String inputFileName, Properties properties)
     {
         DocxExtractor ex = new DocxExtractor();
-        return ex.extractTextFromDocument(inputFolder + inputFileName);
+        return ex.extractTextFromDocument(inputFolder + inputFileName, properties);
     }
 }

@@ -114,7 +114,7 @@ public class TEIGroupTXTExtractor
     {
         ensureDir(folderOut);
         DTATEIExtractor extractor = new TEI2TxtExtractor();
-        String extractTextFromDocument = extractor.extractTextFromDocument(fileIn.getAbsolutePath());
+        String extractTextFromDocument = extractor.extractTextFromDocument(fileIn.getAbsolutePath()).get("<default>");
 
         Matcher m = null;
         String path = null;

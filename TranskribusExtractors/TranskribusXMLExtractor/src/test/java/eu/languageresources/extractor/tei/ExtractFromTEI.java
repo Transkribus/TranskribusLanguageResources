@@ -35,14 +35,7 @@ public class ExtractFromTEI
     public void extractFolder() throws Exception
     {
         File file = new File("src/test/resources/sks-rabbe-transcriptions");
-        String[] directories = file.list(new FilenameFilter()
-        {
-            @Override
-            public boolean accept(File current, String name)
-            {
-                return new File(current, name).getName().endsWith("xml");
-            }
-        });
+        String[] directories = file.list((File current, String name) -> new File(current, name).getName().endsWith("xml"));
 
         TEITXTExtractor extractor = new TEITXTExtractor();
         String outputFolder;

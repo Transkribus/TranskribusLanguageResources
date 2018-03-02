@@ -71,7 +71,7 @@ public class DictionaryFromTEITest
     {
         // first, we extract the text from the page xml folder
         DTATEIExtractor textExtraktor = new DTATEIExtractor();
-        String text = textExtraktor.extractTextFromDocument(pathToFile, " ");
+        String text = textExtraktor.extractTextFromDocument(pathToFile, " ").get("<default>");
 
         Properties tokenizerProperties = new Properties();
 

@@ -32,6 +32,9 @@ import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import eu.transkribus.languageresources.util.PAGEFileComparator;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import org.apache.commons.math3.util.Pair;
 
 /**
@@ -49,41 +52,32 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
     private static Pattern patternOffset = Pattern.compile(".*offset:([0-9]*);.*");
     private static Pattern patternLength = Pattern.compile(".*length:([0-9]*);.*");
 
-    public PAGEXMLExtractor()
-    {
-        super();
-    }
-
-    public PAGEXMLExtractor(String pathToConfig)
-    {
-        super(new File(pathToConfig));
-    }
-
-    public PAGEXMLExtractor(File configFile)
-    {
-        super(configFile);
-    }
-
     @Override
-    public String extractTextFromDocument(String path)
+    public Map<String, String> extractTextFromDocument(String path)
     {
         return extractTextFromDocument(path, "\n");
     }
 
     @Override
-    public String extractTextFromDocument(String path, String splitCharacter)
+    public Map<String, String> extractTextFromDocument(String path, String splitCharacter, Properties properties)
     {
         List<File> files = getFileList(path);
-        return extractTextFromFileList(files, splitCharacter);
+        return extractTextFromFileList(files, splitCharacter, properties);
+    }
+    
+    @Override
+    public List<String> extractTextFromDocumentPagewise(String path)
+    {
+        return extractTextFromDocumentPagewise(path, new Properties());
     }
 
-    public String extractTextFromFileList(List<File> files, String splitCharacter)
+    public Map<String, String> extractTextFromFileList(List<File> files, String splitCharacter, Properties properties)
     {
         StringBuilder content = new StringBuilder();
 
         for (int fileIndex = 0; fileIndex < files.size(); fileIndex++)
         {
-            content.append(getTextFromFile(files.get(fileIndex)));
+            content.append(getTextFromFile(files.get(fileIndex), properties));
 
             if (fileIndex + 1 < files.size())
             {
@@ -91,28 +85,36 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             }
         }
 
-        return content.toString();
+        Map<String, String> contentPerPage = new HashMap<>();
+        contentPerPage.put("<default>", content.toString());
+        return contentPerPage;
     }
 
     @Override
-    public List<String> extractTextFromDocumentPagewise(String path)
+    public List<String> extractTextFromDocumentPagewise(String path, Properties properties)
     {
         List<String> content = new ArrayList<>();
         List<File> files = getFileList(path);
 
         for (File f : files)
         {
-            content.add(getTextFromFile(f));
+            content.add(getTextFromFile(f, properties));
         }
 
         return content;
     }
-
+    
     @Override
     public String extractTextFromPage(String path, int page)
     {
+        return extractTextFromPage(path, page, new Properties());
+    }
+
+    @Override
+    public String extractTextFromPage(String path, int page, Properties properties)
+    {
         List<File> files = getFileList(path);
-        return getTextFromFile(files.get(page));
+        return getTextFromFile(files.get(page), properties);
     }
 
     private List<File> getFileList(String path)
@@ -140,10 +142,11 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return files;
     }
 
-    private List<Node> getNodesFromXml(Document doc){
-        return getNodesFromXml(doc,"Unicode");
+    private List<Node> getNodesFromXml(Document doc)
+    {
+        return getNodesFromXml(doc, "Unicode");
     }
-    
+
     private List<Node> getNodesFromXml(Document doc, String tagName)
     {
         try
@@ -185,19 +188,19 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         }
     }
 
-    protected String getTextFromXml(Document d)
+    protected String getTextFromXml(Document d, Properties properties)
     {
         List<Node> unicodeNodes = getNodesFromXml(d);
-        return getTextFromNodeList(unicodeNodes);
+        return getTextFromNodeList(unicodeNodes, properties);
     }
 
-    protected String getTextFromFile(File f)
+    protected String getTextFromFile(File f, Properties properties)
     {
         List<Node> unicodeNodes = getNodesFromFile(f);
-        return getTextFromNodeList(unicodeNodes);
+        return getTextFromNodeList(unicodeNodes, properties);
     }
 
-    private String getTextFromNodeList(List<Node> unicodeNodes)
+    private String getTextFromNodeList(List<Node> unicodeNodes, Properties properties)
     {
         StringBuilder content = new StringBuilder();
         Node unicodeNode;
@@ -207,7 +210,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         for (int nodeIndex = 0; nodeIndex < numNodes; nodeIndex++)
         {
             unicodeNode = unicodeNodes.get(nodeIndex);
-            content.append(getTextFromNode(unicodeNode));
+            content.append(getTextFromNode(unicodeNode, properties));
 
             if (nodeIndex + 1 < numNodes)
             {
@@ -218,7 +221,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return content.toString();
     }
 
-    public String getTextFromNode(Node unicodeNode)
+    public String getTextFromNode(Node unicodeNode, Properties properties)
     {
         String textContent = unicodeNode.getTextContent();
         Node textLineNode = unicodeNode.getParentNode().getParentNode();
@@ -228,10 +231,10 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         {
             customTagValue = textLineNode.getAttributes().getNamedItem("custom").getTextContent();
         }
-        return getTextFromNode(textContent, customTagValue);
+        return getTextFromNode(textContent, customTagValue, properties);
     }
 
-    public String getTextFromNode(String textContent, String customTagValue)
+    public String getTextFromNode(String textContent, String customTagValue, Properties properties)
     {
         String abbreviationMode = properties.getProperty("abbreviation_expansion_mode", "keep");
         return getTextFromNode(textContent, customTagValue, abbreviationMode);
@@ -397,40 +400,46 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return index;
     }
 
-    public List<Pair<String, String>> extractTextFromDocumentPairwise(String path1, String path2)
+    public List<Pair<String, String>> extractTextFromDocumentPairwise(String path1, String path2, Properties properties)
     {
         List<File> fileList1 = getFileList(path1);
         List<File> fileList2 = getFileList(path2);
 
         if (fileList1.size() != fileList2.size())
         {
-            return createWholeDocumentPair(fileList1, fileList2);
+            return createWholeDocumentPair(fileList1, fileList2, properties);
         }
 
-        return createPageWisePairs(fileList1, fileList2);
+        return createPageWisePairs(fileList1, fileList2, properties);
     }
-    
-    public List<Pair<String, String>> extractTextFromFilePairwise(String path1, String path2)
+
+    public List<Pair<String, String>> extractTextFromFilePairwise(String path1, String path2, Properties properties)
     {
-        List<File> fileList1 = Arrays.asList(new File[]{new File(path1)});
-        List<File> fileList2 = Arrays.asList(new File[]{new File(path2)});
+        List<File> fileList1 = Arrays.asList(new File[]
+        {
+            new File(path1)
+        });
+        List<File> fileList2 = Arrays.asList(new File[]
+        {
+            new File(path2)
+        });
 
         if (fileList1.size() != fileList2.size())
         {
-            return createWholeDocumentPair(fileList1, fileList2);
+            return createWholeDocumentPair(fileList1, fileList2, properties);
         }
 
-        return createPageWisePairs(fileList1, fileList2);
+        return createPageWisePairs(fileList1, fileList2, properties);
     }
 
-    private List<Pair<String, String>> createWholeDocumentPair(List<File> fileList1, List<File> fileList2)
+    private List<Pair<String, String>> createWholeDocumentPair(List<File> fileList1, List<File> fileList2, Properties properties)
     {
-        String text1 = extractTextFromFileList(fileList1, "\n");
-        String text2 = extractTextFromFileList(fileList2, "\n");
+        String text1 = extractTextFromFileList(fileList1, "\n", properties).get("<default>");
+        String text2 = extractTextFromFileList(fileList2, "\n", properties).get("<default>");
         return Arrays.asList(new Pair(text1, text2));
     }
 
-    private List<Pair<String, String>> createPageWisePairs(List<File> fileList1, List<File> fileList2)
+    private List<Pair<String, String>> createPageWisePairs(List<File> fileList1, List<File> fileList2, Properties properties)
     {
         List<Pair<String, String>> pagePairs = new LinkedList<>();
 
@@ -439,55 +448,63 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
             List<Node> nodeList1 = getNodesFromFile(fileList1.get(fileIndex));
             List<Node> nodeList2 = getNodesFromFile(fileList2.get(fileIndex));
 
-            pagePairs.addAll(getPagePairs(nodeList1, nodeList2));
+            pagePairs.addAll(getPagePairs(nodeList1, nodeList2, properties));
         }
 
         return pagePairs;
     }
 
-    private List<Pair<String, String>> getPagePairs(List<Node> nodeList1, List<Node> nodeList2)
+    private List<Pair<String, String>> getPagePairs(List<Node> nodeList1, List<Node> nodeList2, Properties properties)
     {
-        if(allAreAlligned(nodeList1, nodeList2))
+        if (allAreAlligned(nodeList1, nodeList2))
         {
             List<Pair<String, String>> linePairs = new LinkedList<>();
-            
-            for(int nodeIndex = 0; nodeIndex < nodeList1.size(); nodeIndex++)
+
+            for (int nodeIndex = 0; nodeIndex < nodeList1.size(); nodeIndex++)
             {
-                String text1 = getTextFromNode(nodeList1.get(nodeIndex));
-                String text2 = getTextFromNode(nodeList2.get(nodeIndex));
+                String text1 = getTextFromNode(nodeList1.get(nodeIndex), properties);
+                String text2 = getTextFromNode(nodeList2.get(nodeIndex), properties);
                 linePairs.add(new Pair(text1, text2));
             }
-            
+
             return linePairs;
-        }else
+        } else
         {
-            String text1 = getTextFromNodeList(nodeList1);
-            String text2 = getTextFromNodeList(nodeList2);
+            String text1 = getTextFromNodeList(nodeList1, properties);
+            String text2 = getTextFromNodeList(nodeList2, properties);
             return Arrays.asList(new Pair(text1, text2));
         }
     }
-    
+
     private boolean allAreAlligned(List<Node> nodeList1, List<Node> nodeList2)
     {
-        if(nodeList1.size() != nodeList2.size())
-            return false;
-        
-        for(int nodeIndex = 0; nodeIndex < nodeList1.size(); nodeIndex++)
+        if (nodeList1.size() != nodeList2.size())
         {
-            if(!equalsBaseline(nodeList1.get(nodeIndex), nodeList2.get(nodeIndex)))
-                return false;
+            return false;
         }
-        
+
+        for (int nodeIndex = 0; nodeIndex < nodeList1.size(); nodeIndex++)
+        {
+            if (!equalsBaseline(nodeList1.get(nodeIndex), nodeList2.get(nodeIndex)))
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
-    private static Node getChild(Node parent, String name) {
+    private static Node getChild(Node parent, String name)
+    {
         NodeList childNodes = parent.getChildNodes();
         Node res = null;
-        for (int i = 0; i < childNodes.getLength(); i++) {
+        for (int i = 0; i < childNodes.getLength(); i++)
+        {
             Node child = childNodes.item(i);
-            if (child.getNodeName().equals(name)) {
-                if (res != null) {
+            if (child.getNodeName().equals(name))
+            {
+                if (res != null)
+                {
                     throw new RuntimeException("there are more than one child with this name");
                 }
                 res = child;
@@ -502,9 +519,9 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         {
             return true;
         }
-        
-        String points1 = getChild(node1.getParentNode().getParentNode(),"Baseline").getAttributes().getNamedItem("points").getTextContent();
-        String points2 = getChild(node2.getParentNode().getParentNode(),"Baseline").getAttributes().getNamedItem("points").getTextContent();
+
+        String points1 = getChild(node1.getParentNode().getParentNode(), "Baseline").getAttributes().getNamedItem("points").getTextContent();
+        String points2 = getChild(node2.getParentNode().getParentNode(), "Baseline").getAttributes().getNamedItem("points").getTextContent();
         return points1.equals(points2);
     }
 }

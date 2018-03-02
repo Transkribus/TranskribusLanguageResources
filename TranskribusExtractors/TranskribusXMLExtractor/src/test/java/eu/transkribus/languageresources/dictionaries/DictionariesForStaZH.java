@@ -109,21 +109,6 @@ public class DictionariesForStaZH
     private static class StAZhTEIExtractor extends DTATEIExtractor implements IPagewiseTextExtractor
     {
 
-        public StAZhTEIExtractor()
-        {
-            super();
-        }
-
-        public StAZhTEIExtractor(String pathToConfig)
-        {
-            super(pathToConfig);
-        }
-
-        public StAZhTEIExtractor(File configFile)
-        {
-            super(configFile);
-        }
-
         @Override
         public List<String> extractTextFromDocumentPagewise(String path)
         {

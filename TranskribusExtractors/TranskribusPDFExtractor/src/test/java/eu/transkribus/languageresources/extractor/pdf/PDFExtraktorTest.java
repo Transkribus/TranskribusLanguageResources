@@ -69,7 +69,7 @@ public class PDFExtraktorTest
         PDFExtractor instance = new PDFExtractor();
         
         String expResult = page1 + "\n" + page2;
-        String result = instance.extractTextFromDocument(pathToFile);
+        String result = instance.extractTextFromDocument(pathToFile).get("<default>");
         
         assertEquals(expResult, result);
     }
@@ -85,7 +85,7 @@ public class PDFExtraktorTest
         PDFExtractor instance = new PDFExtractor();
         
         String expResult = page1 + splitCharacter + page2;
-        String result = instance.extractTextFromDocument(pathToFile, splitCharacter);
+        String result = instance.extractTextFromDocument(pathToFile, splitCharacter).get("<default>");
         
         assertEquals(expResult, result);
     }

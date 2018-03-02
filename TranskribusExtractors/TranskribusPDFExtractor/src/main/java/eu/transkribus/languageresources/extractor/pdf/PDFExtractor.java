@@ -9,11 +9,12 @@ import eu.transkribus.languageresources.dictionaries.Dictionary;
 import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.pdfbox.cos.COSDocument;
@@ -29,15 +30,27 @@ public class PDFExtractor implements IPagewiseTextExtractor
 {
 
     @Override
-    public String extractTextFromDocument(String pathToFile)
+    public Map<String, String> extractTextFromDocument(String pathToFile)
     {
-        return extractTextFromDocument(pathToFile, "\n");
+        return extractTextFromDocument(pathToFile, "\n", new Properties());
     }
 
     @Override
-    public String extractTextFromDocument(String pathToFile, String splitCharacter)
+    public Map<String, String> extractTextFromDocument(String pathToFile, String splitCharacter)
     {
-        List<String> pageWiseText = extractTextFromDocumentPagewise(pathToFile);
+        return extractTextFromDocument(pathToFile, splitCharacter, new Properties());
+    }
+
+    @Override
+    public Map<String, String> extractTextFromDocument(String pathToFile, Properties properties)
+    {
+        return extractTextFromDocument(pathToFile, "\n", properties);
+    }
+
+    @Override
+    public Map<String, String> extractTextFromDocument(String pathToFile, String splitCharacter, Properties properties)
+    {
+        List<String> pageWiseText = extractTextFromDocumentPagewise(pathToFile, properties);
         StringBuilder sb = new StringBuilder();
 
         for (int pageId = 0; pageId < pageWiseText.size(); pageId++)
@@ -50,11 +63,19 @@ public class PDFExtractor implements IPagewiseTextExtractor
             }
         }
 
-        return sb.toString();
+        Map<String, String> contentPerPage = new HashMap<>();
+        contentPerPage.put("<default>", sb.toString());
+        return contentPerPage;
     }
 
     @Override
     public List<String> extractTextFromDocumentPagewise(String pathToFile)
+    {
+        return extractTextFromDocumentPagewise(pathToFile, new Properties());
+    }
+
+    @Override
+    public List<String> extractTextFromDocumentPagewise(String pathToFile, Properties properties)
     {
         List<String> pageWiseText = new LinkedList<>();
 
@@ -102,7 +123,13 @@ public class PDFExtractor implements IPagewiseTextExtractor
     }
 
     @Override
-    public String extractTextFromPage(String pathToFile, int page)
+    public String extractTextFromPage(String path, int page)
+    {
+        return extractTextFromPage(path, page, new Properties());
+    }
+
+    @Override
+    public String extractTextFromPage(String pathToFile, int page, Properties properties)
     {
         StringBuilder sb = new StringBuilder();
 

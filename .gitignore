@@ -1,13 +1,16 @@
+/.settings/
+/target/
+/.project
 */target/
-*/*/target/
 */.classpath
 */.project
 */.settings/
+*/*/.settings/
+*/*/target/
+*/*/.classpath
+*/*/.project
 
 *.*~
 */nbproject/
 
 /TranskribusExtractors/TranskribusXMLExtractor/nbproject/
-/.project
-/.settings/
-/target/

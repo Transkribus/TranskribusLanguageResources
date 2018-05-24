@@ -203,6 +203,59 @@ public class DictionaryTest
         assertTrue(entriesWord.containsKey("."));
     }
 
+    @Test
+    public void testToJSON() throws FileNotFoundException, IOException {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setName("Test");
+        dictionary.setLanguage("de-DE");
+        dictionary.addEntry("Goethe");
+        dictionary.addEntry("hat");
+        dictionary.addEntry("die");
+        dictionary.addEntry("Leiden");
+        dictionary.addEntry("des");
+        dictionary.addEntry("jungen");
+        dictionary.addEntry("Werthers");
+        dictionary.addEntry("in");
+        dictionary.addEntry("Wetzlar");
+        dictionary.addEntry("geschrieben");
+        dictionary.addEntry("Goethe");
+        dictionary.addEntry("hat");
+        dictionary.addEntry("aber");
+        dictionary.addEntry("nicht");
+        dictionary.addEntry("Dr.");
+        dictionary.addEntry("Faustus");
+        dictionary.addEntry("geschrieben");
+        dictionary.addEntry("sondern");
+        dictionary.addEntry("das");
+        dictionary.addEntry("war");
+        dictionary.addEntry("Thomas");
+        dictionary.addEntry("Mann");
+
+        Dictionary abbreviationsDictionary = new Dictionary();
+        abbreviationsDictionary.addValue("Dr.", "Doktor");
+
+        Dictionary personsDictionary = new Dictionary();
+        personsDictionary.addEntry("Goethe");
+        personsDictionary.addEntry("Werthers");
+        personsDictionary.addEntry("Faustus");
+        personsDictionary.addEntry("Thomas");
+        personsDictionary.addEntry("Mann");
+
+        Dictionary placeNamesDictionary = new Dictionary();
+        placeNamesDictionary.addEntry("Wetzlar");
+
+        Dictionary organizationsDictionary = new Dictionary();
+
+        String result = DictionaryUtils.toJSON(dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary).toString();
+        assertEquals("{\"name\":\"Test\",\"description\":null,\"language\":\"de-DE\",\"number_types\":\"19\",\"number_tokens\":\"22\",\"creation_date\":\"" + dictionary.getCreationDate() + "\",\"entries\":[{\"Goethe\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"hat\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"die\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Leiden\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"des\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"jungen\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Werthers\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"in\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Wetzlar\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":1,\"Organization\":0}}},{\"geschrieben\":{\"frequency\":2,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"aber\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"nicht\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Dr.\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":1,\"expansions\":{\"Doktor\":1}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Faustus\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"sondern\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"das\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"war\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":0,\"PlaceName\":0,\"Organization\":0}}},{\"Thomas\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}},{\"Mann\":{\"frequency\":1,\"tags\":{\"Abbreviation\":{\"Total\":0,\"expansions\":{}},\"Person\":1,\"PlaceName\":0,\"Organization\":0}}}]}", result);
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        String dictionaryPath = new File(classLoader.getResource(".").getFile()).getAbsolutePath() + "/dictionary.json";
+
+        DictionaryUtils.saveAsJSON(dictionaryPath, dictionary, abbreviationsDictionary, personsDictionary, placeNamesDictionary, organizationsDictionary);
+        assertTrue(new File(dictionaryPath).exists());
+    }
+
     private String readFile(String path) throws IOException, FileNotFoundException {
         StringBuilder s = new StringBuilder();
         try ( Reader reader = new BufferedReader(new FileReader(new File(path))) ) {

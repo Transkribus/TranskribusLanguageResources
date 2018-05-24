@@ -32,7 +32,7 @@
             <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
         </site>
     </distributionManagement>
-    
+
     <modules>
         <module>TranskribusTokenizer</module>
         <module>TranskribusDictionaries</module>
@@ -60,6 +60,16 @@
             </testResource>
         </testResources>
         <plugins>
+        	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*logback.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -86,7 +96,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin> 
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>

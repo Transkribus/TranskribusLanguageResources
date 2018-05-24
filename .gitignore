@@ -13,4 +13,11 @@
 *.*~
 */nbproject/
 
+<<<<<<< HEAD
 /TranskribusExtractors/TranskribusXMLExtractor/nbproject/
+=======
+/TranskribusExtractors/TranskribusPDFExtractor/logs/
+/TranskribusExtractors/TranskribusXMLExtractor/nbproject/
+/.project
+/.settings/
+>>>>>>> refs/remotes/origin/master

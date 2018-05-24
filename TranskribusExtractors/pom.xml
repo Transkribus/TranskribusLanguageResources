@@ -28,11 +28,6 @@
     <dependencies>
         <dependency>
             <groupId>eu.transkribus</groupId>
-            <artifactId>TranskribusInterfaces</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDictionaries</artifactId>
             <version>0.3</version>
         </dependency>

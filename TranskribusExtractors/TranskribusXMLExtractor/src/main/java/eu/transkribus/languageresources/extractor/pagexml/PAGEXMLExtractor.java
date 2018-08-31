@@ -191,7 +191,7 @@ public class PAGEXMLExtractor extends XMLExtractor implements IPagewiseTextExtra
         return getTextFromNodeList(unicodeNodes);
     }
 
-    protected String getTextFromFile(File f)
+    public String getTextFromFile(File f)
     {
         List<Node> unicodeNodes = getNodesFromFile(f);
         return getTextFromNodeList(unicodeNodes);

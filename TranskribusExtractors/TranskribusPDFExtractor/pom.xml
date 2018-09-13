@@ -4,8 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.transkribus</groupId>
     <artifactId>TranskribusPDFExtractor</artifactId>
-    <version>0.3</version>
+    <version>0.3.1</version>
     <packaging>jar</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -17,7 +18,28 @@
         <artifactId>TranskribusExtractors</artifactId>
         <version>0.3</version>
     </parent>
+    
+    <repositories>
+        <repository>
+            <id>dea-artifactory</id>
+            <name>dea-artifactory-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release/</url>
+        </repository>
+    </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>dbis-halvar-artifactory</id>
+            <name>dbis-halvar-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release-local</url>
+        </repository>
+        <site>
+            <id>website</id>
+            <name>transkribus.eu</name>
+            <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
+        </site>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

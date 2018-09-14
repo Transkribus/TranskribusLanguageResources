@@ -9,6 +9,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
+    <parent>
+        <groupId>eu.transkribus</groupId>
+        <artifactId>TranskribusExtractors</artifactId>
+        <version>0.3.1</version>
+    </parent>
+    
     <repositories>
         <repository>
             <id>dea-artifactory</id>
@@ -29,18 +35,12 @@
             <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
         </site>
     </distributionManagement>
-    
-    <parent>
-        <groupId>eu.transkribus</groupId>
-        <artifactId>TranskribusExtractors</artifactId>
-        <version>0.3</version>
-    </parent>
-    
+
     <dependencies>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

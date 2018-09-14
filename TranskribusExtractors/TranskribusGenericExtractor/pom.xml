@@ -14,7 +14,7 @@
     <parent>
         <groupId>eu.transkribus</groupId>
         <artifactId>TranskribusExtractors</artifactId>
-        <version>0.3</version>
+        <version>0.3.1</version>
     </parent>
 
 
@@ -43,22 +43,22 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDocxExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusPDFExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusXMLExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

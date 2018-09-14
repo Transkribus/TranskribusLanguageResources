@@ -32,7 +32,7 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDictionaries</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

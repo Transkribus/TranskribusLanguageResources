@@ -47,12 +47,12 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDictionaries</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>

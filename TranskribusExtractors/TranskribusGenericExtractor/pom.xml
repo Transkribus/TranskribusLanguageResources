@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>eu.transkribus</groupId>
     <artifactId>TranskribusGenericExtractor</artifactId>
     <name>TranskribusGenericExtractor</name>
-    <version>0.3</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,7 +14,7 @@
     <parent>
         <groupId>eu.transkribus</groupId>
         <artifactId>TranskribusExtractors</artifactId>
-        <version>0.3</version>
+        <version>0.3.1</version>
     </parent>
 
 
@@ -45,22 +43,22 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDocxExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusPDFExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusXMLExtractor</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

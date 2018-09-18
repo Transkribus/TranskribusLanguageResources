@@ -2,9 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <name>TranskribusPDFExtractor</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>eu.transkribus</groupId>
     <artifactId>TranskribusPDFExtractor</artifactId>
-    <version>0.3</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,9 +13,30 @@
     <parent>
         <groupId>eu.transkribus</groupId>
         <artifactId>TranskribusExtractors</artifactId>
-        <version>0.3</version>
+        <version>0.3.1</version>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>dea-artifactory</id>
+            <name>dea-artifactory-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>dbis-halvar-artifactory</id>
+            <name>dbis-halvar-releases</name>
+            <url>http://dbis-halvar.uibk.ac.at/artifactory/libs-release-local</url>
+        </repository>
+        <site>
+            <id>website</id>
+            <name>transkribus.eu</name>
+            <url>scp://read01.uibk.ac.at/var/www/html/TranskribusLanguageResources</url>
+        </site>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -28,12 +47,12 @@
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusExtractorsCore</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.transkribus</groupId>
             <artifactId>TranskribusDictionaries</artifactId>
-            <version>0.3</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>

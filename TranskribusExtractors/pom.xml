@@ -30,4 +30,15 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    
+    <dependencyManagement>
+	    <dependencies>
+	    	<dependency>
+	            <groupId>org.apache.pdfbox</groupId>
+	            <artifactId>pdfbox</artifactId>
+	            <version>1.8.16</version>
+	            <type>jar</type>
+	        </dependency>
+    	</dependencies>
+    </dependencyManagement>
 </project>

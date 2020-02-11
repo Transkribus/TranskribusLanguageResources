@@ -5,21 +5,23 @@
  */
 package eu.transkribus.languageresources.extractor.pdf;
 
-import eu.transkribus.languageresources.dictionaries.Dictionary;
-import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.io.RandomAccessBufferedFileInputStream;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import eu.transkribus.interfaces.languageresources.IPagewiseTextExtractor;
+import eu.transkribus.languageresources.dictionaries.Dictionary;
+
+
 
 /**
  *
@@ -62,7 +64,7 @@ public class PDFExtractor implements IPagewiseTextExtractor
         PDDocument pdDoc = null;
         try
         {
-            PDFParser parser = new PDFParser(new FileInputStream(new File(pathToFile)));
+            PDFParser parser = new PDFParser(new RandomAccessBufferedFileInputStream(new File(pathToFile)));
             parser.parse();
             cosDoc = parser.getDocument();
             pdDoc = new PDDocument(cosDoc);
@@ -110,7 +112,7 @@ public class PDFExtractor implements IPagewiseTextExtractor
         PDDocument pdDoc = null;
         try
         {
-            PDFParser parser = new PDFParser(new FileInputStream(new File(pathToFile)));
+            PDFParser parser = new PDFParser(new RandomAccessBufferedFileInputStream(new File(pathToFile)));
             parser.parse();
             cosDoc = parser.getDocument();
             pdDoc = new PDDocument(cosDoc);
